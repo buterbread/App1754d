@@ -41,10 +41,10 @@ export default {
       this.$store.dispatch('makeUserMove', { row, col });
     },
     dropPassageHorizontal(el) {
-      $(el).animate({ width: (config.arrayWidth - 1) * 50 }, (config.arrayWidth - 1) * config.dropInjectionDelay, 'linear');
+      $(el).animate({ width: config.arrayWidth * 50 }, config.arrayWidth * config.dropInjectionDelay, 'linear');
     },
     dropPassageVertical(el) {
-      $(el).animate({ height: (config.arrayHeight - 1) * 50 }, (config.arrayHeight - 1) * config.dropInjectionDelay, 'linear');
+      $(el).animate({ height: config.arrayHeight * 50 }, config.arrayHeight * config.dropInjectionDelay, 'linear');
     },
   },
 };
@@ -98,47 +98,71 @@ export default {
   left: 0;
 }
 
-@keyframes passage {
-  from { width: 0; }
-  to { width: 200px; }
-}
-
 .drop-passage {
   position: absolute;
   margin: auto;
-  background: #f00;
-  opacity: 0.5;
+  overflow: visible!important;
+
+  &:before {
+    content: '';
+    display: block;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: rgba(255, 128, 0, 1);
+  }
 
   &.left {
-    height: 10px;
+    height: 20px;
     width: 0;
     top: 0;
     bottom: 0;
     right: 50%;
+
+    &:before {
+      right: 100%;
+      margin: 0 -10px 0 0;
+    }
   }
 
   &.top {
     height: 0;
-    width: 10px;
+    width: 20px;
     left: 0;
     right: 0;
     bottom: 50%;
+
+    &:before {
+      top: 0;
+      margin: -10px 0 0 0;
+    }
   }
 
   &.right {
-    height: 10px;
+    height: 20px;
     width: 0;
     top: 0;
     bottom: 0;
     left: 50%;
+
+    &:before {
+      left: 100%;
+      margin: 0 0 0 -10px;
+    }
   }
 
   &.bottom {
     height: 0;
-    width: 10px;
+    width: 20px;
     left: 0;
     right: 0;
     top: 50%;
+
+    &:before {
+      bottom: 0;
+      margin: 0 0 -10px 0;
+    }
   }
 }
 </style>

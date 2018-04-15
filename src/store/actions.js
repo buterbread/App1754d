@@ -56,7 +56,7 @@ export default {
     const top = options.direction.top;
     const left = options.direction.left;
 
-    if (items[row][col].value === 0) {
+    if (items[row][col].value === config.minItemValue) {
       let newTop;
       let newLeft;
 
@@ -90,13 +90,15 @@ export default {
       return;
     }
 
-    context.commit('INCREASE_ITEM', { row, col });
-
     setTimeout(() => {
-      context.dispatch('stopDropPassageAnimation', initialItemCords);
-    }, config.dropInjectionDelay);
+      console.log(items[row][col]);
 
-    context.dispatch('popBubble', { row, col, addBonusDrop: true });
+      if (items[row][col].value !== 0) {
+        context.commit('INCREASE_ITEM', { row, col });
+      }
+      context.dispatch('stopDropPassageAnimation', initialItemCords);
+      context.dispatch('popBubble', { row, col, addBonusDrop: true });
+    }, config.dropInjectionDelay);
   },
 
   startDropPassageAnimation(context, options) {
@@ -126,12 +128,11 @@ export default {
     const { row, col } = options;
 
     if (context.state.itemsArray[row][col].value > config.maxItemValue) {
+      context.commit('RESET_ITEM_VALUE', { row, col, value: config.minItemValue });
       context.dispatch('makePopAnimation', options);
 
       setTimeout(() => {
-        context.dispatch('injectAllDrops', options).then(() => {
-          context.commit('RESET_ITEM_VALUE', { row, col, value: config.minItemValue });
-        });
+        context.dispatch('injectAllDrops', options);
       }, config.dropPopDelay);
     }
   },
