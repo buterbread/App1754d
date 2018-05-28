@@ -4,7 +4,7 @@ const config = configModule();
 
 export default {
   startNewGame(context) {
-    context.commit('GENERATE_ITEMS_ARRAY');
+    context.commit('GENERATE_DEFAULT_ITEMS_ARRAY');
     context.commit('RESET_DROPS_COUNTER');
     context.commit('SET_GAME_STARTED', true);
   },
@@ -20,7 +20,7 @@ export default {
 
     this.commit('INCREASE_ITEM', { row: options.row, col: options.col });
 
-    this.dispatch('popBubble', { row, col, addBonusDrop: true });
+    this.dispatch('tryToPopBubble', { row, col });
   },
 
   injectAllDrops(context, options) {
@@ -56,7 +56,7 @@ export default {
     const top = options.direction.top;
     const left = options.direction.left;
 
-    if (items[row][col].value === config.minItemValue) {
+    if (items[row][col].value === config.minItemValue || items[row][col].disabled) {
       let newTop;
       let newLeft;
 
@@ -91,13 +91,11 @@ export default {
     }
 
     setTimeout(() => {
-      console.log(items[row][col]);
-
-      if (items[row][col].value !== 0) {
+      if (items[row][col].value !== 0 && !items[row][col].disabled) {
         context.commit('INCREASE_ITEM', { row, col });
       }
       context.dispatch('stopDropPassageAnimation', initialItemCords);
-      context.dispatch('popBubble', { row, col, addBonusDrop: true });
+      context.dispatch('tryToPopBubble', { row, col, addBonusDrop: true });
     }, config.dropInjectionDelay);
   },
 
@@ -109,8 +107,11 @@ export default {
       return;
     }
 
-    if (!items[row][col].dropPassageAnimation[direction.label]) {
-      items[row][col].dropPassageAnimation[direction.label] = true;
+    const dropCurrentDirection =
+        items[row][col].directions.find(dir => dir.label === direction.label);
+
+    if (dropCurrentDirection && !dropCurrentDirection.animation) {
+      dropCurrentDirection.animation = true;
     }
   },
 
@@ -119,23 +120,27 @@ export default {
     const { row, col, direction } = options;
     const items = context.state.itemsArray;
 
-    if (items[row][col].dropPassageAnimation[direction.label]) {
-      items[row][col].dropPassageAnimation[direction.label] = false;
+    const dropCurrentDirection =
+        items[row][col].directions.find(dir => dir.label === direction.label);
+
+    if (dropCurrentDirection && dropCurrentDirection.animation) {
+      dropCurrentDirection.animation = false;
     }
   },
 
-  popBubble(context, options) {
+  tryToPopBubble(context, options) {
     const { row, col } = options;
 
     if (context.state.itemsArray[row][col].value > config.maxItemValue) {
-      context.commit('RESET_ITEM_VALUE', { row, col, value: config.minItemValue });
       context.dispatch('makePopAnimation', options);
 
       setTimeout(() => {
+        context.commit('RESET_ITEM_VALUE', { row, col, value: config.minItemValue });
         context.dispatch('injectAllDrops', options);
       }, config.dropPopDelay);
     }
   },
+
   makePopAnimation(context, options) {
     const { row, col } = options;
 

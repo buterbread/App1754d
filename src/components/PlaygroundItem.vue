@@ -1,23 +1,29 @@
 <template>
-<div class="item" v-bind:value="item.value" v-bind:data-row="item.row" v-bind:data-col="item.col"
-     v-on:click.prevent="onClick">
-  {{ theValue }}
-  <div class="pop-animation" v-if="item.isPopAnimationActive"></div>
-  <div class="drop-passage-anim-box">
-    <transition v-on:enter="dropPassageHorizontal">
-      <div class="drop-passage left" v-if="item.dropPassageAnimation.left"></div>
-    </transition>
-    <transition v-on:enter="dropPassageVertical">
-      <div class="drop-passage top" v-if="item.dropPassageAnimation.top"></div>
-    </transition>
-    <transition v-on:enter="dropPassageHorizontal">
-      <div class="drop-passage right" v-if="item.dropPassageAnimation.right"></div>
-    </transition>
-    <transition v-on:enter="dropPassageVertical">
-      <div class="drop-passage bottom" v-if="item.dropPassageAnimation.bottom"></div>
-    </transition>
+  <div v-bind:class="['item-box', item.type ]"
+       v-on:click.prevent="onClick"
+       v-bind:disabled="item.disabled"
+       v-bind:style="{ width: `${itemDimensions.itemWidth}px`,
+       height: `${itemDimensions.itemHeight}px`}">
+    <div class="item-bgr"></div>
+    <div v-bind:value="item.value"
+         v-bind:class="{ item, 'pop-animation': item.isPopAnimationActive }">
+    </div>
+
+    <div class="drop-passage-anim-box">
+      <transition v-on:enter="dropPassageHorizontal">
+        <div class="drop-passage left" v-if="getDirectionAnimState('left')"></div>
+      </transition>
+      <transition v-on:enter="dropPassageVertical">
+        <div class="drop-passage top" v-if="getDirectionAnimState('top')"></div>
+      </transition>
+      <transition v-on:enter="dropPassageHorizontal">
+        <div class="drop-passage right" v-if="getDirectionAnimState('right')"></div>
+      </transition>
+      <transition v-on:enter="dropPassageVertical">
+        <div class="drop-passage bottom" v-if="getDirectionAnimState('bottom')"></div>
+      </transition>
+    </div>
   </div>
-</div>
 </template>
 
 <script>
@@ -26,68 +32,117 @@ import configModule from '../config/gameplay';
 
 const config = configModule();
 
+const { itemWidth, itemHeight } = config;
+
 export default {
   props: ['item'],
   computed: {
     theValue() {
-      return this.$store.state.itemsArray[this.$props.item.row][this.$props.item.col].value;
+      return this.$props.item.value;
+    },
+    itemDimensions() {
+      return { itemWidth, itemHeight };
     },
   },
   methods: {
     onClick(event) {
-      const row = +event.currentTarget.getAttribute('data-row');
-      const col = +event.currentTarget.getAttribute('data-col');
+      event.preventDefault();
+
+      if (this.$props.item.disabled || this.$store.getters.animationsInProgress) {
+        return;
+      }
+
+      const { row, col } = this.$props.item;
 
       this.$store.dispatch('makeUserMove', { row, col });
     },
     dropPassageHorizontal(el) {
-      $(el).animate({ width: config.arrayWidth * 50 }, config.arrayWidth * config.dropInjectionDelay, 'linear');
+      $(el).animate({ width: config.arrayWidth * itemWidth }, config.arrayWidth * config.dropInjectionDelay, 'linear');
     },
     dropPassageVertical(el) {
-      $(el).animate({ height: config.arrayHeight * 50 }, config.arrayHeight * config.dropInjectionDelay, 'linear');
+      $(el).animate({ height: config.arrayHeight * itemHeight }, config.arrayHeight * config.dropInjectionDelay, 'linear');
+    },
+    getDirectionAnimState(direction) {
+      return this.$props.item.directions.find(dir => dir.label === direction).animation;
     },
   },
 };
 </script>
 
 <style lang="scss">
-.item {
-  display: inline-block;
+.item-box {
+  display: inline-flex;
+  align-items: center;
+  justify-items: center;
+
   vertical-align: top;
   position: relative;
-  border: 1px solid #cccccc;
-  width: 50px;
-  height: 50px;
+  width: 49px;
+  height: 49px;
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 0 1px #2EEFBF inset;
+  border-radius: 50%;
   text-align: center;
   font-size: 16px;
   line-height: 48px;
   cursor: pointer;
-
   box-sizing: border-box;
-
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
   user-select: none;
+
+  &[disabled] {
+    opacity: 0.3;
+    cursor: default;
+  }
+
+  &.bobomb {
+    .item {
+      background-color: chocolate;
+    }
+  }
 }
 
-.item[value="0"] {
+.item {
+  display: block;
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  background: #17b6ed;
+  border-radius: 50%;
+  margin: auto;
   font-size: 0;
+  transition: all 0.2s ease 0s;
+
+  &[value="0"] {
+    transform: scale(0);
+    opacity: 0;
+  }
+
+  &[value="1"] {
+    transform: scale(0.25);
+  }
+
+  &[value="2"] {
+    transform: scale(0.5);
+  }
+
+  &[value="3"] {
+    transform: scale(0.75);
+  }
+
+  &[value="4"] {
+    transform: scale(1);
+  }
+
+  &.pop-animation {
+    transform: scale(2);
+    opacity: 0;
+  }
 }
 
 .clear {
   display: block;
   clear: both;
-}
-
-.pop-animation {
-  background: #333333;
-  position: absolute;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 50;
 }
 
 .drop-passage-anim-box {
@@ -96,6 +151,7 @@ export default {
   height: 100%;
   top: 0;
   left: 0;
+  z-index: 10;
 }
 
 .drop-passage {
@@ -110,7 +166,7 @@ export default {
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background: rgba(255, 128, 0, 1);
+    background: #EFBF2E;
   }
 
   &.left {
@@ -123,6 +179,7 @@ export default {
     &:before {
       right: 100%;
       margin: 0 -10px 0 0;
+      box-shadow: 5px 0 10px 0 #EFBF2E;
     }
   }
 
@@ -136,6 +193,7 @@ export default {
     &:before {
       top: 0;
       margin: -10px 0 0 0;
+      box-shadow: 0 5px 10px 0 #EFBF2E;
     }
   }
 
@@ -149,6 +207,7 @@ export default {
     &:before {
       left: 100%;
       margin: 0 0 0 -10px;
+      box-shadow: -5px 0 10px 0 #EFBF2E;
     }
   }
 
@@ -162,6 +221,7 @@ export default {
     &:before {
       bottom: 0;
       margin: 0 0 -10px 0;
+      box-shadow: 0 -5px 10px 0 #EFBF2E;
     }
   }
 }

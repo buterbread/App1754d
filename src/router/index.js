@@ -16,6 +16,7 @@ export default new Router({
   routes: [
     { path: '/', component: Hello },
     { path: '/gameplay', component: Gameplay },
+    { path: '/gameplay/:chapter/:level', component: Gameplay },
     { path: '/you-win', component: YouWin },
     { path: '/you-lost', component: YouLost },
   ],

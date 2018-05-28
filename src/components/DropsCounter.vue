@@ -14,15 +14,18 @@ export default {
 
 <style lang="scss">
 .drops-counter {
-    position: absolute;
-    top: 30px;
-    right: 30px;
-    font-size: 20px;
-    line-height: 50px;
-    width: 50px;
-    height: 50px;
-    border: 1px solid #0c82df;
-    border-radius: 5px;
-    text-align: center;
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  left: 30px;
+  margin: auto;
+  font-size: 20px;
+  line-height: 60px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #17b6ed;
+  color: #ffffff;
+  text-align: center;
 }
 </style>

@@ -1,25 +1,11 @@
 import configModule from '../config/gameplay';
+import BubbleDefault from '../bubbleDefault';
+import BubbleBobomb from '../bubbleBobomb';
 
 const config = configModule();
 
-function Bubble(options) {
-  this.value = options.value;
-  this.row = options.row;
-  this.col = options.col;
-  this.isPopAnimationActive = false;
-  this.directions = config.directions.slice();
-  this.dropPassageAnimation = {
-    left: false,
-    top: false,
-    right: false,
-    bottom: false,
-    topLeft: false,
-    bottomRight: false,
-  };
-}
-
 export default {
-  GENERATE_ITEMS_ARRAY(state) {
+  GENERATE_DEFAULT_ITEMS_ARRAY(state) {
     const itemsArray = [];
 
     for (let i = 0; i < config.arrayHeight; i += 1) {
@@ -28,7 +14,7 @@ export default {
       itemsRow.id = Math.random().toString(36).substr(2, 9);
 
       for (let j = 0; j < config.arrayWidth; j += 1) {
-        const col = new Bubble({
+        const col = new BubbleDefault({
           value: Math.floor(Math.random() *
               ((config.maxItemValue - config.minItemValue) + 1)) + config.minItemValue,
           row: i,
@@ -37,8 +23,17 @@ export default {
         });
         itemsRow.push(col);
       }
+      itemsRow[i].disabled = true;
       itemsArray.push(itemsRow);
     }
+
+    itemsArray[0][1] = new BubbleBobomb({
+      value: Math.floor(Math.random() *
+          ((config.maxItemValue - config.minItemValue) + 1)) + config.minItemValue,
+      row: 0,
+      col: 1,
+      id: Math.random().toString(36).substr(2, 9),
+    });
 
     state.itemsArray = itemsArray;
   },

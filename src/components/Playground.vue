@@ -23,8 +23,9 @@ export default {
 
 <style lang="scss">
 .playground-box {
+  position: relative;
   display: table;
-  margin: 100px auto 0;
+  margin: 120px auto 0;
   text-align: center;
   font-size: 0;
 }

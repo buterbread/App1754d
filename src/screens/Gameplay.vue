@@ -38,7 +38,8 @@ export default {
   },
 
   beforeMount() {
-    this.$store.dispatch('startNewGame');
+    const { chapter, level } = this.$route.params;
+    this.$store.dispatch('startNewGame', { chapter, level });
   },
 };
 </script>
