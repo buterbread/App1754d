@@ -1,10 +1,11 @@
 import configModule from '../config/gameplay';
+import levelConstructor from '../config/levelConstructor';
 
 const config = configModule();
 
 export default {
-  startNewGame(context) {
-    context.commit('GENERATE_DEFAULT_ITEMS_ARRAY');
+  startNewGame(context, options) {
+    context.commit('GENERATE_ITEMS_ARRAY', levelConstructor(options));
     context.commit('RESET_DROPS_COUNTER');
     context.commit('SET_GAME_STARTED', true);
   },
@@ -16,87 +17,28 @@ export default {
   makeUserMove(context, options) {
     const { row, col } = options;
 
-    this.commit('REMOVE_USER_DROP');
-
-    this.commit('INCREASE_ITEM', { row: options.row, col: options.col });
-
-    this.dispatch('tryToPopBubble', { row, col });
+    context.commit('REMOVE_USER_DROP');
+    context.commit('INCREASE_ITEM', { row, col });
+    context.dispatch('userMoveCallback', options);
   },
 
-  injectAllDrops(context, options) {
-    const { row, col, addBonusDrop } = options;
-
-    if (addBonusDrop === true) {
-      this.commit('ADD_USER_DROP');
-    }
-
-    const emitter = context.state.itemsArray[row][col];
-
-    emitter.directions.forEach((direction) => {
-      context.commit('INCREASE_ANIMS_COUNTER');
-      context.dispatch('injectSingleDrop', { row, col, direction });
-    });
-  },
-
-  injectSingleDrop(context, options) {
+  userMoveCallback(context, options) {
     const items = context.state.itemsArray;
+    const { row, col } = options;
+    const dropType = items[row][col].type;
 
-    const initialItemCords = options.initialItemCords || options;
+    const emittingFunctionPromise = context.dispatch('getBubbleEmitAction', { dropType, ...options });
 
-    const row = options.row + options.direction.top;
-    const col = options.col + options.direction.left;
+    emittingFunctionPromise.then(action => action(context, options));
+  },
 
-    if (!items[row] || !items[row][col]) {
-      context.dispatch('stopDropPassageAnimation', initialItemCords);
-      return;
-    }
+  getBubbleEmitAction(context, options) {
+    const { row, col, dropType } = options;
 
-    context.dispatch('startDropPassageAnimation', options);
-
-    const top = options.direction.top;
-    const left = options.direction.left;
-
-    if (items[row][col].value === config.minItemValue || items[row][col].disabled) {
-      let newTop;
-      let newLeft;
-
-      if (top === 0) {
-        newTop = top;
-      } else if (top < 0) {
-        newTop = top - 1;
-      } else {
-        newTop = top + 1;
-      }
-
-      if (left === 0) {
-        newLeft = left;
-      } else if (left < 0) {
-        newLeft = left - 1;
-      } else {
-        newLeft = left + 1;
-      }
-
-      setTimeout(() => {
-        context.dispatch('injectSingleDrop', {
-          row: options.row,
-          col: options.col,
-          direction: {
-            top: newTop,
-            left: newLeft,
-          },
-          initialItemCords,
-        });
-      }, config.dropInjectionDelay);
-      return;
-    }
-
-    setTimeout(() => {
-      if (items[row][col].value !== 0 && !items[row][col].disabled) {
-        context.commit('INCREASE_ITEM', { row, col });
-      }
-      context.dispatch('stopDropPassageAnimation', initialItemCords);
-      context.dispatch('tryToPopBubble', { row, col, addBonusDrop: true });
-    }, config.dropInjectionDelay);
+    return {
+      default: () => context.dispatch('moduleBubbleDefault/tryToPopBubble', { row, col }),
+      bobomb: () => context.dispatch('moduleBubbleBobomb/tryToPopBubble', { row, col }),
+    }[dropType];
   },
 
   startDropPassageAnimation(context, options) {
@@ -128,19 +70,6 @@ export default {
     }
   },
 
-  tryToPopBubble(context, options) {
-    const { row, col } = options;
-
-    if (context.state.itemsArray[row][col].value > config.maxItemValue) {
-      context.dispatch('makePopAnimation', options);
-
-      setTimeout(() => {
-        context.commit('RESET_ITEM_VALUE', { row, col, value: config.minItemValue });
-        context.dispatch('injectAllDrops', options);
-      }, config.dropPopDelay);
-    }
-  },
-
   makePopAnimation(context, options) {
     const { row, col } = options;
 
@@ -148,6 +77,6 @@ export default {
 
     setTimeout(() => {
       context.commit('TOGGLE_ITEM_ANIMATION_STATE', { row, col, value: false });
-    }, config.dropPopDelay);
+    }, config.dropPopDuration);
   },
 };

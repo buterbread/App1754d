@@ -14,11 +14,7 @@ export default {
 
 <style lang="scss">
 .drops-counter {
-  position: absolute;
-  top: 30px;
-  right: 30px;
-  left: 30px;
-  margin: auto;
+  margin: 30px auto 0 auto;
   font-size: 20px;
   line-height: 60px;
   width: 60px;

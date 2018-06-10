@@ -25,7 +25,7 @@ export default {
 .playground-box {
   position: relative;
   display: table;
-  margin: 120px auto 0;
+  margin: 30px auto 0;
   text-align: center;
   font-size: 0;
 }

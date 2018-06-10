@@ -17,7 +17,7 @@ export default new Router({
     { path: '/', component: Hello },
     { path: '/gameplay', component: Gameplay },
     { path: '/gameplay/:chapter/:level', component: Gameplay },
-    { path: '/you-win', component: YouWin },
+    { path: '/you-win', name: 'YouWin', component: YouWin },
     { path: '/you-lost', component: YouLost },
   ],
 });

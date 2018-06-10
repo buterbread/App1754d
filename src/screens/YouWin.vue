@@ -1,52 +1,29 @@
 <template>
 <div class="you-win">
-  <button v-on:click="show = !show">Переключить</button>
-  <transition name="fade" :duration="{ 'enter-active': 3000, leave: 3000 }">
-    <p v-if="show">привет</p>
-  </transition>
-  <br>
-  You Win<br>Congratulations!
-  <br>
-  <br>
-  <router-link to="gameplay">Start Game</router-link>
+  <router-link :to=nextLvlLink>Next Level &gt;</router-link>
 </div>
 </template>
 
 <script>
 export default {
   data() {
-    return { show: false };
+    return {
+      show: false,
+      nextLvlLink: `gameplay/${this.getChapter()}/${this.getLevel()}`,
+    };
+  },
+  methods: {
+    getChapter() {
+      return +this.$route.params.chapter;
+    },
+    getLevel() {
+      return +this.$route.params.level + 1;
+    },
   },
 };
 </script>
 
 <style lang="scss">
-  .fade-enter-active {
-    // transition: opacity 0.1s ease 0s;
-    transition-property: opacity;
-  }
-
-  .fade-enter {
-    opacity: 0;
-  }
-
-  .fade-enter-to {
-    opacity: 1;
-  }
-
-  .fade-leave-active {
-    color: #000;
-    transition: opacity 0.1s ease 0s;
-  }
-
-  .fade-leave {
-    opacity: 1;
-  }
-
-  .fade-leave-to {
-    opacity: 0;
-  }
-
   .you-win {
     position: fixed;
     left: 0;

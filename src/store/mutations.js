@@ -1,41 +1,11 @@
 import configModule from '../config/gameplay';
-import BubbleDefault from '../bubbleDefault';
-import BubbleBobomb from '../bubbleBobomb';
 
 const config = configModule();
 
 export default {
-  GENERATE_DEFAULT_ITEMS_ARRAY(state) {
-    const itemsArray = [];
-
-    for (let i = 0; i < config.arrayHeight; i += 1) {
-      const itemsRow = [];
-
-      itemsRow.id = Math.random().toString(36).substr(2, 9);
-
-      for (let j = 0; j < config.arrayWidth; j += 1) {
-        const col = new BubbleDefault({
-          value: Math.floor(Math.random() *
-              ((config.maxItemValue - config.minItemValue) + 1)) + config.minItemValue,
-          row: i,
-          col: j,
-          id: Math.random().toString(36).substr(2, 9),
-        });
-        itemsRow.push(col);
-      }
-      itemsRow[i].disabled = true;
-      itemsArray.push(itemsRow);
-    }
-
-    itemsArray[0][1] = new BubbleBobomb({
-      value: Math.floor(Math.random() *
-          ((config.maxItemValue - config.minItemValue) + 1)) + config.minItemValue,
-      row: 0,
-      col: 1,
-      id: Math.random().toString(36).substr(2, 9),
-    });
-
-    state.itemsArray = itemsArray;
+  GENERATE_ITEMS_ARRAY(state, level) {
+    state.level = level;
+    state.itemsArray = level.getMap();
   },
 
   RESET_DROPS_COUNTER(state) {
