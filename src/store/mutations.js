@@ -17,8 +17,8 @@ export default {
   },
 
   INCREASE_ITEM(state, options) {
-    const { row, col } = options;
-    state.itemsArray[row][col].value += 1;
+    const { row, col, amount = 1 } = options;
+    state.itemsArray[row][col].value += amount;
   },
 
   RESET_ITEM_VALUE(state, options) {

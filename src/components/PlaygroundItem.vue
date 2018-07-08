@@ -1,17 +1,14 @@
 <template>
-  <bubbleDefault v-if="(item.type === 'default')" v-bind:item="item"></bubbleDefault>
-  <bubbleBobomb v-else-if="(item.type === 'bobomb')" v-bind:item="item"></bubbleBobomb>
+  <bubbleComponent v-bind:item="item"></bubbleComponent>
 </template>
 
 <script>
-import bubbleDefault from './BubbleDefault';
-import bubbleBobomb from './BubbleBobomb';
+import bubbleComponent from './BubbleComponent';
 
 export default {
   props: ['item'],
   components: {
-    bubbleDefault,
-    bubbleBobomb,
+    bubbleComponent,
   },
 };
 </script>

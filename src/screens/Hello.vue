@@ -2,11 +2,11 @@
 <div class="hello-screen">
   <router-link to="gameplay">Start New Game</router-link>
   <br>
-  <router-link to="gameplay">Level 1 - 1</router-link>
+  <router-link to="gameplay/1">Level 1 - 1</router-link>
   <br>
-  <router-link to="gameplay/1/2">Level 1 - 2</router-link>
+  <router-link to="gameplay/2">Level 1 - 2</router-link>
   <br>
-  <router-link to="gameplay/1/3">Level 1 - 3</router-link>
+  <router-link to="gameplay/3">Level 1 - 3</router-link>
   <br>
 </div>
 </template>

@@ -1,7 +1,5 @@
 export default () => ({
-  initialDropsCounter: 10,
+  initialDropsCounter: 1000,
   dropPopDuration: 200,
   dropInjectionDelay: 200,
-  itemWidth: 45,
-  itemHeight: 45,
 });

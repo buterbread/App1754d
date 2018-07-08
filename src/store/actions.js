@@ -23,34 +23,46 @@ export default {
   },
 
   userMoveCallback(context, options) {
-    const items = context.state.itemsArray;
+    context.dispatch('attemptToPopBubble', options);
+  },
+
+  attemptToPopBubble(context, options) {
+    const { itemsArray: items, level } = context.state;
     const { row, col } = options;
-    const dropType = items[row][col].type;
 
-    const emittingFunctionPromise = context.dispatch('getBubbleEmitAction', { dropType, ...options });
+    if (items[row][col].value > level.maxItemValue) {
+      context.dispatch('makePopAnimation', options, { root: true });
 
-    emittingFunctionPromise.then(action => action(context, options));
+      setTimeout(() => {
+        context.commit('RESET_ITEM_VALUE', { row, col, value: level.minItemValue }, { root: true });
+
+        const dropType = items[row][col].type;
+
+        context.dispatch('getBubbleEmitAction', { dropType, ...options })
+          .then(action => action(context, options));
+      }, config.dropPopDuration - 1);
+    }
   },
 
   getBubbleEmitAction(context, options) {
     const { row, col, dropType } = options;
 
     return {
-      default: () => context.dispatch('moduleBubbleDefault/tryToPopBubble', { row, col }),
-      bobomb: () => context.dispatch('moduleBubbleBobomb/tryToPopBubble', { row, col }),
+      default: () => context.dispatch('moduleBubbleDefault/injectAllDrops', { row, col }),
+      bobomb: () => context.dispatch('moduleBubbleBobomb/injectAllDrops', { row, col }),
     }[dropType];
   },
 
   startDropPassageAnimation(context, options) {
-    const items = context.state.itemsArray;
-    const { row, col, direction } = options;
+    const { itemsArray: items, level } = context.state;
+    const { row, col, emitter } = options;
 
     if (!items[row] || !items[row][col]) {
       return;
     }
 
     const dropCurrentDirection =
-        items[row][col].directions.find(dir => dir.label === direction.label);
+        items[row][col].emitters[level.type].find(dir => dir.label === emitter.label);
 
     if (dropCurrentDirection && !dropCurrentDirection.animation) {
       dropCurrentDirection.animation = true;
@@ -59,11 +71,11 @@ export default {
 
   stopDropPassageAnimation(context, options) {
     context.commit('DECREASE_ANIMS_COUNTER');
-    const { row, col, direction } = options;
-    const items = context.state.itemsArray;
+    const { itemsArray: items, level } = context.state;
+    const { row, col, emitter } = options;
 
     const dropCurrentDirection =
-        items[row][col].directions.find(dir => dir.label === direction.label);
+        items[row][col].emitters[level.type].find(dir => dir.label === emitter.label);
 
     if (dropCurrentDirection && dropCurrentDirection.animation) {
       dropCurrentDirection.animation = false;
@@ -73,9 +85,11 @@ export default {
   makePopAnimation(context, options) {
     const { row, col } = options;
 
+    context.commit('INCREASE_ANIMS_COUNTER');
     context.commit('TOGGLE_ITEM_ANIMATION_STATE', { row, col, value: true });
 
     setTimeout(() => {
+      context.commit('DECREASE_ANIMS_COUNTER');
       context.commit('TOGGLE_ITEM_ANIMATION_STATE', { row, col, value: false });
     }, config.dropPopDuration);
   },

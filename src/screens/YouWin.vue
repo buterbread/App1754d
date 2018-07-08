@@ -1,7 +1,7 @@
 <template>
-<div class="you-win">
-  <router-link :to=nextLvlLink>Next Level &gt;</router-link>
-</div>
+  <div class="you-win">
+    <router-link :to=nextLvlLink>Next Level &gt;</router-link>
+  </div>
 </template>
 
 <script>
@@ -9,13 +9,10 @@ export default {
   data() {
     return {
       show: false,
-      nextLvlLink: `gameplay/${this.getChapter()}/${this.getLevel()}`,
+      nextLvlLink: `gameplay/${this.getLevel()}`,
     };
   },
   methods: {
-    getChapter() {
-      return +this.$route.params.chapter;
-    },
     getLevel() {
       return +this.$route.params.level + 1;
     },
