@@ -10,6 +10,11 @@ export default {
     context.commit('SET_GAME_STARTED', true);
   },
 
+  startNextLevel(context, options) {
+    context.commit('GENERATE_ITEMS_ARRAY', levelConstructor(options));
+    context.commit('SET_GAME_STARTED', true);
+  },
+
   stopGame(context) {
     context.commit('SET_GAME_STARTED', false);
   },
@@ -29,28 +34,47 @@ export default {
   attemptToPopBubble(context, options) {
     const { itemsArray: items, level } = context.state;
     const { row, col } = options;
+    const unit = items[row][col];
 
-    if (items[row][col].value > level.maxItemValue) {
+    if (unit.value > level.maxItemValue) {
       context.dispatch('makePopAnimation', options, { root: true });
 
+      if (unit.injectionInProgress === true) {
+        return;
+      }
+
+      unit.injectionInProgress = true;
+
       setTimeout(() => {
-        context.commit('RESET_ITEM_VALUE', { row, col, value: level.minItemValue }, { root: true });
-
-        const dropType = items[row][col].type;
-
-        context.dispatch('getBubbleEmitAction', { dropType, ...options })
-          .then(action => action(context, options));
+        context.commit('RESET_ITEM_VALUE', { row, col, value: level.minItemValue });
+        const dropType = unit.type;
+        context.dispatch('injectAllDrops', { dropType, ...options });
+        unit.injectionInProgress = false;
       }, config.dropPopDuration - 1);
     }
   },
 
-  getBubbleEmitAction(context, options) {
-    const { row, col, dropType } = options;
+  injectAllDrops(context, options) {
+    const { itemsArray: items, level } = context.state;
+    const { row, col, addBonusDrop } = options;
+    const unit = items[row][col];
 
-    return {
-      default: () => context.dispatch('moduleBubbleDefault/injectAllDrops', { row, col }),
-      bobomb: () => context.dispatch('moduleBubbleBobomb/injectAllDrops', { row, col }),
-    }[dropType];
+    const unitEmitters = unit.emitters[level.type];
+
+    if (addBonusDrop === true) {
+      context.commit('ADD_USER_DROP', 1);
+    }
+
+    unitEmitters.forEach((emitter) => {
+      context.commit('INCREASE_ANIMS_COUNTER', null, { root: true });
+      context.dispatch('emitterFire', { row, col, emitter });
+    });
+  },
+
+  emitterFire(context, options) {
+    const { emissionType } = options.emitter;
+
+    context.dispatch(`emissions/${emissionType}`, options);
   },
 
   startDropPassageAnimation(context, options) {
@@ -73,9 +97,10 @@ export default {
     context.commit('DECREASE_ANIMS_COUNTER');
     const { itemsArray: items, level } = context.state;
     const { row, col, emitter } = options;
+    const unit = items[row][col];
 
     const dropCurrentDirection =
-        items[row][col].emitters[level.type].find(dir => dir.label === emitter.label);
+        unit.emitters[level.type].find(dir => dir.label === emitter.label);
 
     if (dropCurrentDirection && dropCurrentDirection.animation) {
       dropCurrentDirection.animation = false;

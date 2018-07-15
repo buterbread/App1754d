@@ -1,8 +1,9 @@
 export default {
   youLost(state) {
-    return state.gameStarted && (state.dropsCount === 0);
+    return state.gameStarted && (state.user.currentCount === 0);
   },
   youWin(state, getters) {
+    return false;
     return state.gameStarted && !getters.animationsInProgress && getters.isArrayEmpty;
   },
   animationsInProgress(state) {

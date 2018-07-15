@@ -6,7 +6,7 @@
 export default {
   computed: {
     dropsCount() {
-      return this.$store.state.dropsCount;
+      return this.$store.state.user.currentCount;
     },
   },
 };

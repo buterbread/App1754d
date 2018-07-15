@@ -3,11 +3,11 @@ import BubbleBobomb from '../bubbleBobomb';
 
 class BaseLevel {
   constructor(options) {
-    Object.assign(this, this.defaults, options);
+    Object.assign(this, BaseLevel.defaults(), options);
   }
 
-  get defaults() {
-    this.defaultParams = {
+  static defaults() {
+    return {
       type: 'default',
       matrixHeight: 9,
       matrixWidth: 9,
@@ -15,8 +15,6 @@ class BaseLevel {
       maxItemValue: 4,
       customDrops: [],
     };
-
-    return this.defaultParams;
   }
 
   getRandomValue() {
@@ -43,7 +41,9 @@ class BaseLevel {
         options.value = this.getRandomValue();
       }
 
-      map[row][col] = new customDrop.constructor(options);
+      const Constructor = customDrop.unitConstructor || BubbleDefault;
+
+      map[row][col] = new Constructor(options);
     });
 
     return map;
@@ -119,14 +119,16 @@ const config = [{
   matrixWidth: 5,
   type: 'default',
   customDrops: [{
-    constructor: BubbleDefault,
+    unitConstructor: BubbleDefault,
     col: 0,
     row: 0,
     options: {
       disabled: true,
     },
   }, {
-    constructor: BubbleBobomb,
+    unitConstructor: BubbleBobomb,
+    col: 1,
+    row: 0,
   }],
 }, {
   label: 'Level 1-2',
@@ -135,12 +137,12 @@ const config = [{
   type: 'triangle',
   customDrops: [
     {
-      constructor: BubbleBobomb,
+      unitConstructor: BubbleBobomb,
       col: 2,
       row: 2,
     },
     {
-      constructor: BubbleBobomb,
+      unitConstructor: BubbleBobomb,
       col: 1,
       row: 1,
     },
@@ -154,16 +156,22 @@ const config = [{
   cornerSize: 3,
   customDrops: [
     {
-      constructor: BubbleBobomb,
+      unitConstructor: BubbleBobomb,
       col: 6,
       row: 6,
     },
     {
-      constructor: BubbleBobomb,
+      unitConstructor: BubbleBobomb,
       col: 0,
       row: 6,
     },
   ],
+}, {
+  label: 'Level 1-3',
+  index: 4,
+  matrixHeight: 3,
+  matrixWidth: 3,
+  type: 'default',
 }];
 
 export default function (options) {

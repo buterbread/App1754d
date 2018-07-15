@@ -9,7 +9,7 @@ export default {
   },
 
   RESET_DROPS_COUNTER(state) {
-    state.dropsCount = config.initialDropsCounter;
+    state.user.currentCount = config.initialDropsCounter;
   },
 
   SET_GAME_STARTED(state, status) {
@@ -40,10 +40,10 @@ export default {
   },
 
   REMOVE_USER_DROP(state, amount = 1) {
-    state.dropsCount -= amount;
+    state.user.currentCount -= amount;
   },
 
   ADD_USER_DROP(state, amount = 1) {
-    state.dropsCount += amount;
+    state.user.currentCount += amount;
   },
 };

@@ -3,8 +3,8 @@ import Vuex from 'vuex';
 import actions from './actions';
 import mutations from './mutations';
 import getters from './getters';
-import moduleBubbleDefault from './moduleBubbleDefault';
-import moduleBubbleBobomb from './moduleBubbleBobomb';
+import user from './user';
+import emissions from './emissionTypes';
 
 Vue.use(Vuex);
 
@@ -16,8 +16,8 @@ export default new Vuex.Store({
     gameStarted: false,
   },
   modules: {
-    moduleBubbleDefault,
-    moduleBubbleBobomb,
+    user,
+    emissions,
   },
   actions,
   mutations,

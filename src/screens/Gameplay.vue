@@ -41,8 +41,14 @@ export default {
   },
 
   beforeMount() {
-    const { level = 1 } = this.$route.params;
-    this.$store.dispatch('startNewGame', { index: level });
+    let { level = 'new' } = this.$route.params;
+
+    if (level === 'new') {
+      level = 1;
+      this.$store.dispatch('startNewGame', { index: level });
+    } else {
+      this.$store.dispatch('startNextLevel', { index: level });
+    }
   },
 };
 </script>

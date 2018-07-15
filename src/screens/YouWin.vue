@@ -14,7 +14,9 @@ export default {
   },
   methods: {
     getLevel() {
-      return +this.$route.params.level + 1;
+      const { level } = this.$route.params;
+
+      return +level + 1;
     },
   },
 };

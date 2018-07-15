@@ -1,30 +1,31 @@
-class Bubble {
+class BubbleDefault {
   constructor(options) {
     const defaults = {
       type: 'default',
       value: 0,
       isPopAnimationActive: false,
+      injectionInProgress: false,
       disabled: false,
       minItemValue: 0,
       maxItemValue: 4,
       emitters: {
         default: [
-          { top: 0, left: -1, label: 'left', animation: false, injectionType: 'tillImpact' },
-          { top: -1, left: 0, label: 'top', animation: false, injectionType: 'tillImpact' },
-          { top: 0, left: 1, label: 'right', animation: false, injectionType: 'tillImpact' },
-          { top: 1, left: 0, label: 'bottom', animation: false, injectionType: 'tillImpact' },
+          { top: 0, left: -1, label: 'left', animation: false, emissionType: 'tillImpact' },
+          { top: -1, left: 0, label: 'top', animation: false, emissionType: 'tillImpact' },
+          { top: 0, left: 1, label: 'right', animation: false, emissionType: 'tillImpact' },
+          { top: 1, left: 0, label: 'bottom', animation: false, emissionType: 'tillImpact' },
         ],
         triangle: [
-          { top: 0, left: -1, label: 'left', animation: false, injectionType: 'tillImpact', forOddCell: true, forEvenCell: true },
-          { top: 0, left: 1, label: 'right', animation: false, injectionType: 'tillImpact', forOddCell: true, forEvenCell: true },
-          { top: -1, left: -1, label: 'topLeft', animation: false, injectionType: 'tillImpact', forOddCell: false, forEvenCell: true },
-          { top: 1, left: 1, label: 'bottomRight', animation: false, injectionType: 'tillImpact', forOddCell: true, forEvenCell: false },
+          { top: 0, left: -1, label: 'left', animation: false, emissionType: 'tillImpact', forOddCell: true, forEvenCell: true },
+          { top: 0, left: 1, label: 'right', animation: false, emissionType: 'tillImpact', forOddCell: true, forEvenCell: true },
+          { top: -1, left: -1, label: 'topLeft', animation: false, emissionType: 'tillImpact', forOddCell: false, forEvenCell: true },
+          { top: 1, left: 1, label: 'bottomRight', animation: false, emissionType: 'tillImpact', forOddCell: true, forEvenCell: false },
         ],
         hexagon: [
-          { top: 0, left: -1, label: 'left', animation: false, injectionType: 'tillImpact' },
-          { top: -1, left: 0, label: 'top', animation: false, injectionType: 'tillImpact' },
-          { top: 0, left: 1, label: 'right', animation: false, injectionType: 'tillImpact' },
-          { top: 1, left: 0, label: 'bottom', animation: false, injectionType: 'tillImpact' },
+          { top: 0, left: -1, label: 'left', animation: false, emissionType: 'tillImpact' },
+          { top: -1, left: 0, label: 'top', animation: false, emissionType: 'tillImpact' },
+          { top: 0, left: 1, label: 'right', animation: false, emissionType: 'tillImpact' },
+          { top: 1, left: 0, label: 'bottom', animation: false, emissionType: 'tillImpact' },
         ],
       },
     };
@@ -35,4 +36,4 @@ class Bubble {
   }
 }
 
-export default Bubble;
+export default BubbleDefault;

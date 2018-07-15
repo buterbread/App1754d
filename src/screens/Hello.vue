@@ -1,6 +1,6 @@
 <template>
 <div class="hello-screen">
-  <router-link to="gameplay">Start New Game</router-link>
+  <router-link to="gameplay/new">Start New Game</router-link>
   <br>
   <router-link to="gameplay/1">Level 1 - 1</router-link>
   <br>
