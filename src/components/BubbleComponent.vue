@@ -59,10 +59,9 @@ export default {
         return;
       }
 
-      const col = +event.currentTarget.getAttribute('data-col');
-      const row = +event.currentTarget.getAttribute('data-row');
+      const { row, col } = event.currentTarget.dataset;
 
-      this.$store.dispatch('makeUserMove', { row, col });
+      this.$store.dispatch('makeUserMove', { row: +row, col: +col });
     },
     dropPassageHorizontal(el) {
       const level = this.$store.state.level;

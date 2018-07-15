@@ -3,7 +3,6 @@ export default {
     return state.gameStarted && (state.user.currentCount === 0);
   },
   youWin(state, getters) {
-    return false;
     return state.gameStarted && !getters.animationsInProgress && getters.isArrayEmpty;
   },
   animationsInProgress(state) {

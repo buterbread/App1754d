@@ -47,7 +47,9 @@ export default {
 
       setTimeout(() => {
         context.commit('RESET_ITEM_VALUE', { row, col, value: level.minItemValue });
+
         const dropType = unit.type;
+
         context.dispatch('injectAllDrops', { dropType, ...options });
         unit.injectionInProgress = false;
       }, config.dropPopDuration - 1);
