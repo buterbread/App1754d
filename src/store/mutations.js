@@ -46,4 +46,22 @@ export default {
   ADD_USER_DROP(state, amount = 1) {
     state.user.currentCount += amount;
   },
+
+  INCREASE_DISCHARGES_COUNT(state, amount = 1) {
+    state.dischargesCount += amount;
+  },
+
+  RESET_DISCHARGES_COUNT(state) {
+    state.dischargesCount = 0;
+  },
+
+  SHIFT_MULTIPLIER_INDEX(state) {
+    if (state.comboMultipliers[state.comboMultiplierIndex + 1]) {
+      state.comboMultiplierIndex += 1;
+    }
+  },
+
+  RESET_MULTIPLIER_INDEX(state) {
+    state.comboMultiplierIndex = 0;
+  },
 };

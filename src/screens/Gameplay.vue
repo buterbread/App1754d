@@ -34,6 +34,7 @@ export default {
       this.$router.push({ path: '/you-lost' });
     },
     youWin() {
+      this.$store.commit('ADD_USER_DROP', 1);
       this.$store.dispatch('stopGame');
       const { level = 1 } = this.$route.params;
       this.$router.push({ name: 'YouWin', params: { level } });

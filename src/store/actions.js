@@ -22,12 +22,10 @@ export default {
   makeUserMove(context, options) {
     const { row, col } = options;
 
+    context.commit('RESET_DISCHARGES_COUNT');
+    context.commit('RESET_MULTIPLIER_INDEX');
     context.commit('REMOVE_USER_DROP');
     context.commit('INCREASE_ITEM', { row, col });
-    context.dispatch('userMoveCallback', options);
-  },
-
-  userMoveCallback(context, options) {
     context.dispatch('attemptToPopBubble', options);
   },
 
@@ -64,16 +62,26 @@ export default {
     const unitEmitters = unit.emitters[level.type];
 
     if (addBonusDrop === true) {
-      context.commit('ADD_USER_DROP', 1);
+      context.dispatch('increaseCombo');
     }
 
     unitEmitters.forEach((emitter) => {
       context.commit('INCREASE_ANIMS_COUNTER', null, { root: true });
-      context.dispatch('emitterFire', { row, col, emitter });
+      context.dispatch('emitterDischarge', { row, col, emitter });
     });
   },
 
-  emitterFire(context, options) {
+  increaseCombo(context) {
+    context.commit('INCREASE_DISCHARGES_COUNT', 1);
+    const { dischargesCount, comboMultipliers, comboMultiplierIndex: index } = context.state;
+
+    if (dischargesCount % comboMultipliers[index] === 0) {
+      context.commit('ADD_USER_DROP', 1);
+      context.commit('SHIFT_MULTIPLIER_INDEX');
+    }
+  },
+
+  emitterDischarge(context, options) {
     const { emissionType } = options.emitter;
 
     context.dispatch(`emissions/${emissionType}`, options);
