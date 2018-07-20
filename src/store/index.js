@@ -15,8 +15,9 @@ export default new Vuex.Store({
     animationsCounter: 0,
     gameStarted: false,
     dischargesCount: 0,
-    comboMultipliers: [7, 5, 3, 2],
+    comboMultipliers: [9, 8, 7, 6, 5, 4],
     comboMultiplierIndex: 0,
+    combosCount: 0,
   },
   modules: {
     user,

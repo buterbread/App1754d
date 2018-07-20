@@ -1,6 +1,9 @@
 export default {
-  youLost(state) {
-    return state.gameStarted && (state.user.currentCount === 0);
+  youLost(state, getters) {
+    return state.gameStarted
+        && !getters.animationsInProgress
+        && (state.user.currentCount === 0)
+        && !getters.isArrayEmpty;
   },
   youWin(state, getters) {
     return state.gameStarted && !getters.animationsInProgress && getters.isArrayEmpty;

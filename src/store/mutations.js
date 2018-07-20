@@ -55,6 +55,14 @@ export default {
     state.dischargesCount = 0;
   },
 
+  INCREASE_COMBOS_COUNT(state, amount = 1) {
+    state.combosCount += amount;
+  },
+
+  RESET_COMBOS_COUNT(state) {
+    state.combosCount = 0;
+  },
+
   SHIFT_MULTIPLIER_INDEX(state) {
     if (state.comboMultipliers[state.comboMultiplierIndex + 1]) {
       state.comboMultiplierIndex += 1;

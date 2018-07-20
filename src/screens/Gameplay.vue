@@ -3,6 +3,7 @@
     <div class="gameplay-screen">
       <drops-counter></drops-counter>
       <playground></playground>
+      <comboMonitor></comboMonitor>
     </div>
   </div>
 </template>
@@ -10,12 +11,14 @@
 <script>
 import dropsCounter from '../components/DropsCounter';
 import playground from '../components/Playground';
+import comboMonitor from '../components/ComboMonitor';
 
 export default {
   name: 'ScreenGameplay',
   components: {
     dropsCounter,
     playground,
+    comboMonitor,
   },
 
   computed: {
@@ -31,7 +34,7 @@ export default {
   watch: {
     youLost() {
       this.$store.dispatch('stopGame');
-      this.$router.push({ path: '/you-lost' });
+      setTimeout(() => { this.$router.push({ path: '/you-lost' }); }, 1000);
     },
     youWin() {
       this.$store.commit('ADD_USER_DROP', 1);

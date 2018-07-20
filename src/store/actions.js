@@ -23,6 +23,7 @@ export default {
     const { row, col } = options;
 
     context.commit('RESET_DISCHARGES_COUNT');
+    context.commit('RESET_COMBOS_COUNT');
     context.commit('RESET_MULTIPLIER_INDEX');
     context.commit('REMOVE_USER_DROP');
     context.commit('INCREASE_ITEM', { row, col });
@@ -77,6 +78,7 @@ export default {
 
     if (dischargesCount % comboMultipliers[index] === 0) {
       context.commit('ADD_USER_DROP', 1);
+      context.commit('INCREASE_COMBOS_COUNT', 1);
       context.commit('SHIFT_MULTIPLIER_INDEX');
     }
   },

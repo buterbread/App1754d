@@ -1,5 +1,4 @@
 import BubbleDefault from '../bubbleDefault';
-import BubbleBobomb from '../bubbleBobomb';
 
 class BaseLevel {
   constructor(options) {
@@ -112,76 +111,15 @@ class HexagonalLevel extends BaseLevel {
   }
 }
 
-const config = [{
-  label: 'Level 1-1',
-  index: 1,
-  matrixHeight: 5,
-  matrixWidth: 5,
-  type: 'default',
-  customDrops: [{
-    unitConstructor: BubbleDefault,
-    col: 0,
-    row: 0,
-    options: {
-      disabled: true,
-    },
-  }, {
-    unitConstructor: BubbleBobomb,
-    col: 1,
-    row: 0,
-  }],
-}, {
-  label: 'Level 1-2',
-  index: 2,
-  matrixHeight: 5,
-  type: 'triangle',
-  customDrops: [
-    {
-      unitConstructor: BubbleBobomb,
-      col: 2,
-      row: 2,
-    },
-    {
-      unitConstructor: BubbleBobomb,
-      col: 1,
-      row: 1,
-    },
-  ],
-}, {
-  label: 'Level 1-3',
-  index: 3,
-  matrixHeight: 7,
-  matrixWidth: 7,
-  type: 'hexagon',
-  cornerSize: 3,
-  customDrops: [
-    {
-      unitConstructor: BubbleBobomb,
-      col: 6,
-      row: 6,
-    },
-    {
-      unitConstructor: BubbleBobomb,
-      col: 0,
-      row: 6,
-    },
-  ],
-}, {
-  label: 'Level 1-3',
-  index: 4,
-  matrixHeight: 3,
-  matrixWidth: 3,
-  type: 'default',
-}];
-
 export default function (options) {
-  const levelConfig = config.find(level => level.index === +options.index) || {};
+  const config = [];
+  const levelCfg = config.find(level => level.index === +options.index) || { type: 'default' };
 
   const Level = {
     default: BaseLevel,
     triangle: TriangularLevel,
     hexagon: HexagonalLevel,
-  }[levelConfig.type || 'default'];
+  }[levelCfg.type || 'default'];
 
-  return new Level(levelConfig || {});
+  return new Level(levelCfg || {});
 }

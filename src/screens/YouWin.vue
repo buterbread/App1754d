@@ -16,7 +16,7 @@ export default {
     getLevel() {
       const { level } = this.$route.params;
 
-      return +level + 1;
+      return (level === 'new') ? 2 : +level + 1;
     },
   },
 };
