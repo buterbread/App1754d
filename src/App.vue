@@ -9,6 +9,5 @@
 
   .wrapper {
     min-width: 320px;
-    overflow: hidden;
   }
 </style>

@@ -1,6 +1,6 @@
 <template>
-  <div :class="['playground-box', levelType]">
-    <div v-for="(itemRow, rowIndex) in itemsArray"
+  <div :class="['playground-box']">
+    <div :class="['playground-row']" v-for="(itemRow, rowIndex) in itemsArray"
          v-bind:key="itemRow.id">
       <item v-for="(item, colIndex) in itemRow"
             v-bind:item="item"
@@ -29,9 +29,14 @@ export default {
 <style lang="scss">
 .playground-box {
   position: relative;
-  display: table;
-  margin: 30px auto 0;
+  width: 100%;
+  margin: 20px auto 0;
   font-size: 0;
+}
+
+.playground-row {
+  display: flex;
+  justify-content: center;
 }
 
 .item-box {

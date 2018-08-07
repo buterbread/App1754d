@@ -1,7 +1,7 @@
 <template>
 <div class="you-lost">
-  Game Over<br><br>
-  <router-link to="gameplay">Restart</router-link>
+  <h1>Game Over</h1>
+  <router-link to="gameplay" class="restart">Restart</router-link>
 </div>
 </template>
 
@@ -11,6 +11,9 @@ export default {};
 
 <style lang="scss">
 .you-lost {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   position: fixed;
   left: 0;
   top: 0;
@@ -22,5 +25,9 @@ export default {};
   background: #333;
   font-size: 36px;
   color: coral;
+}
+
+.restart {
+  color: #ffffff;
 }
 </style>

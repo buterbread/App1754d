@@ -55,7 +55,9 @@ export default {
   }),
   methods: {
     onClick(event) {
-      if (this.$props.item.disabled || this.$store.getters.animationsInProgress) {
+      if (!this.$store.state.gameStarted
+          || this.$props.item.disabled
+          || this.$store.getters.animationsInProgress) {
         return;
       }
 

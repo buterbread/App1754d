@@ -8,6 +8,10 @@ export default {
     state.itemsArray = level.getMap();
   },
 
+  SET_DROPS_COUNTER(state, value) {
+    state.user.currentCount = value;
+  },
+
   RESET_DROPS_COUNTER(state) {
     state.user.currentCount = config.initialDropsCounter;
   },
@@ -64,7 +68,7 @@ export default {
   },
 
   SHIFT_MULTIPLIER_INDEX(state) {
-    if (state.comboMultipliers[state.comboMultiplierIndex + 1]) {
+    if (state.level.comboMultipliers[state.comboMultiplierIndex + 1]) {
       state.comboMultiplierIndex += 1;
     }
   },

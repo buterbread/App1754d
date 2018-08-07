@@ -11,11 +11,9 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     itemsArray: [],
-    dropsCount: 0,
     animationsCounter: 0,
     gameStarted: false,
     dischargesCount: 0,
-    comboMultipliers: [9, 8, 7, 6, 5, 4],
     comboMultiplierIndex: 0,
     combosCount: 0,
   },

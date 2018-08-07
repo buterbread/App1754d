@@ -1,4 +1,5 @@
 import BubbleDefault from '../bubbleDefault';
+import config from './levelsConfig';
 
 class BaseLevel {
   constructor(options) {
@@ -13,7 +14,27 @@ class BaseLevel {
       minItemValue: 0,
       maxItemValue: 4,
       customDrops: [],
+      comboMultipliers: [9, 8, 7, 6, 5],
+      win: (state) => {
+        const { itemsArray } = state;
+        return this.isArrayEmpty(itemsArray);
+      },
+      lost: (state) => {
+        const { itemsArray } = state;
+        return (state.user.currentCount === 0) && !this.isArrayEmpty(itemsArray);
+      },
     };
+  }
+
+  static isArrayEmpty(array) {
+    for (let i = 0; i < array.length; i += 1) {
+      for (let j = 0; j < array[i].length; j += 1) {
+        if (array[i][j].value > 0 && !array[i][j].disabled) {
+          return false;
+        }
+      }
+    }
+    return true;
   }
 
   getRandomValue() {
