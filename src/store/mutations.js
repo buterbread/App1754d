@@ -1,11 +1,13 @@
-import configModule from '../config/gameplay';
-
-const config = configModule();
+import config from '../config/gameplay';
 
 export default {
   GENERATE_ITEMS_ARRAY(state, level) {
     state.level = level;
     state.itemsArray = level.getMap();
+  },
+
+  SET_DROPS_COUNTER(state, value) {
+    state.user.currentCount = value;
   },
 
   RESET_DROPS_COUNTER(state) {
@@ -55,8 +57,16 @@ export default {
     state.dischargesCount = 0;
   },
 
+  INCREASE_COMBOS_COUNT(state, amount = 1) {
+    state.combosCount += amount;
+  },
+
+  RESET_COMBOS_COUNT(state) {
+    state.combosCount = 0;
+  },
+
   SHIFT_MULTIPLIER_INDEX(state) {
-    if (state.comboMultipliers[state.comboMultiplierIndex + 1]) {
+    if (state.level.comboMultipliers[state.comboMultiplierIndex + 1]) {
       state.comboMultiplierIndex += 1;
     }
   },

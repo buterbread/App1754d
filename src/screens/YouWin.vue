@@ -16,7 +16,7 @@ export default {
     getLevel() {
       const { level } = this.$route.params;
 
-      return +level + 1;
+      return (level === 'new') ? 2 : +level + 1;
     },
   },
 };
@@ -29,7 +29,10 @@ export default {
     top: 0;
     width: 100%;
     height: 100%;
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     padding: 50px 20px;
     z-index: 9999;
     background: #fafafa;

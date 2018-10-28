@@ -1,6 +1,4 @@
-import configModule from '../config/gameplay';
-
-const config = configModule();
+import config from '../config/gameplay';
 
 export default {
   namespaced: true,

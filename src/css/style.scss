@@ -6,7 +6,35 @@
 
 html, body {
   margin: 0;
-  font: normal normal 14px/1.4 Helvetica, Arial, sans-serif;
+  font: normal 100 14px/1.4 var(--font-default);
   background: #ffffff;
   height: 100%;
+  color: #b2b2b2;
+}
+
+a {
+  color: #17b6ed;
+  text-decoration: none;
+}
+
+.link {
+  color: #17b6ed;
+  text-decoration: none;
+}
+
+.scene {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  text-align: center;
+  z-index: 9999;
+  background: #ffffff;
+  font-size: 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
 }

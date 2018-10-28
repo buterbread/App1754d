@@ -1,5 +1,4 @@
 import BubbleDefault from '../bubbleDefault';
-import BubbleBobomb from '../bubbleBobomb';
 
 class BaseLevel {
   constructor(options) {
@@ -14,7 +13,27 @@ class BaseLevel {
       minItemValue: 0,
       maxItemValue: 4,
       customDrops: [],
+      comboMultipliers: [9, 8, 7, 6, 5],
+      win: (state) => {
+        const { itemsArray } = state;
+        return this.isArrayEmpty(itemsArray);
+      },
+      lost: (state) => {
+        const { itemsArray } = state;
+        return (state.user.currentCount === 0) && !this.isArrayEmpty(itemsArray);
+      },
     };
+  }
+
+  static isArrayEmpty(array) {
+    for (let i = 0; i < array.length; i += 1) {
+      for (let j = 0; j < array[i].length; j += 1) {
+        if (array[i][j].value > 0 && !array[i][j].disabled) {
+          return false;
+        }
+      }
+    }
+    return true;
   }
 
   getRandomValue() {
@@ -90,7 +109,7 @@ class HexagonalLevel extends BaseLevel {
   constructor(options) {
     super(options);
 
-    Object.assign(this, this.defaults, options);
+    Object.assign(this, this.defaults, { cornerSize: 3 }, options);
   }
 
   getMap() {
@@ -112,76 +131,12 @@ class HexagonalLevel extends BaseLevel {
   }
 }
 
-const config = [{
-  label: 'Level 1-1',
-  index: 1,
-  matrixHeight: 5,
-  matrixWidth: 5,
-  type: 'default',
-  customDrops: [{
-    unitConstructor: BubbleDefault,
-    col: 0,
-    row: 0,
-    options: {
-      disabled: true,
-    },
-  }, {
-    unitConstructor: BubbleBobomb,
-    col: 1,
-    row: 0,
-  }],
-}, {
-  label: 'Level 1-2',
-  index: 2,
-  matrixHeight: 5,
-  type: 'triangle',
-  customDrops: [
-    {
-      unitConstructor: BubbleBobomb,
-      col: 2,
-      row: 2,
-    },
-    {
-      unitConstructor: BubbleBobomb,
-      col: 1,
-      row: 1,
-    },
-  ],
-}, {
-  label: 'Level 1-3',
-  index: 3,
-  matrixHeight: 7,
-  matrixWidth: 7,
-  type: 'hexagon',
-  cornerSize: 3,
-  customDrops: [
-    {
-      unitConstructor: BubbleBobomb,
-      col: 6,
-      row: 6,
-    },
-    {
-      unitConstructor: BubbleBobomb,
-      col: 0,
-      row: 6,
-    },
-  ],
-}, {
-  label: 'Level 1-3',
-  index: 4,
-  matrixHeight: 3,
-  matrixWidth: 3,
-  type: 'default',
-}];
-
 export default function (options) {
-  const levelConfig = config.find(level => level.index === +options.index) || {};
-
   const Level = {
     default: BaseLevel,
     triangle: TriangularLevel,
     hexagon: HexagonalLevel,
-  }[levelConfig.type || 'default'];
+  }[options.type || 'default'];
 
-  return new Level(levelConfig || {});
+  return new Level(options);
 }
