@@ -68,7 +68,7 @@ export default {
 <style lang="scss">
   .combo-monitor {
     position: relative;
-    margin: 20px 20px auto auto;
+    margin: 20px 20px 20px auto;
     text-align: center;
     display: flex;
     align-items: center;

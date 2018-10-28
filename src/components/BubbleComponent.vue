@@ -38,9 +38,7 @@
 
 <script>
 import $ from 'jquery';
-import configModule from '../config/gameplay';
-
-const config = configModule();
+import config from '../config/gameplay';
 
 export default {
   props: ['item'],
@@ -62,6 +60,16 @@ export default {
       }
 
       const { row, col } = event.currentTarget.dataset;
+
+      if (event.shiftKey) {
+        this.$store.state.itemsArray[row][col].value = 4;
+        return;
+      }
+
+      if (event.altKey) {
+        this.$store.state.itemsArray[row][col].value = 0;
+        return;
+      }
 
       this.$store.dispatch('makeUserMove', { row: +row, col: +col });
     },

@@ -1,6 +1,4 @@
-import configModule from '../config/gameplay';
-
-const config = configModule();
+import config from '../config/gameplay';
 
 export default {
   namespaced: true,
@@ -8,11 +6,26 @@ export default {
   state: {
     currentLevel: 1,
     currentCount: config.initialDropsCounter,
+    currentGame: null,
+    currentChapter: null,
+    currentSet: null,
   },
 
   actions: {},
 
   mutations: {
+    SET_CURRENT_GAME(state, game) {
+      state.currentGame = game;
+    },
+
+    SET_CURRENT_CHAPTER(state, chapter) {
+      state.currentChapter = chapter;
+    },
+
+    SET_CURRENT_SET(state, set) {
+      state.currentSet = set;
+    },
+
     SET_CURRENT_LEVEL(state, level) {
       state.currentLevel = level;
     },

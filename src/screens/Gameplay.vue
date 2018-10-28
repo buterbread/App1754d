@@ -2,17 +2,18 @@
   <div>
     <div class="gameplay-screen">
       <drops-counter></drops-counter>
+      <div class="levels-counter">
+        Level: {{ this.$store.state.user.currentLevel }}
+      </div>
       <comboMonitor v-if="this.$store.state.gameStarted"></comboMonitor>
       <playground></playground>
-      <br />
-      Level: {{ this.$store.state.user.currentLevel }}
-      Discharges: {{ this.$store.state.dischargesCount }}
     </div>
 
     <div class="hello-screen" v-if="showHelloScreen">
       <a href="#" v-on:click.prevent="startNewGame" class="start-new-game">Start New Game</a>
       <br />
-      <a href="#" v-on:click.prevent="continueGame" v-if="saveRecord" class="start-new-game">Continue Game</a>
+      <a href="#" v-on:click.prevent="continueGame" v-if="saveRecord"
+        class="start-new-game">Continue Game</a>
     </div>
     <div class="you-lost" v-if="showLostScreen">
       <h1>Game Over</h1>
@@ -31,8 +32,9 @@ import { mapGetters } from 'vuex';
 import dropsCounter from '../components/DropsCounter';
 import playground from '../components/Playground';
 import comboMonitor from '../components/ComboMonitor';
+import config from '../config/gameplay';
 
-const saveRecordName = '__faraBubbleGame1754__';
+const { saveRecordName } = config;
 
 export default {
   name: 'ScreenGameplay',
@@ -79,6 +81,11 @@ export default {
   },
 
   methods: {
+    startSet() {
+      this.$store.dispatch('startNewGame');
+      localStorage.removeItem(saveRecordName);
+    },
+
     startNewGame() {
       this.showHelloScreen = false;
       this.$store.dispatch('startNewGame');
@@ -107,7 +114,7 @@ export default {
     continueGame() {
       this.showHelloScreen = false;
       this.$store.dispatch('continueGame', this.getSaveRecord());
-    }
+    },
   },
 };
 </script>
@@ -123,13 +130,6 @@ export default {
     flex-wrap: wrap;
     align-items: center;
     margin: auto;
-
-    &:before,
-    &:after {
-      content: '';
-      display: table;
-      clear: both;
-    }
   }
 
   .hello-screen {
@@ -190,5 +190,11 @@ export default {
 
   .restart {
     color: #ffffff;
+  }
+
+  .gameplay-footer {
+    text-align: center;
+    margin: auto;
+    clear: both;
   }
 </style>

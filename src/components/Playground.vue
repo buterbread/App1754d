@@ -1,5 +1,6 @@
 <template>
   <div :class="['playground-box']">
+    <h1>123</h1>
     <div :class="['playground-row']" v-for="(itemRow, rowIndex) in itemsArray"
          v-bind:key="itemRow.id">
       <item v-for="(item, colIndex) in itemRow"
@@ -30,7 +31,7 @@ export default {
 .playground-box {
   position: relative;
   width: 100%;
-  margin: 20px auto 0;
+  margin: 0 auto;
   font-size: 0;
 }
 

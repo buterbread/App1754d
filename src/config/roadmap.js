@@ -1,38 +1,50 @@
-const roadmap = [
-  { id: 'chapter1', available: true },
-  { id: 'chapter2', available: false },
-  { id: 'chapter3', available: false },
-];
+import endlessChapters from '../config/endlessChapters';
+import relaxChapters from '../config/relaxChapters';
 
-const chapters = {
-  chapter1: {
-    label: 'Chapter 1',
-    available: false,
-    length: 12,
-    sets: [
-      {
-        id: 'set1',
-        label: 'Set 1',
-        available: false,
-        length: 12,
-        levels: [{
-          index: 1,
-          id: 'level1',
-          available: false,
-        },
-        {
-          index: 2,
-          id: 'level1',
-          available: false,
-        },
-        {
-          index: 3,
-          id: 'level1',
-          available: false,
-        }],
-      },
-    ],
-  },
-};
+const roadmap = [{
+  loop: true,
+  type: 'relax',
+  label: 'Relax',
+  chaptersConfig: relaxChapters,
+  index: 1,
+  chaptersMap: [
+    { id: 'relaxChapter1', available: true },
+  ],
+},
+{
+  loop: false,
+  type: 'endless',
+  label: 'Endless',
+  index: 2,
+  chaptersConfig: endlessChapters,
+  chaptersMap: [
+    { id: 'endlessChapter1', available: true },
+    { id: 'endlessChapter2', available: true },
+  ],
+},
+{
+  loop: false,
+  type: 'puzzle',
+  label: 'Puzzle',
+  index: 3,
+  chaptersMap: [
+    { id: 'puzzleChapter1', available: true },
+    { id: 'puzzleChapter2', available: false },
+    { id: 'puzzleChapter3', available: false },
+    { id: 'puzzleChapter4', available: false },
+  ],
+},
+{
+  loop: false,
+  type: 'tactics',
+  label: 'Tactics',
+  index: 4,
+  chaptersMap: [
+    { id: 'tacticsChapter1', available: true },
+    { id: 'tacticsChapter2', available: false },
+    { id: 'tacticsChapter3', available: false },
+    { id: 'tacticsChapter4', available: false },
+  ],
+}];
 
 export default roadmap;

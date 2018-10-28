@@ -1,26 +1,130 @@
 <template>
-<div class="hello-screen">
-  <router-link to="gameplay/new">New Game</router-link>
-  <router-link to="gameplay/new">Continue</router-link>
+<div>
+  <gameModesMenu v-if="showGameModesMenu"></gameModesMenu>
+  <chaptersMenu v-if="showChaptersMenu"></chaptersMenu>
+  <setsMenu v-if="showSetsMenu"></setsMenu>
+  <div class="scene scene_playground" v-if="gameStarted">
+      <playground></playground>
+  </div>
 </div>
 </template>
 
 <script>
-export default {};
+import { mapState, mapGetters } from 'vuex';
+import gameModesMenu from './gameModesMenu';
+import chaptersMenu from './chaptersMenu';
+import setsMenu from './setsMenu';
+import playground from '../components/Playground';
+
+export default {
+  components: {
+    gameModesMenu,
+    chaptersMenu,
+    setsMenu,
+    playground,
+  },
+  methods: {
+    isLastLevel() {
+      return this.user.currentLevel.index + 1 === this.user.currentSet.levelsLength;
+    },
+
+    isLastSet() {
+      return this.user.currentSet.index + 1 === this.user.currentChapter.setsLength;
+    },
+
+    isLastChapter() {
+      return this.currentChapter.index + 1 === this.currentGame.chaptersMap.length;
+    },
+  },
+  watch: {
+    levelPassed(value) {
+      if (!value) {
+        return;
+      }
+
+      if (this.user.currentSet.loop) {
+        this.$store.dispatch('startSet', this.currentSet.index);
+        return;
+      }
+
+      if (this.isLastChapter() && this.isLastSet() && this.isLastLevel()) {
+        this.$store.dispatch('startChapter', 0);
+        return;
+      }
+
+      if (this.isLastSet() && this.isLastLevel()) {
+        this.$store.dispatch('startChapter', this.currentChapter.index + 1);
+        return;
+      }
+
+      if (this.isLastLevel()) {
+        this.$store.dispatch('startSet', this.currentSet.index + 1);
+        return;
+      }
+
+      this.$store.dispatch('startNextLevel');
+    },
+  },
+  computed: {
+    ...mapState({
+      showGameModesMenu: state => state.sceneController.showGameModesMenu,
+      showChaptersMenu: state => state.sceneController.showChaptersMenu,
+      showSetsMenu: state => state.sceneController.showSetsMenu,
+      gameStarted: state => state.gameStarted,
+      currentGame: state => state.user.currentGame,
+      currentChapter: state => state.user.currentChapter,
+      currentSet: state => state.user.currentSet,
+      user: state => state.user,
+    }),
+    ...mapGetters([
+      'levelPassed',
+    ]),
+  },
+};
 </script>
 
 <style lang="scss">
-.hello-screen {
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  padding: 50px 20px;
-  z-index: 9999;
-  background: #ffffff;
-  font-size: 36px;
-  color: cornflowerblue;
+.scene_playground {
+  padding-left: 5px;
+  padding-right: 5px
 }
+
+.home-screen__header {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.home-screen__settings-link {
+  font-size: 24px;
+}
+
+.main-menu {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.main-menu__list {
+  display: block;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.main-menu__item {
+  display: block;
+  font-size: 36px;
+  line-height: 70px;
+  text-transform: uppercase;
+}
+
+.main-menu__item-link {
+  cursor: pointer;
+
+  &[disabled] {
+    opacity: .5;
+  }
+}
+
 </style>

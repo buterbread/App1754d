@@ -1,5 +1,4 @@
 import BubbleDefault from '../bubbleDefault';
-import config from './levelsConfig';
 
 class BaseLevel {
   constructor(options) {
@@ -110,7 +109,7 @@ class HexagonalLevel extends BaseLevel {
   constructor(options) {
     super(options);
 
-    Object.assign(this, this.defaults, options);
+    Object.assign(this, this.defaults, { cornerSize: 3 }, options);
   }
 
   getMap() {
@@ -133,14 +132,11 @@ class HexagonalLevel extends BaseLevel {
 }
 
 export default function (options) {
-  const config = [];
-  const levelCfg = config.find(level => level.index === +options.index) || { type: 'default' };
-
   const Level = {
     default: BaseLevel,
     triangle: TriangularLevel,
     hexagon: HexagonalLevel,
-  }[levelCfg.type || 'default'];
+  }[options.type || 'default'];
 
-  return new Level(levelCfg || {});
+  return new Level(options);
 }
