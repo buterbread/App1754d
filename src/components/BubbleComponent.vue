@@ -1,45 +1,85 @@
 <template>
-  <div v-bind:class="['item-box', item.type ]"
-       v-on:click.prevent="onClick"
-       v-bind:disabled="item.disabled">
-    <div class="item-bgr"></div>
-    <div v-bind:value="item.value"
-         v-bind:class="{ item, 'pop-animation': item.isPopAnimationActive }">
+  <div v-bind:class="['item-box', item.type ]" v-bind:disabled="item.disabled">
+    <div class="effector" v-on:click.prevent="onClick">
+      <div class="effector__field"></div>
+    </div>
+    <div class="item-bgr-box">
+      <div class="item-bgr"></div>
+    </div>
+    <div class="item-wrapper">
+      <div v-bind:value="item.value"
+           v-bind:class="{ item, 'pop-animation': item.isPopAnimationActive }">
+      </div>
     </div>
 
-    <div class="drop-passage-anim-box">
-      <transition v-on:enter="dropPassageHorizontal">
-        <div class="drop-passage left" v-if="getDirectionAnimState('left')"></div>
-      </transition>
-      <transition v-on:enter="dropPassageDiagonal">
-        <div class="drop-passage top-left" v-if="getDirectionAnimState('topLeft')"></div>
-      </transition>
-      <transition v-on:enter="dropPassageVertical">
-        <div class="drop-passage top" v-if="getDirectionAnimState('top')"></div>
-      </transition>
-      <transition v-on:enter="dropPassageDiagonal">
-        <div class="drop-passage top-right" v-if="getDirectionAnimState('topRight')"></div>
-      </transition>
-      <transition v-on:enter="dropPassageHorizontal">
-        <div class="drop-passage right" v-if="getDirectionAnimState('right')"></div>
-      </transition>
-      <transition v-on:enter="dropPassageDiagonal">
-        <div class="drop-passage bottom-right" v-if="getDirectionAnimState('bottomRight')"></div>
-      </transition>
-      <transition v-on:enter="dropPassageVertical">
-        <div class="drop-passage bottom" v-if="getDirectionAnimState('bottom')"></div>
-      </transition>
-      <transition v-on:enter="dropPassageDiagonal">
-        <div class="drop-passage bottom-left" v-if="getDirectionAnimState('bottomLeft')"></div>
-      </transition>
+    <div class="drop-passage-anim-wrapper">
+      <div class="drop-passage-anim-box">
+        <div class="drop-rail vertical to-top" v-if="getDirectionAnimState('top')">
+          <div class="drop-platform">
+            <span class="drop-box">
+              <i class="drop"></i>
+            </span>
+          </div>
+        </div>
+        <div class="drop-rail horizontal to-right" v-if="getDirectionAnimState('right')">
+          <div class="drop-platform">
+            <span class="drop-box">
+              <i class="drop"></i>
+            </span>
+          </div>
+        </div>
+        <div class="drop-rail vertical to-bottom" v-if="getDirectionAnimState('bottom')">
+          <div class="drop-platform">
+            <span class="drop-box">
+              <i class="drop"></i>
+            </span>
+          </div>
+        </div>
+        <div class="drop-rail horizontal to-left" v-if="getDirectionAnimState('left')">
+          <div class="drop-platform">
+            <span class="drop-box">
+              <i class="drop"></i>
+            </span>
+          </div>
+        </div>
+
+        <div class="drop-rail diagonal to-top-right" v-if="getDirectionAnimState('topRight')">
+          <div class="drop-platform">
+            <span class="drop-box">
+              <i class="drop"></i>
+            </span>
+          </div>
+        </div>
+
+        <div class="drop-rail diagonal to-bottom-right" v-if="getDirectionAnimState('bottomRight')">
+          <div class="drop-platform">
+            <span class="drop-box">
+              <i class="drop"></i>
+            </span>
+          </div>
+        </div>
+
+        <div class="drop-rail diagonal to-bottom-left" v-if="getDirectionAnimState('bottomLeft')">
+          <div class="drop-platform">
+            <span class="drop-box">
+              <i class="drop"></i>
+            </span>
+          </div>
+        </div>
+
+        <div class="drop-rail diagonal to-top-left" v-if="getDirectionAnimState('topLeft')">
+          <div class="drop-platform">
+            <span class="drop-box">
+              <i class="drop"></i>
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import $ from 'jquery';
-import config from '../config/gameplay';
-
 export default {
   props: ['item'],
   computed: {
@@ -47,44 +87,29 @@ export default {
       return this.$props.item.value;
     },
   },
-  data: () => ({
-    itemWidth: 0,
-    itemHeight: 0,
-  }),
   methods: {
     onClick(event) {
       if (!this.$store.state.gameStarted
-          || this.$props.item.disabled
+          || !this.$props.item.canReceiveUserInput
           || this.$store.getters.animationsInProgress) {
         return;
       }
 
-      const { row, col } = event.currentTarget.dataset;
+      const { row, col } = event.currentTarget.parentNode.dataset;
 
-      if (event.shiftKey) {
+      if (event.shiftKey) { ///DEV_MODE
         this.$store.state.itemsArray[row][col].value = 4;
         return;
       }
 
-      if (event.altKey) {
+      if (event.altKey) { ///DEV_MODE
         this.$store.state.itemsArray[row][col].value = 0;
         return;
       }
 
       this.$store.dispatch('makeUserMove', { row: +row, col: +col });
     },
-    dropPassageHorizontal(el) {
-      const level = this.$store.state.level;
-      $(el).animate({ width: level.matrixWidth * this.itemWidth }, level.matrixWidth * config.dropInjectionDelay, 'linear');
-    },
-    dropPassageVertical(el) {
-      const level = this.$store.state.level;
-      $(el).animate({ height: level.matrixHeight * this.itemHeight }, level.matrixHeight * config.dropInjectionDelay, 'linear');
-    },
-    dropPassageDiagonal(el) {
-      const level = this.$store.state.level;
-      $(el).animate({ height: Math.floor(level.matrixHeight * this.itemHeight * 1.41) }, level.matrixHeight * config.dropInjectionDelay, 'linear');
-    },
+
     getDirectionAnimState(direction) {
       const { level } = this.$store.state;
 
@@ -95,26 +120,558 @@ export default {
         return false;
       }
 
-      if (level.type === 'triangle') {
-        const cellIsOdd = !!((+this.$el.dataset.col + 1) % 2);
-
-        if (cellIsOdd) {
-          return currentDirection.forOddCell && currentDirection.animation;
-        }
-
-        return currentDirection.forEvenCell && currentDirection.animation;
-      }
-
       return currentDirection.animation;
     },
-  },
-  mounted() {
-    this.itemHeight = this.$el.offsetHeight;
-    this.itemWidth = this.$el.offsetWidth;
   },
 };
 </script>
 
 <style lang="scss">
+/*
+.playground-row {
+  .item-box:not(:nth-child(8)) {
+    .drop-passage-anim-box {
+      display: none;
+    }
+  }
+}
+
+.playground-row:not(:nth-child(7)) {
+  .item-box {
+    .drop-passage-anim-box {
+      display: none;
+    }
+  }
+}
+
+.drop-rail {
+  background: rgba(#17b6ed, 0.3);
+}
+//*/
+
+:root {
+  --item-width: 40px;
+  --item-height: 40px;
+  --matrix-width: 9;
+  --matrix-height: 9;
+  --drop-passage-delay: 200;
+}
+
+.drop-rail {
+  position: absolute;
+
+  &.vertical {
+    transform-origin: center 0;
+    width: var(--item-width);
+    height: calc(var(--item-height) * (var(--matrix-height) - 1));
+
+    .drop-platform {
+      animation-name: 'drop-passage-vertical';
+      animation-duration: calc(var(--drop-passage-delay) * (var(--matrix-height) - 1) * 1ms);
+    }
+
+    .drop-box {
+      width: 100%;
+      height: 0;
+    }
+  }
+
+  &.horizontal {
+    transform-origin: 0 center;
+    width: calc(var(--item-width) * (var(--matrix-width) - 1));
+    height: var(--item-height);
+
+    .drop-platform {
+      animation-name: 'drop-passage-horizontal';
+      animation-duration: calc(var(--drop-passage-delay) * (var(--matrix-width) - 1) * 1ms);
+    }
+
+    .drop-box {
+      width: 0;
+      height: 100%;
+    }
+  }
+
+  &.diagonal {
+    transform-origin: center 0;
+    width: var(--item-width);
+    height: calc(var(--item-height) * (var(--matrix-height) - 1) * 1.4142);
+
+    .drop-platform {
+      animation-name: 'drop-passage-vertical';
+      animation-duration: calc(var(--drop-passage-delay) * (var(--matrix-height) - 1) * 1ms);
+    }
+
+    .drop-box {
+      width: 100%;
+      height: 0;
+    }
+  }
+
+  &.to-top {
+    top: calc(var(--item-height) / 2);
+    left: 0;
+    transform: rotate(180deg);
+  }
+
+  &.to-right {
+    top: 0;
+    left: calc(var(--item-width) / 2);
+  }
+
+  &.to-left {
+    top: 0;
+    left: calc(var(--item-width) / 2);
+    transform: rotate(180deg);
+  }
+
+  &.to-bottom {
+    top: calc(var(--item-height) / 2);
+    left: 0;
+  }
+
+  &.to-top-right {
+    top: calc(var(--item-height) / 2);
+    left: 0;
+    transform: rotate(225deg);
+  }
+
+  &.to-bottom-right {
+    top: calc(var(--item-height) / 2);
+    left: 0;
+    transform: rotate(315deg);
+  }
+
+  &.to-bottom-left {
+    top: calc(var(--item-height) / 2);
+    left: 0;
+    transform: rotate(45deg);
+  }
+
+  &.to-top-left {
+    top: calc(var(--item-height) / 2);
+    left: 0;
+    transform: rotate(135deg);
+  }
+}
+
+.drop-platform {
+  position: absolute;
+  display: flex;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  animation-timing-function: linear;
+  animation-delay: 0ms;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  backface-visibility: hidden;
+}
+
+.drop-box {
+  display: flex;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+}
+
+.drop {
+  display: block;
+  min-width: 20px;
+  min-height: 20px;
+  border-radius: 50%;
+  background: #EFBF2E;
+}
+
+@keyframes drop-passage-horizontal {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes drop-passage-vertical {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+.item-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  vertical-align: top;
+  position: relative;
+  width: var(--item-width);
+  height: var(--item-height);
+  border-radius: 50%;
+  box-sizing: border-box;
+  user-select: none;
+
+  &.bobomb {
+    .item-bgr {
+      border: 1px solid chocolate;
+    }
+
+    .item {
+      background-color: chocolate;
+    }
+  }
+
+  &.invisible-wall {
+    display: none;
+  }
+}
+
+.effector {
+  position: relative;
+  width: 0;
+  height: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.effector__field {
+  width: var(--item-width);
+  height: var(--item-height);
+  min-width: var(--item-width);
+  min-height: var(--item-height);
+  cursor: pointer;
+}
+
+.item-bgr-box {
+  width: 0;
+  height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.item-bgr {
+  position: absolute;
+  border: 1px solid #2EEFBF;
+  z-index: 1;
+  width: var(--item-width);
+  height: var(--item-height);
+  min-width: var(--item-width);
+  min-height: var(--item-height);
+  border-radius: 50%;
+  margin: auto;
+}
+
+.item-wrapper {
+  width: 0;
+  height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.item {
+  display: block;
+  z-index: 1;
+  width: var(--item-width);
+  height: var(--item-height);
+  min-width: var(--item-width);
+  min-height: var(--item-height);
+  background: #17b6ed;
+  border-radius: 50%;
+  transition: all 0.2s ease 0s;
+
+  &[value="0"] {
+    transform: scale(0);
+    opacity: 0;
+  }
+
+  &[value="1"] {
+    transform: scale(0.25);
+  }
+
+  &[value="2"] {
+    transform: scale(0.5);
+  }
+
+  &[value="3"] {
+    transform: scale(0.75);
+  }
+
+  &[value="4"] {
+    transform: scale(1);
+  }
+
+  &.pop-animation {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+.drop-passage-anim-wrapper {
+  width: 0;
+  height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.drop-passage-anim-box {
+  width: var(--item-width);
+  height: var(--item-height);
+  min-width: var(--item-width);
+  min-height: var(--item-height);
+  z-index: 10;
+  position: relative;
+}
+
+.playground-box.hexagon {
+  --item-width: 38px;
+
+  .playground-row {
+    margin: -4px 0 -4px 0;
+  }
+
+  .item-box {
+    width: var(--item-width);
+    height: var(--item-height);
+  }
+
+  .item-bgr {
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 0;
+    border: none;
+    background-image: url("../assets/bgr-hexagon.svg");
+    background-size: 100% 100%;
+  }
+
+  .item {
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    //background-image: url("../assets/bgr-hexagon.svg");
+  }
+
+  .drop-rail {
+    &.vertical,
+    &.diagonal {
+      height: calc((var(--item-height) - 4px) * (var(--matrix-height) - 1) * 1.1547);
+    }
+
+    &.to-top {
+      transform: rotate(210deg);
+    }
+
+    &.to-bottom {
+      transform: rotate(30deg);
+    }
+
+    &.to-top-left {
+      transform: rotate(150deg);
+    }
+
+    &.to-bottom-right {
+      transform: rotate(330deg);
+    }
+  }
+}
+
+.playground-box.triangle {
+  --item-height: 50px;
+  --item-width: 60px;
+
+  .playground-row {
+    &:nth-of-type(odd) {
+      .item-box {
+        &:nth-of-type(odd) {
+          .effector {
+            transform: scaleY(2) rotate(180deg);
+            top: var(--item-height);
+          }
+
+          .item-bgr {
+            background-position: center bottom;
+          }
+
+          .item {
+            background-position: center bottom;
+
+            &[value="1"] {
+              transform: translateY(-12%) scale(0.25);
+            }
+
+            &[value="2"] {
+              transform: translateY(-9%) scale(0.5);
+            }
+
+            &[value="3"] {
+              transform: translateY(-5%) scale(0.75);
+            }
+          }
+        }
+      }
+    }
+
+    &:nth-of-type(even) {
+      .item-box {
+        &:nth-of-type(even) {
+          .effector {
+            transform: scaleY(2) rotate(180deg);
+            top: var(--item-height);
+          }
+
+          .item-bgr {
+            background-position: center bottom;
+          }
+
+          .item {
+            background-position: center bottom;
+
+            &[value="1"] {
+              transform: translateY(-12%) scale(0.25);
+            }
+
+            &[value="2"] {
+              transform: translateY(-9%) scale(0.5);
+            }
+
+            &[value="3"] {
+              transform: translateY(-5%) scale(0.75);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .item-box {
+    width: 0;
+    margin: 0 calc(var(--item-width) / 4);
+  }
+
+  .item-bgr {
+    z-index: -1;
+    border: none;
+    border-radius: 0;
+    background-image: url("../assets/bgr-triangle.svg");
+    background-position: center top;
+    background-repeat: no-repeat;
+  }
+
+  .item {
+    z-index: -1;
+    border-radius: 0;
+    background-color: transparent;
+    background-image: url("../assets/img-item-triangle.svg");
+    background-position: center top;
+    background-repeat: no-repeat;
+
+    &[value="1"] {
+      transform: translateY(12%) scale(0.25);
+    }
+
+    &[value="2"] {
+      transform: translateY(9%) scale(0.5);
+    }
+
+    &[value="3"] {
+      transform: translateY(5%) scale(0.75);
+    }
+  }
+
+  .effector {
+    transform: scaleY(2);
+    margin-bottom: auto;
+  }
+
+  .effector__field {
+    height: var(--item-height);
+    width: var(--item-width);
+    min-height: var(--item-height);
+    min-width: var(--item-width);
+    transform: perspective(17px) rotateX(45deg) scaleY(30);
+    transform-origin: center bottom;
+  }
+
+  .drop-platform {
+    animation-duration: calc(var(--drop-passage-delay) * 2.2 * (var(--matrix-height) - 1) * 1ms);
+  }
+
+  .playground-row {
+    &:nth-of-type(odd) {
+      .item-box {
+        &:nth-of-type(odd) {
+          .drop-rail {
+            &.to-right {
+              width: calc(var(--item-height) * (var(--matrix-height) - 1) * 1.23);
+              transform: rotate(59deg) translate(-4px, -8px);
+            }
+
+            &.to-left {
+              width: calc(var(--item-height) * (var(--matrix-height) - 1) * 1.23);
+              transform: rotate(121deg) translate(-4px, 8px);
+            }
+          }
+        }
+        &:nth-of-type(even) {
+          .drop-rail {
+            &.to-right {
+              width: calc(var(--item-height) * (var(--matrix-height) - 1) * 1.23);
+              transform: rotate(-59deg) translate(-4px, 8px);
+            }
+
+            &.to-left {
+              width: calc(var(--item-height) * (var(--matrix-height) - 1) * 1.23);
+              transform: rotate(-121deg) translate(-4px, -8px);
+            }
+          }
+        }
+      }
+    }
+
+    &:nth-of-type(even) {
+      .item-box {
+        &:nth-of-type(odd) {
+          .drop-rail {
+            &.to-right {
+              width: calc(var(--item-height) * (var(--matrix-height) - 1) * 1.23);
+              transform: rotate(-59deg) translate(-4px, 8px);
+            }
+
+            &.to-left {
+              width: calc(var(--item-height) * (var(--matrix-height) - 1) * 1.23);
+              transform: rotate(-121deg) translate(-4px, -8px);
+            }
+          }
+        }
+        &:nth-of-type(even) {
+          .drop-rail {
+            &.to-right {
+              width: calc(var(--item-height) * (var(--matrix-height) - 1) * 1.23);
+              transform: rotate(59deg) translate(-4px, -8px);
+            }
+
+            &.to-left {
+              width: calc(var(--item-height) * (var(--matrix-height) - 1) * 1.23);
+              transform: rotate(121deg) translate(-4px, 8px);
+            }
+          }
+        }
+      }
+    }
+  }
+
+}
 
 </style>

@@ -1,4 +1,12 @@
-import BubbleDefault from '../bubbleDefault';
+import BubbleDefault from './bubbleDefault';
+import BubbleBobomb from './bubbleBobomb';
+import InvisibleWall from './invisibleWall';
+
+const constructorsMap = () => ({
+  BubbleDefault,
+  BubbleBobomb,
+  InvisibleWall,
+});
 
 class BaseLevel {
   constructor(options) {
@@ -60,7 +68,7 @@ class BaseLevel {
         options.value = this.getRandomValue();
       }
 
-      const Constructor = customDrop.unitConstructor || BubbleDefault;
+      const Constructor = constructorsMap()[customDrop.unitConstructor] || BubbleDefault;
 
       map[row][col] = new Constructor(options);
     });
@@ -85,20 +93,15 @@ class BaseLevel {
 }
 
 class TriangularLevel extends BaseLevel {
-  constructor(options) {
-    super(options);
-    this.matrixWidth = (this.matrixHeight * 2) - 1;
-  }
   generateRandomDefaultArray() {
-    const itemsArray = [];
-    for (let i = 0; i < this.matrixHeight; i += 1) {
-      const itemsRow = [];
-      itemsRow.id = Math.random().toString(36).substr(2, 9);
-      for (let j = 0; j < ((i * 2) + 1); j += 1) {
-        const col = new BubbleDefault({ value: this.getRandomValue() });
-        itemsRow.push(col);
+    const itemsArray = super.generateRandomDefaultArray();
+
+    for (let i = 0; i < itemsArray.length; i += 1) {
+      const threshold = Math.floor(itemsArray[i].length / 2) - i;
+      for (let j = 0; j < threshold; j += 1) {
+        itemsArray[i][j] = new InvisibleWall();
+        itemsArray[i][itemsArray[i].length - j - 1] = new InvisibleWall();
       }
-      itemsArray.push(itemsRow);
     }
 
     return itemsArray;
@@ -109,7 +112,7 @@ class HexagonalLevel extends BaseLevel {
   constructor(options) {
     super(options);
 
-    Object.assign(this, this.defaults, { cornerSize: 3 }, options);
+    Object.assign(this, this.defaults, { cornerSize: 4 }, options);
   }
 
   getMap() {
@@ -117,13 +120,13 @@ class HexagonalLevel extends BaseLevel {
 
     for (let i = 0; i < this.cornerSize; i += 1) {
       for (let j = this.cornerSize - i; j > 0; j -= 1) {
-        map[i][this.matrixWidth - j].disabled = true;
+        map[i][this.matrixWidth - j] = new InvisibleWall();
       }
     }
 
     for (let i = 0; i < this.cornerSize; i += 1) {
       for (let j = this.cornerSize - i; j > 0; j -= 1) {
-        map[this.matrixHeight - 1 - i][j - 1].disabled = true;
+        map[this.matrixHeight - 1 - i][j - 1] = new InvisibleWall();
       }
     }
 

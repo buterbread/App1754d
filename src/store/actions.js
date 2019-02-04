@@ -1,6 +1,6 @@
 import config from '../config/gameplay';
 import roadmap from '../config/roadmap';
-import levelConstructor from '../config/levelConstructor';
+import levelConstructor from '../levelConstructor';
 
 const { saveRecordName } = config;
 
@@ -80,6 +80,10 @@ export default {
   startLevel(context) {
     const { user } = context.state;
     context.commit('GENERATE_ITEMS_ARRAY', levelConstructor(user.currentLevel));
+    const { level } = context.state;
+
+    document.documentElement.style.setProperty('--matrix-width', level.matrixWidth, '');
+    document.documentElement.style.setProperty('--matrix-height', level.matrixHeight, '');
   },
 
   startNextLevel(context) {
@@ -144,7 +148,7 @@ export default {
     const unit = items[row][col];
 
     const unitEmitters = unit.emitters[level.type];
-  
+
     unitEmitters.forEach((emitter) => {
       context.commit('INCREASE_ANIMS_COUNTER', null, { root: true });
       context.dispatch('emitterDischarge', { row, col, emitter });
@@ -154,6 +158,12 @@ export default {
       context.dispatch('increaseCombo');
     }
   },
+
+  increaseItemValue(context, options) {
+    context.commit('INCREASE_ITEM', options);
+  },
+
+  wallImpact() {},
 
   increaseCombo(context) {
     context.commit('INCREASE_DISCHARGES_COUNT', 1);

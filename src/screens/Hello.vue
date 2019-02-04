@@ -42,8 +42,8 @@ export default {
         return;
       }
 
-      if (this.user.currentSet.loop) {
-        this.$store.dispatch('startSet', this.currentSet.index);
+      if (this.user.currentSet.loop && this.isLastLevel()) {
+        this.$store.dispatch('startSet', 0);
         return;
       }
 

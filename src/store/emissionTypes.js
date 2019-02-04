@@ -1,31 +1,37 @@
 import config from '../config/gameplay';
 
+function isIndexEven(entity) {
+  return ((entity + 1) % 2) > 0;
+}
+
 export default {
   namespaced: true,
 
   actions: {
     explodeNearest(context, options) {
       const { rootState, dispatch, commit } = context;
-      const { level, itemsArray: items } = rootState;
+      const { itemsArray: items } = rootState;
 
       const row = options.row + options.emitter.top;
       const col = options.col + options.emitter.left;
 
-      if (!items[row] || !items[row][col]) {
+      const item = items[row][col];
+
+      if (!items[row] || !item || item.isWall) {
         dispatch('stopDropPassageAnimation', options, { root: true });
         return;
       }
 
       dispatch('startDropPassageAnimation', options, { root: true });
 
-      if (items[row][col].disabled) {
+      if (item.disabled) {
         dispatch('stopDropPassageAnimation', options, { root: true });
         return;
       }
 
       setTimeout(() => {
-        if (items[row][col].value !== 0 && !items[row][col].disabled) {
-          commit('INCREASE_ITEM', { row, col, amount: level.maxItemValue }, { root: true });
+        if (item.value !== 0) {
+          commit('INCREASE_ITEM', { row, col, amount: item.maxItemValue }, { root: true });
         }
         dispatch('stopDropPassageAnimation', options, { root: true });
         dispatch('attemptToPopBubble', { row, col, addBonusDrop: true }, { root: true });
@@ -33,25 +39,26 @@ export default {
     },
 
     tillImpact(context, options) {
-      const { rootState, dispatch, commit } = context;
-      const { level, itemsArray: items } = rootState;
+      const { rootState, dispatch } = context;
+      const { itemsArray: items } = rootState;
 
       const initialItemCords = options.initialItemCords || options;
 
       const row = options.row + options.emitter.top;
       const col = options.col + options.emitter.left;
 
-      if (!items[row] || !items[row][col]) {
+      if (!items[row] || !items[row][col] || items[row][col].isWall) {
         dispatch('stopDropPassageAnimation', initialItemCords, { root: true });
         return;
       }
 
+      const item = items[row][col];
+
       dispatch('startDropPassageAnimation', options, { root: true });
 
-      const top = options.emitter.top;
-      const left = options.emitter.left;
+      const { top, left } = options.emitter;
 
-      if (items[row][col].value === level.minItemValue || items[row][col].disabled) {
+      if (item.value === item.minItemValue || !item.canReceiveImpact) {
         let newTop;
         let newLeft;
 
@@ -86,8 +93,77 @@ export default {
       }
 
       setTimeout(() => {
-        if (items[row][col].value !== 0 && !items[row][col].disabled) {
-          commit('INCREASE_ITEM', { row, col }, { root: true });
+        if (items[row][col].value !== 0) {
+          dispatch(items[row][col].impactCallback, { row, col }, { root: true });
+        }
+        dispatch('stopDropPassageAnimation', initialItemCords, { root: true });
+        dispatch('attemptToPopBubble', { row, col, addBonusDrop: true }, { root: true });
+      }, config.dropInjectionDelay);
+    },
+
+    tillImpactTriangle(context, options) {
+      const { rootState, dispatch } = context;
+      const { itemsArray: items } = rootState;
+
+      const initialItemCords = options.initialItemCords || options;
+
+      const row = options.row + options.emitter.top;
+      const col = options.col + options.emitter.left;
+
+      if (!items[row] || !items[row][col] || items[row][col].isWall) {
+        dispatch('stopDropPassageAnimation', initialItemCords, { root: true });
+        return;
+      }
+
+      const item = items[row][col];
+
+      dispatch('startDropPassageAnimation', options, { root: true });
+
+      const { top, left } = options.emitter;
+
+      if (item.value === item.minItemValue || !item.canReceiveImpact) {
+        let newTop;
+        let newLeft;
+        const newShift = !options.emitter.shift;
+
+        if (newShift) {
+          newLeft = left;
+
+          if (isIndexEven(options.row)) {
+            newTop = isIndexEven(options.col) ? top + 1 : top - 1;
+          } else {
+            newTop = isIndexEven(options.col) ? top - 1 : top + 1;
+          }
+        } else {
+          newTop = top;
+
+          if (left === 0) {
+            newLeft = left;
+          } else if (left < 0) {
+            newLeft = left - 1;
+          } else {
+            newLeft = left + 1;
+          }
+        }
+
+        setTimeout(() => {
+          dispatch('tillImpactTriangle', {
+            row: options.row,
+            col: options.col,
+            emitter: {
+              top: newTop,
+              left: newLeft,
+              shift: newShift,
+            },
+            initialItemCords,
+          });
+        }, config.dropInjectionDelay);
+        return;
+      }
+
+      setTimeout(() => {
+        if (items[row][col].value !== 0) {
+          dispatch(items[row][col].impactCallback, { row, col }, { root: true });
         }
         dispatch('stopDropPassageAnimation', initialItemCords, { root: true });
         dispatch('attemptToPopBubble', { row, col, addBonusDrop: true }, { root: true });

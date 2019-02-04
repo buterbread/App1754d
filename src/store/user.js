@@ -4,7 +4,7 @@ export default {
   namespaced: true,
 
   state: {
-    currentLevel: 1,
+    currentLevel: null,
     currentCount: config.initialDropsCounter,
     currentGame: null,
     currentChapter: null,

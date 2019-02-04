@@ -95,9 +95,9 @@ export default {
   border: 1px solid #46b9ea;
   width: 50px;
   height: 50px;
-  border-radius: 15px;
-  font-size: 14px;
-  line-height: 54px;
+  border-radius: 50%;
+  font-size: 18px;
+  line-height: 48px;
   padding: 0 10px;
   white-space: nowrap;
 

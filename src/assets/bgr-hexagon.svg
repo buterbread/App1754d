@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="38" height="40" viewBox="0 0 38 40">
+  <defs>
+    <style>
+      .hexagon-1 {
+        fill: #ccc;
+        fill-opacity: 0;
+        stroke: #2EEFBF;
+        stroke-linejoin: miter;
+        stroke-width: 1px;
+        fill-rule: evenodd;
+      }
+    </style>
+  </defs>
+  <path id="hexagon-1" data-name="hexagon-1" class="hexagon-1" d="M19,0L37,10V30L19,40,1,30V10Z"/>
+</svg>
