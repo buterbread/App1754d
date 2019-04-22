@@ -27,13 +27,6 @@ export default {
       this.$store.commit('sceneController/HIDE_CHAPTERS_MENU');
     },
   },
-  created() {
-    if (this.chapters.length === 1) {
-      this.$store.dispatch('setChapter', this.game.chapters[0].id);
-      this.$store.commit('sceneController/SHOW_SETS_MENU');
-      this.$store.commit('sceneController/HIDE_CHAPTERS_MENU');
-    }
-  },
   computed: {
     chapters() {
       return this.game.chapters;

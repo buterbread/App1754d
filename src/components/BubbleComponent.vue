@@ -1,5 +1,7 @@
 <template>
-  <div v-bind:class="['item-box', item.type ]" v-bind:disabled="item.disabled">
+  <div
+    :class="['item-box', item.type ]"
+    :disabled="item.disabled">
     <div class="effector" v-on:click.prevent="onClick">
       <div class="effector__field"></div>
     </div>
@@ -7,8 +9,10 @@
       <div class="item-bgr"></div>
     </div>
     <div class="item-wrapper">
-      <div v-bind:value="item.value"
-           v-bind:class="{ item, 'pop-animation': item.isPopAnimationActive }">
+      <div :value="item.value"
+           :class="{ item, 'pop-animation': item.isPopAnimationActive }"
+           :style="itemStyle"
+      >
       </div>
     </div>
 
@@ -76,45 +80,80 @@
         </div>
       </div>
     </div>
+
+    <div class="select-wrapper" v-if="item.selected">
+      <div class="select"></div>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  props: ['item'],
+  props: ['row', 'col'],
   computed: {
-    theValue() {
-      return this.$props.item.value;
+    itemStyle() {
+      const { row, col } = this.$props;
+      const { maxItemValue, value } = this.item;
+      const { level } = this.$store.state;
+
+      let style = {
+        transform: `scale(${(value / maxItemValue)})`,
+      };
+
+      if (level.type === 'triangle') {
+        let initialOffsetY = 9;
+        let offsetY;
+
+        if (row % 2 === 0) {
+          initialOffsetY = (col % 2 === 0) ? initialOffsetY * -1 : initialOffsetY;
+        } else {
+          initialOffsetY = (col % 2 !== 0) ? initialOffsetY * -1 : initialOffsetY;
+        }
+
+        if (value === maxItemValue) {
+          offsetY = 0;
+        } else {
+          offsetY = initialOffsetY / value;
+        }
+
+        style = {
+          transform: `translateY(${offsetY}%) scale(${(value / maxItemValue)})`,
+        };
+      }
+
+      if (value === 0) {
+        style = {
+          transform: 'scale(0)',
+          opacity: 0,
+        };
+      }
+
+      return style;
+    },
+
+    item() {
+      const { row, col } = this.$props;
+      return this.$store.state.itemsArray[row][col];
     },
   },
   methods: {
     onClick(event) {
-      if (!this.$store.state.gameStarted
-          || !this.$props.item.canReceiveUserInput
-          || this.$store.getters.animationsInProgress) {
-        return;
-      }
-
       const { row, col } = event.currentTarget.parentNode.dataset;
+      const { shiftKey, altKey } = event;
 
-      if (event.shiftKey) { ///DEV_MODE
-        this.$store.state.itemsArray[row][col].value = 4;
-        return;
-      }
-
-      if (event.altKey) { ///DEV_MODE
-        this.$store.state.itemsArray[row][col].value = 0;
-        return;
-      }
-
-      this.$store.dispatch('makeUserMove', { row: +row, col: +col });
+      this.$store.dispatch('executeUserAction', {
+        row: +row,
+        col: +col,
+        shiftKey,
+        altKey,
+      });
     },
 
     getDirectionAnimState(direction) {
       const { level } = this.$store.state;
 
       const currentDirection =
-          this.$props.item.emitters[level.type].find(dir => dir.label === direction);
+        this.item.emitters[level.type].find(dir => dir.label === direction);
 
       if (!currentDirection || !this.$el) {
         return false;
@@ -129,14 +168,14 @@ export default {
 <style lang="scss">
 /*
 .playground-row {
-  .item-box:not(:nth-child(8)) {
+  .item-box:not(:nth-child(5)) {
     .drop-passage-anim-box {
       display: none;
     }
   }
 }
 
-.playground-row:not(:nth-child(7)) {
+.playground-row:not(:nth-child(9)) {
   .item-box {
     .drop-passage-anim-box {
       display: none;
@@ -268,6 +307,8 @@ export default {
   animation-iteration-count: 1;
   animation-fill-mode: forwards;
   backface-visibility: hidden;
+
+  will-change: transform;
 }
 
 .drop-box {
@@ -316,16 +357,6 @@ export default {
   box-sizing: border-box;
   user-select: none;
 
-  &.bobomb {
-    .item-bgr {
-      border: 1px solid chocolate;
-    }
-
-    .item {
-      background-color: chocolate;
-    }
-  }
-
   &.invisible-wall {
     display: none;
   }
@@ -359,13 +390,12 @@ export default {
 
 .item-bgr {
   position: absolute;
-  border: 1px solid #2EEFBF;
   z-index: 1;
   width: var(--item-width);
   height: var(--item-height);
   min-width: var(--item-width);
   min-height: var(--item-height);
-  border-radius: 50%;
+  background-image: url("../assets/bgr-rectangle.svg");
   margin: auto;
 }
 
@@ -384,34 +414,13 @@ export default {
   height: var(--item-height);
   min-width: var(--item-width);
   min-height: var(--item-height);
-  background: #17b6ed;
-  border-radius: 50%;
-  transition: all 0.2s ease 0s;
-
-  &[value="0"] {
-    transform: scale(0);
-    opacity: 0;
-  }
-
-  &[value="1"] {
-    transform: scale(0.25);
-  }
-
-  &[value="2"] {
-    transform: scale(0.5);
-  }
-
-  &[value="3"] {
-    transform: scale(0.75);
-  }
-
-  &[value="4"] {
-    transform: scale(1);
-  }
+  background-image: url("../assets/img-rectangle-item.svg");
+  transition: transform 0.2s, opacity 0.2s;
 
   &.pop-animation {
-    transform: scale(2);
-    opacity: 0;
+    transform: scale(2)!important;
+    opacity: 0!important;
+    will-change: transform;
   }
 }
 
@@ -428,12 +437,77 @@ export default {
   height: var(--item-height);
   min-width: var(--item-width);
   min-height: var(--item-height);
-  z-index: 10;
+  z-index: 15;
   position: relative;
 }
 
+.select-wrapper {
+  width: 0;
+  height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.select {
+  width: var(--item-width);
+  height: var(--item-height);
+  min-width: var(--item-width);
+  min-height: var(--item-height);
+  z-index: 10;
+  position: relative;
+
+  background: url("../assets/bgr-rectangle-select.svg");
+}
+
 .playground-box.hexagon {
-  --item-width: 38px;
+  .select {
+    background-image: url("../assets/bgr-hexagon-selected.svg");
+  }
+}
+
+.playground-box.triangle {
+  .select {
+    background-image: url("../assets/bgr-triangle-selected.svg");
+  }
+
+  .playground-row {
+    &:nth-of-type(odd) {
+      .item-box {
+        &:nth-of-type(odd) {
+          .select {
+            background-position: 0 bottom;
+          }
+        }
+        &:nth-of-type(even) {
+          .select {
+            background-position: 0 0;
+          }
+        }
+      }
+    }
+    &:nth-of-type(even) {
+      .item-box {
+        &:nth-of-type(odd) {
+          .select {
+            background-position: 0 0;
+          }
+        }
+        &:nth-of-type(even) {
+          .select {
+            background-position: 0 bottom;
+          }
+        }
+      }
+    }
+  }
+}
+
+.playground-box.hexagon {
+  --item-width: 40px;
+  --item-height: 42px;
+
+  padding: 4px 0;
 
   .playground-row {
     margin: -4px 0 -4px 0;
@@ -460,29 +534,32 @@ export default {
     top: 0;
     right: 0;
     bottom: 0;
-    //background-image: url("../assets/bgr-hexagon.svg");
+    border-radius: 0;
+    background-color: transparent;
+    background-image: url("../assets/img-hexagon-item.svg");
+    background-size: 100% 100%;
   }
 
   .drop-rail {
     &.vertical,
     &.diagonal {
-      height: calc((var(--item-height) - 4px) * (var(--matrix-height) - 1) * 1.1547);
+      height: calc((var(--item-height) - 4px) * (var(--matrix-height) - 1) * 1.04);
     }
 
     &.to-top {
-      transform: rotate(210deg);
+      transform: rotate(210.5deg);
     }
 
     &.to-bottom {
-      transform: rotate(30deg);
+      transform: rotate(30.5deg);
     }
 
     &.to-top-left {
-      transform: rotate(150deg);
+      transform: rotate(149.5deg);
     }
 
     &.to-bottom-right {
-      transform: rotate(330deg);
+      transform: rotate(329.5deg);
     }
   }
 }
@@ -506,18 +583,6 @@ export default {
 
           .item {
             background-position: center bottom;
-
-            &[value="1"] {
-              transform: translateY(-12%) scale(0.25);
-            }
-
-            &[value="2"] {
-              transform: translateY(-9%) scale(0.5);
-            }
-
-            &[value="3"] {
-              transform: translateY(-5%) scale(0.75);
-            }
           }
         }
       }
@@ -537,18 +602,6 @@ export default {
 
           .item {
             background-position: center bottom;
-
-            &[value="1"] {
-              transform: translateY(-12%) scale(0.25);
-            }
-
-            &[value="2"] {
-              transform: translateY(-9%) scale(0.5);
-            }
-
-            &[value="3"] {
-              transform: translateY(-5%) scale(0.75);
-            }
           }
         }
       }
@@ -576,18 +629,6 @@ export default {
     background-image: url("../assets/img-item-triangle.svg");
     background-position: center top;
     background-repeat: no-repeat;
-
-    &[value="1"] {
-      transform: translateY(12%) scale(0.25);
-    }
-
-    &[value="2"] {
-      transform: translateY(9%) scale(0.5);
-    }
-
-    &[value="3"] {
-      transform: translateY(5%) scale(0.75);
-    }
   }
 
   .effector {
@@ -600,7 +641,7 @@ export default {
     width: var(--item-width);
     min-height: var(--item-height);
     min-width: var(--item-width);
-    transform: perspective(17px) rotateX(45deg) scaleY(30);
+    transform: perspective(24px) rotateX(45deg) scaleY(30);
     transform-origin: center bottom;
   }
 
@@ -671,7 +712,45 @@ export default {
       }
     }
   }
+}
 
+.default {
+  .item-box {
+    &.bobomb {
+      .item-bgr {
+        background-image: url("../assets/bgr-rectangle-bobomb.svg");
+      }
+      .item {
+        background-image: url("../assets/img-rectangle-item-bobomb.svg");
+      }
+    }
+  }
+}
+
+.hexagon {
+  .item-box {
+    &.bobomb {
+      .item-bgr {
+        background-image: url("../assets/bgr-hexagon-bobomb.svg");
+      }
+      .item {
+        background-image: url("../assets/img-hexagon-item-bobomb.svg");
+      }
+    }
+  }
+}
+
+.triangle {
+  .item-box {
+    &.bobomb {
+      .item-bgr {
+        background-image: url("../assets/bgr-triangle-bobomb.svg");
+      }
+      .item {
+        background-image: url("../assets/img-item-triangle-bobomb.svg");
+      }
+    }
+  }
 }
 
 </style>

@@ -39,7 +39,6 @@ export default {
 
 <style lang="scss">
 .drops-counter {
-  margin: 20px auto 20px 20px;
   font-size: 20px;
   line-height: 60px;
   width: 60px;

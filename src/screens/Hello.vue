@@ -1,40 +1,36 @@
 <template>
 <div>
-  <gameModesMenu v-if="showGameModesMenu"></gameModesMenu>
-  <chaptersMenu v-if="showChaptersMenu"></chaptersMenu>
-  <setsMenu v-if="showSetsMenu"></setsMenu>
-  <div class="scene scene_playground" v-if="gameStarted">
-      <playground></playground>
-  </div>
+  <you-lost v-if="showLostScreen"></you-lost>
+  <you-win v-if="showWinScreen"></you-win>
+  <template v-if="!gameStarted">
+    <game-modes-menu v-if="showGameModesMenu"></game-modes-menu>
+    <chapters-menu v-if="showChaptersMenu"></chapters-menu>
+    <sets-menu v-if="showSetsMenu"></sets-menu>
+  </template>
+  <gameplay v-if="gameStarted"></gameplay>
+  <fast-relax v-if="showFastRelax"></fast-relax>
 </div>
 </template>
 
 <script>
 import { mapState, mapGetters } from 'vuex';
-import gameModesMenu from './gameModesMenu';
-import chaptersMenu from './chaptersMenu';
-import setsMenu from './setsMenu';
-import playground from '../components/Playground';
+import gameModesMenu from './GameModesMenu';
+import chaptersMenu from './ChaptersMenu';
+import setsMenu from './SetsMenu';
+import youWin from './YouWin';
+import youLost from './YouLost';
+import gameplay from './Gameplay';
+import fastRelax from './FastRelax';
 
 export default {
   components: {
+    youLost,
+    youWin,
+    gameplay,
     gameModesMenu,
     chaptersMenu,
     setsMenu,
-    playground,
-  },
-  methods: {
-    isLastLevel() {
-      return this.user.currentLevel.index + 1 === this.user.currentSet.levelsLength;
-    },
-
-    isLastSet() {
-      return this.user.currentSet.index + 1 === this.user.currentChapter.setsLength;
-    },
-
-    isLastChapter() {
-      return this.currentChapter.index + 1 === this.currentGame.chaptersMap.length;
-    },
+    fastRelax,
   },
   watch: {
     levelPassed(value) {
@@ -42,89 +38,121 @@ export default {
         return;
       }
 
-      if (this.user.currentSet.loop && this.isLastLevel()) {
-        this.$store.dispatch('startSet', 0);
+      this.$store.dispatch('applyLevelReward');
+      this.$store.commit('sceneController/SHOW_WIN_SCREEN', true);
+    },
+    noMoreMoves(value) {
+      if (!value) {
         return;
       }
 
-      if (this.isLastChapter() && this.isLastSet() && this.isLastLevel()) {
-        this.$store.dispatch('startChapter', 0);
-        return;
-      }
+      this.$store.commit('user/LOCK_USER_INPUT');
+      this.$store.dispatch('applyLevelPenalty');
+      this.$store.dispatch('dropSave');
 
-      if (this.isLastSet() && this.isLastLevel()) {
-        this.$store.dispatch('startChapter', this.currentChapter.index + 1);
-        return;
-      }
-
-      if (this.isLastLevel()) {
-        this.$store.dispatch('startSet', this.currentSet.index + 1);
-        return;
-      }
-
-      this.$store.dispatch('startNextLevel');
+      setTimeout(() => {
+        this.$store.dispatch('stopGame');
+        this.$store.commit('sceneController/SHOW_LOST_SCREEN');
+      }, 1000);
     },
   },
   computed: {
     ...mapState({
+      showWinScreen: state => state.sceneController.showWinScreen,
+      showLostScreen: state => state.sceneController.showLostScreen,
       showGameModesMenu: state => state.sceneController.showGameModesMenu,
       showChaptersMenu: state => state.sceneController.showChaptersMenu,
       showSetsMenu: state => state.sceneController.showSetsMenu,
       gameStarted: state => state.gameStarted,
-      currentGame: state => state.user.currentGame,
-      currentChapter: state => state.user.currentChapter,
-      currentSet: state => state.user.currentSet,
       user: state => state.user,
+      showFastRelax: state => state.sceneController.showFastRelax,
     }),
     ...mapGetters([
       'levelPassed',
+      'noMoreMoves',
     ]),
   },
 };
 </script>
 
 <style lang="scss">
-.scene_playground {
-  padding-left: 5px;
-  padding-right: 5px
-}
-
-.home-screen__header {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.home-screen__settings-link {
-  font-size: 24px;
-}
-
-.main-menu {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.main-menu__list {
-  display: block;
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-}
-
-.main-menu__item {
-  display: block;
-  font-size: 36px;
-  line-height: 70px;
-  text-transform: uppercase;
-}
-
-.main-menu__item-link {
-  cursor: pointer;
-
-  &[disabled] {
-    opacity: .5;
+  .scene_playground {
+    padding-left: 0;
+    padding-right: 0;
   }
-}
 
+  .gameplay-screen {
+    width: 375px;
+    min-width: 320px;
+    height: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    margin: auto;
+  }
+
+  .gameplay-screen__top {
+    display: flex;
+    width: 100%;
+    padding: 0 20px;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .gameplay-screen__middle {
+    flex-grow: 1;
+    width: 100%;
+    display: flex;
+    align-items: center;
+  }
+
+  .gameplay-screen__bottom {
+    height: 60px;
+    width: 100%;
+    display: flex;
+  }
+
+  .levels-counter {
+    font-size: 14px;
+    color: #333;
+  }
+
+  .home-screen__header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .home-screen__settings-link {
+    font-size: 24px;
+  }
+
+  .main-menu {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .main-menu__list {
+    display: block;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .main-menu__item {
+    display: block;
+    font-size: 36px;
+    line-height: 70px;
+    text-transform: uppercase;
+  }
+
+  .main-menu__item-link {
+    cursor: pointer;
+
+    &[disabled] {
+      opacity: .5;
+    }
+  }
 </style>

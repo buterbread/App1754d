@@ -1,23 +1,59 @@
 <template>
   <div class="you-win">
-    <router-link :to=nextLvlLink>Next Level &gt;</router-link>
+    <a v-on:click.prevent="startNextLevel">Next Level &gt;</a>
   </div>
 </template>
 
 <script>
-export default {
-  data() {
-    return {
-      show: false,
-      nextLvlLink: `gameplay/${this.getLevel()}`,
-    };
-  },
-  methods: {
-    getLevel() {
-      const { level } = this.$route.params;
+import { mapState } from 'vuex';
 
-      return (level === 'new') ? 2 : +level + 1;
+export default {
+  methods: {
+    isLastLevel() {
+      return this.user.currentLevel.index + 1 === this.user.currentSet.levelsLength;
     },
+
+    isLastSet() {
+      return this.user.currentSet.index + 1 === this.user.currentChapter.setsLength;
+    },
+
+    isLastChapter() {
+      return this.currentChapter.index + 1 === this.currentGame.chaptersMap.length;
+    },
+
+    startNextLevel() {
+      this.$store.commit('sceneController/SHOW_WIN_SCREEN', false);
+
+      if (this.user.currentSet.loop && this.isLastLevel()) {
+        this.$store.dispatch('startSet', { setIndex: 0, levelIndex: 0 });
+        return;
+      }
+
+      if (this.isLastChapter() && this.isLastSet() && this.isLastLevel()) {
+        this.$store.dispatch('startChapter', { chapterIndex: 0 });
+        return;
+      }
+
+      if (this.isLastSet() && this.isLastLevel()) {
+        this.$store.dispatch('startChapter', { chapterIndex: this.currentChapter.index + 1 });
+        return;
+      }
+
+      if (this.isLastLevel()) {
+        this.$store.dispatch('startSet', { setIndex: this.currentSet.index + 1, levelIndex: 0 });
+        return;
+      }
+
+      this.$store.dispatch('startNextLevel');
+    },
+  },
+  computed: {
+    ...mapState({
+      currentGame: state => state.user.currentGame,
+      currentChapter: state => state.user.currentChapter,
+      currentSet: state => state.user.currentSet,
+      user: state => state.user,
+    }),
   },
 };
 </script>
@@ -34,7 +70,7 @@ export default {
     justify-content: center;
     align-items: center;
     padding: 50px 20px;
-    z-index: 9999;
+    z-index: 10000;
     background: #fafafa;
     font-size: 36px;
     color: mediumseagreen;

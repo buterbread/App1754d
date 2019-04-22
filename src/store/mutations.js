@@ -23,6 +23,48 @@ export default {
     state.itemsArray[row][col].value += amount;
   },
 
+  SELECT_ITEM(state, options) {
+    const { row, col } = options;
+    state.itemsArray[row][col].selected = true;
+  },
+
+  DESELECT_ITEM(state, options) {
+    const { row, col } = options;
+    state.itemsArray[row][col].selected = false;
+  },
+
+  SET_SELECTED_ITEMS_LIMIT(state, value) {
+    state.selectedItemsLimit = value;
+  },
+
+  SET_DIALOG_CONFIRM_ACTION(state, value) {
+    state.dialogOnConfirmAction = value;
+  },
+
+  CLEAR_DIALOG_CONFIRM_ACTION(state) {
+    state.dialogOnConfirmAction = null;
+  },
+
+  SET_DIALOG_CANCEL_ACTION(state, value) {
+    state.dialogOnCancelAction = value;
+  },
+
+  CLEAR_DIALOG_CANCEL_ACTION(state) {
+    state.dialogOnCancelAction = null;
+  },
+
+  ADD_ITEM_TO_SELECTION_CACHE(state, options) {
+    const { row, col } = options;
+    const name = `item-${row}-${col}`;
+    state.selectedItemsCache[name] = { row, col };
+  },
+
+  REMOVE_ITEM_FROM_SELECTION_CACHE(state, options) {
+    const { row, col } = options;
+    const name = `item-${row}-${col}`;
+    delete state.selectedItemsCache[name];
+  },
+
   RESET_ITEM_VALUE(state, options) {
     const { row, col, value } = options;
     state.itemsArray[row][col].value = value;

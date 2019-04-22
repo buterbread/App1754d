@@ -24,6 +24,11 @@ export default {
 
     menuItemClick(event) {
       const { key } = event.target.dataset;
+
+      if (key === 'relax') {
+        this.$store.dispatch('startRelax');
+      }
+
       this.$store.dispatch('setGameMode', key);
     },
   },

@@ -5,7 +5,11 @@
       <template v-if="combosCount > 0">+{{combosCount}}</template>
     </div>
     <svg :width="chartRadius * 2" :height="chartRadius * 2" class="combo-chart">
-      <circle :r="chartRadius" :cx="chartRadius" :cy="chartRadius" class="combo-chart__pie"
+      <circle
+        :r="chartRadius"
+        :cx="chartRadius"
+        :cy="chartRadius"
+        :class="{'combo-chart__pie': true, animated: chart.dash > 0}"
         :style="`stroke-dasharray: ${chart.dash}, ${chart.gap};`"></circle>
     </svg>
   </div>
@@ -52,9 +56,7 @@ export default {
       }
 
       this.resetter = setTimeout(() => {
-        this.$store.commit('RESET_DISCHARGES_COUNT');
-        this.$store.commit('RESET_COMBOS_COUNT');
-        this.$store.commit('RESET_MULTIPLIER_INDEX');
+        this.$store.dispatch('resetComboMonitor');
       }, 3000);
     },
 
@@ -68,7 +70,6 @@ export default {
 <style lang="scss">
   .combo-monitor {
     position: relative;
-    margin: 20px 20px 20px auto;
     text-align: center;
     display: flex;
     align-items: center;
@@ -142,7 +143,10 @@ export default {
     stroke: #17b6ed;
     stroke-width: 10;
     stroke-dasharray: 0 128;
-    transition: stroke-dasharray .3s ease;
+
+    &.animated {
+      transition: stroke-dasharray .3s ease;
+    }
   }
 
 </style>

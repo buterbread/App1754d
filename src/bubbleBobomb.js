@@ -18,10 +18,8 @@ class BubbleBobomb extends BubbleDefault {
         { top: 1, left: 1, label: 'bottomRight', animation: false, emissionType: 'explodeNearest' },
       ],
       triangle: [
-        { top: 0, left: -1, label: 'left', animation: false, emissionType: 'explodeNearest', forOddCell: true, forEvenCell: true },
-        { top: 0, left: 1, label: 'right', animation: false, emissionType: 'explodeNearest', forOddCell: true, forEvenCell: true },
-        { top: -1, left: -1, label: 'topLeft', animation: false, emissionType: 'explodeNearest', forOddCell: false, forEvenCell: true },
-        { top: 1, left: 1, label: 'bottomRight', animation: false, emissionType: 'explodeNearest', forOddCell: true, forEvenCell: false },
+        { top: 0, left: -1, label: 'left', animation: false, emissionType: 'explodeNearest' },
+        { top: 0, left: 1, label: 'right', animation: false, emissionType: 'explodeNearest' },
       ],
       hexagon: [
         { top: 0, left: -1, label: 'left', animation: false, emissionType: 'explodeNearest' },
@@ -29,7 +27,7 @@ class BubbleBobomb extends BubbleDefault {
         { top: 0, left: 1, label: 'right', animation: false, emissionType: 'explodeNearest' },
         { top: 1, left: 0, label: 'bottom', animation: false, emissionType: 'explodeNearest' },
         { top: -1, left: -1, label: 'topLeft', animation: false, emissionType: 'explodeNearest' },
-        { top: 1, left: -1, label: 'bottomRight', animation: false, emissionType: 'explodeNearest' },
+        { top: 1, left: 1, label: 'bottomRight', animation: false, emissionType: 'explodeNearest' },
       ],
     };
   }

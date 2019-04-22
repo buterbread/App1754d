@@ -1,200 +1,159 @@
 <template>
-  <div>
+  <div class="scene scene_playground">
     <div class="gameplay-screen">
-      <drops-counter></drops-counter>
-      <div class="levels-counter">
-        Level: {{ this.$store.state.user.currentLevel }}
+      <div class="gameplay-screen__top">
+        <drops-counter></drops-counter>
+        <div class="levels-counter">
+          Level: {{ this.user.totalFinishedLevelsCount + 1 }}
+        </div>
+        <comboMonitor></comboMonitor>
       </div>
-      <comboMonitor v-if="this.$store.state.gameStarted"></comboMonitor>
-      <playground></playground>
-    </div>
-
-    <div class="hello-screen" v-if="showHelloScreen">
-      <a href="#" v-on:click.prevent="startNewGame" class="start-new-game">Start New Game</a>
-      <br />
-      <a href="#" v-on:click.prevent="continueGame" v-if="saveRecord"
-        class="start-new-game">Continue Game</a>
-    </div>
-    <div class="you-lost" v-if="showLostScreen">
-      <h1>Game Over</h1>
-      <a href="#" v-on:click.prevent="restart" class="restart">Restart</a>
-    </div>
-    <div class="you-win" v-if="showWinScreen">
-      <a href="#"
-         v-on:click.prevent="nextLevel"
-         class="next-level">Level {{ this.$store.state.user.currentLevel + 1}}</a>
+      <div class="gameplay-screen__middle">
+        <playground></playground>
+      </div>
+      <div class="gameplay-screen__bottom">
+        <template v-if="!showConfirmationDialog">
+          <button
+            :disabled="!bobomsAvailable"
+            v-on:click="onAddBobombClick"
+            class="btn btn_add-bobomb"
+          >Add Bobomb {{bobombs}}</button>
+          <button
+            :disabled="!swapsAvailable"
+            v-on:click="onSwapItemsClick"
+            class="btn btn_swap-items"
+          >Swap Items {{swaps}}</button>
+        </template>
+        <template v-if="showConfirmationDialog">
+          <button
+            v-on:click="onDialogCancel"
+            class="btn btn_cancel"
+          >Nooo!..</button>
+          <button
+            v-on:click="onDialogConfirm"
+            class="btn btn_ok"
+          >Yeah Baby</button>
+        </template>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 import dropsCounter from '../components/DropsCounter';
-import playground from '../components/Playground';
 import comboMonitor from '../components/ComboMonitor';
-import config from '../config/gameplay';
-
-const { saveRecordName } = config;
+import playground from '../components/Playground';
 
 export default {
-  name: 'ScreenGameplay',
   components: {
     dropsCounter,
-    playground,
     comboMonitor,
+    playground,
   },
-
-  data() {
-    return {
-      showHelloScreen: true,
-      showWinScreen: false,
-      showLostScreen: false,
-      saveRecord: this.getSaveRecord(),
-    };
-  },
-
-  computed: {
-    ...mapGetters([
-      'youLost',
-      'youWin',
-    ]),
-  },
-
-  watch: {
-    youLost(value) {
-      if (!value) {
-        return;
-      }
-
-      this.$store.dispatch('stopGame');
-      setTimeout(() => { this.showLostScreen = true; }, 1000);
-    },
-    youWin(value) {
-      if (!value) {
-        return;
-      }
-      this.$store.commit('ADD_USER_DROP', 1);
-      this.$store.dispatch('stopGame');
-      this.$store.dispatch('saveProgress');
-      setTimeout(() => { this.showWinScreen = true; }, 500);
-    },
-  },
-
   methods: {
-    startSet() {
-      this.$store.dispatch('startNewGame');
-      localStorage.removeItem(saveRecordName);
+    onAddBobombClick() {
+      this.$store.commit('user/SET_USER_INPUT_MODE', 'selectionMode');
+      this.$store.commit('user/SET_CONTINUOUS_SELECTION_MODE', true);
+      this.$store.commit('SET_SELECTED_ITEMS_LIMIT', 1);
+      this.$store.commit('sceneController/SHOW_CONFIRMATION_DIALOG');
+      this.$store.commit('SET_DIALOG_CONFIRM_ACTION', 'placeUsersBobobmb');
+    },
+    onSwapItemsClick() {
+      this.$store.commit('user/SET_USER_INPUT_MODE', 'selectionMode');
+      this.$store.commit('SET_SELECTED_ITEMS_LIMIT', 2);
+      this.$store.commit('sceneController/SHOW_CONFIRMATION_DIALOG');
+      this.$store.commit('SET_DIALOG_CONFIRM_ACTION', 'swapSelectedItems');
     },
 
-    startNewGame() {
-      this.showHelloScreen = false;
-      this.$store.dispatch('startNewGame');
-      localStorage.removeItem(saveRecordName);
+    onDialogCancel() {
+      this.$store.dispatch('executeDialogCancelAction');
+      this.$store.commit('sceneController/HIDE_CONFIRMATION_DIALOG');
+      this.$store.dispatch('clearSelection');
+      this.$store.commit('user/SET_CONTINUOUS_SELECTION_MODE', false);
+      this.$store.commit('user/SET_USER_INPUT_MODE', 'default');
     },
 
-    restart() {
-      this.showLostScreen = false;
-      this.$store.dispatch('startNewGame');
+    onDialogConfirm() {
+      this.$store.dispatch('executeDialogConfirmAction');
+      this.$store.commit('sceneController/HIDE_CONFIRMATION_DIALOG');
+      this.$store.dispatch('clearSelection');
+      this.$store.commit('user/SET_CONTINUOUS_SELECTION_MODE', false);
+      this.$store.commit('user/SET_USER_INPUT_MODE', 'default');
     },
-
-    nextLevel() {
-      this.showWinScreen = false;
-      this.$store.dispatch('startNextLevel');
-    },
-
-    getSaveRecord() {
-      const saveRecord = localStorage.getItem(saveRecordName);
-      if (saveRecord) {
-        return JSON.parse(saveRecord);
-      }
-
-      return false;
-    },
-
-    continueGame() {
-      this.showHelloScreen = false;
-      this.$store.dispatch('continueGame', this.getSaveRecord());
-    },
+  },
+  computed: {
+    ...mapState({
+      user: state => state.user,
+      bobombs: state => state.inventory.bobombs,
+      swaps: state => state.inventory.swaps,
+      showConfirmationDialog: state => state.sceneController.showConfirmationDialog,
+    }),
+    ...mapGetters({
+      bobomsAvailable: 'inventory/bobomsAvailable',
+      swapsAvailable: 'inventory/swapsAvailable',
+    }),
   },
 };
 </script>
 
 <style lang="scss">
-  .gameplay-screen {
-    width: 375px;
-    min-width: 320px;
-    height: 100%;
-    position: relative;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: center;
-    margin: auto;
-  }
-
-  .hello-screen {
-    position: fixed;
-    display: flex;
-    align-items: center;
+  .gameplay-screen__bottom {
+    padding: 0 10px;
     justify-content: center;
-    flex-direction: column;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    text-align: center;
-    padding: 50px 20px;
-    z-index: 9999;
-    background: #ffffff;
-    font-size: 36px;
-    color: cornflowerblue;
+
+    .btn {
+      flex: 1 1 0;
+      margin: auto 10px;
+      max-width: 50%;
+    }
   }
 
-  .you-win {
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 50px 20px;
-    z-index: 9999;
-    background: #fafafa;
-    font-size: 36px;
-    color: mediumseagreen;
-  }
-
-  .next-level {
-    text-decoration: none;
-  }
-
-  .you-lost {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    text-align: center;
-    padding: 50px 20px;
-    z-index: 9999;
-    background: #333;
-    font-size: 36px;
-    color: coral;
-  }
-
-  .restart {
+  .btn_add-bobomb {
+    display: block;
+    padding: 10px 20px;
+    border-radius: 9999px;
+    background-color: chocolate;
     color: #ffffff;
+    margin: auto;
+    font-size: 14px;
+    border: none;
   }
 
-  .gameplay-footer {
-    text-align: center;
+  .btn_swap-items {
+    display: block;
+    padding: 10px 20px;
+    border-radius: 9999px;
+    background-color: chocolate;
+    color: #ffffff;
     margin: auto;
-    clear: both;
+    font-size: 14px;
+    border: none;
+  }
+
+  .btn_cancel {
+    display: block;
+    padding: 10px 20px;
+    border-radius: 9999px;
+    background-color: #ffffff;
+    color: chocolate;
+    margin: auto;
+    font-size: 14px;
+    border: 3px solid #ff8040;
+  }
+
+  .btn_ok {
+    display: block;
+    padding: 10px 20px;
+    border-radius: 9999px;
+    background-color: #ffffff;
+    color: #1f991f;
+    margin: auto;
+    font-size: 14px;
+    border: 3px solid #1f991f;
+  }
+
+  .btn[disabled] {
+    opacity: 0.5;
   }
 </style>

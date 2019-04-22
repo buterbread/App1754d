@@ -6,6 +6,7 @@ import getters from './getters';
 import user from './user';
 import emissions from './emissionTypes';
 import sceneController from './sceneController';
+import inventory from './inventory';
 
 Vue.use(Vuex);
 
@@ -17,11 +18,16 @@ export default new Vuex.Store({
     dischargesCount: 0,
     comboMultiplierIndex: 0,
     combosCount: 0,
+    selectedItemsCache: {},
+    selectedItemsLimit: null,
+    dialogOnConfirmAction: null,
+    dialogOnCancelAction: null,
   },
   modules: {
     user,
     emissions,
     sceneController,
+    inventory,
   },
   actions,
   mutations,

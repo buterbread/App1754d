@@ -1,15 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="38" height="40" viewBox="0 0 38 40">
+<svg id="bgr-hexagon.svg" xmlns="http://www.w3.org/2000/svg" width="40" height="42" viewBox="0 0 40 42">
   <defs>
     <style>
-      .hexagon-1 {
-        fill: #ccc;
-        fill-opacity: 0;
-        stroke: #2EEFBF;
-        stroke-linejoin: miter;
-        stroke-width: 1px;
+      .cls-1 {
+        fill: none;
+      }
+
+      .cls-2 {
+        fill: #2eefbf;
         fill-rule: evenodd;
       }
     </style>
   </defs>
-  <path id="hexagon-1" data-name="hexagon-1" class="hexagon-1" d="M19,0L37,10V30L19,40,1,30V10Z"/>
+  <rect id="boundingbox" class="cls-1" width="40" height="42"/>
+  <path id="hexagon" class="cls-2" d="M47,217.005l19,10.011v22l-19,9.989-19-9.989v-22Zm0,1,18,9.438V248.5L47,258l-18-9.5V227.438Z" transform="translate(-27 -217)"/>
 </svg>

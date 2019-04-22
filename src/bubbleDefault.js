@@ -18,6 +18,8 @@ class BubbleDefault {
       movable: true,
       rotatable: true,
       swappable: true,
+      selected: false,
+      selectable: true,
 
       emitters: {
         default: [
@@ -42,6 +44,11 @@ class BubbleDefault {
     };
 
     Object.assign(this, defaults, options);
+
+    if (!options || !options.value) {
+      this.value = Math.floor(Math.random() * ((this.maxItemValue - this.minItemValue) + 1))
+        + this.minItemValue;
+    }
 
     this.id = Math.random().toString(36).substr(2, 9);
   }

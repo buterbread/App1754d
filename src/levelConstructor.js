@@ -2,7 +2,7 @@ import BubbleDefault from './bubbleDefault';
 import BubbleBobomb from './bubbleBobomb';
 import InvisibleWall from './invisibleWall';
 
-const constructorsMap = () => ({
+const ConstructorsMap = () => ({
   BubbleDefault,
   BubbleBobomb,
   InvisibleWall,
@@ -18,18 +18,20 @@ class BaseLevel {
       type: 'default',
       matrixHeight: 9,
       matrixWidth: 9,
-      minItemValue: 0,
-      maxItemValue: 4,
       customDrops: [],
       comboMultipliers: [9, 8, 7, 6, 5],
       win: (state) => {
         const { itemsArray } = state;
         return this.isArrayEmpty(itemsArray);
       },
+      winReward: (context) => {
+        context.commit('ADD_USER_DROP', 1);
+      },
       lost: (state) => {
         const { itemsArray } = state;
-        return (state.user.currentCount === 0) && !this.isArrayEmpty(itemsArray);
+        return (state.user.currentCount <= 0) && !this.isArrayEmpty(itemsArray);
       },
+      lostPenalty: () => {},
     };
   }
 
@@ -42,11 +44,6 @@ class BaseLevel {
       }
     }
     return true;
-  }
-
-  getRandomValue() {
-    return Math.floor(Math.random() *
-        ((this.maxItemValue - this.minItemValue) + 1)) + this.minItemValue;
   }
 
   getMap() {
@@ -64,11 +61,7 @@ class BaseLevel {
         options = {},
       } = customDrop;
 
-      if (!options.value) {
-        options.value = this.getRandomValue();
-      }
-
-      const Constructor = constructorsMap()[customDrop.unitConstructor] || BubbleDefault;
+      const Constructor = ConstructorsMap()[customDrop.unitConstructor] || BubbleDefault;
 
       map[row][col] = new Constructor(options);
     });
@@ -76,13 +69,14 @@ class BaseLevel {
     return map;
   }
 
-  generateRandomDefaultArray() {
+  generateRandomDefaultArray(options = {}) {
     const itemsArray = [];
     for (let i = 0; i < this.matrixHeight; i += 1) {
       const itemsRow = [];
       itemsRow.id = Math.random().toString(36).substr(2, 9);
       for (let j = 0; j < this.matrixWidth; j += 1) {
-        const col = new BubbleDefault({ value: this.getRandomValue() });
+        const col = new BubbleDefault(options);
+
         itemsRow.push(col);
       }
       itemsArray.push(itemsRow);
@@ -94,7 +88,9 @@ class BaseLevel {
 
 class TriangularLevel extends BaseLevel {
   generateRandomDefaultArray() {
-    const itemsArray = super.generateRandomDefaultArray();
+    const itemsArray = super.generateRandomDefaultArray({
+      maxItemValue: 2,
+    });
 
     for (let i = 0; i < itemsArray.length; i += 1) {
       const threshold = Math.floor(itemsArray[i].length / 2) - i;
@@ -113,6 +109,12 @@ class HexagonalLevel extends BaseLevel {
     super(options);
 
     Object.assign(this, this.defaults, { cornerSize: 4 }, options);
+  }
+
+  generateRandomDefaultArray() {
+    return super.generateRandomDefaultArray({
+      maxItemValue: 5,
+    });
   }
 
   getMap() {

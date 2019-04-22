@@ -24,13 +24,8 @@ export default {
     onSetClick(event) {
       const { idx } = event.target.dataset;
 
-      this.$store.dispatch('startSet', idx);
+      this.$store.dispatch('startSet', { setIndex: idx, levelIndex: 0 });
     },
-  },
-  created() {
-    if (this.chapter.sets.length === 1) {
-      this.$store.dispatch('startSet', 0);
-    }
   },
   computed: {
     title() {

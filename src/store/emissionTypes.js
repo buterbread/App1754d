@@ -15,12 +15,12 @@ export default {
       const row = options.row + options.emitter.top;
       const col = options.col + options.emitter.left;
 
-      const item = items[row][col];
-
-      if (!items[row] || !item || item.isWall) {
+      if (!items[row] || !items[row][col] || items[row][col].isWall) {
         dispatch('stopDropPassageAnimation', options, { root: true });
         return;
       }
+
+      const item = items[row][col];
 
       dispatch('startDropPassageAnimation', options, { root: true });
 

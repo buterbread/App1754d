@@ -1,10 +1,29 @@
 import config from '../config/gameplay';
 import roadmap from '../config/roadmap';
 import levelConstructor from '../levelConstructor';
+import BubbleBobomb from '../bubbleBobomb';
 
 const { saveRecordName } = config;
 
 export default {
+  startRelax(context) {
+    context.commit('RESET_DROPS_COUNTER');
+    context.commit('user/SET_FINISHED_LEVELS_COUNT', 0);
+    context.commit('inventory/RESET');
+
+    context.dispatch('setGameMode', 'relax');
+    context.dispatch('startChapter', { chapterIndex: 0, setIndex: 0, levelIndex: 0 });
+  },
+
+  startNewGame(context, gameMode) {
+    context.commit('RESET_DROPS_COUNTER');
+    context.commit('user/SET_FINISHED_LEVELS_COUNT', 0);
+    context.commit('inventory/RESET');
+
+    context.dispatch('setGameMode', gameMode);
+    context.dispatch('startChapter', { chapterIndex: 0, setIndex: 0, levelIndex: 0 });
+  },
+
   setGameMode(context, gameMode) {
     const game = roadmap.find(item => item.type === gameMode);
     game.chapters = [];
@@ -38,17 +57,24 @@ export default {
     context.commit('user/SET_CURRENT_CHAPTER', chapter);
   },
 
-  startChapter(context, index) {
+  startChapter(context, options) {
+    const defaults = { chapterIndex: 0, setIndex: 0, levelIndex: 0 };
+    const opts = { ...defaults, ...options };
+
+    const { chapterIndex } = opts;
     const { user } = context.state;
     const game = user.currentGame;
-    const chapter = game.chapters.find(item => item.index === index);
+    const chapter = game.chapters.find(item => item.index === chapterIndex);
     context.dispatch('setChapter', chapter.id);
-    context.dispatch('startSet', 0);
+    context.commit('sceneController/HIDE_CHAPTERS_MENU');
+    context.dispatch('startSet', opts);
   },
 
-  startSet(context, setIndex) {
+  startSet(context, options) {
+    const { setIndex } = options;
     const { user } = context.state;
     const chapter = user.currentChapter;
+
     const gameSet = chapter.sets[setIndex];
 
     const levels = [];
@@ -67,20 +93,26 @@ export default {
 
     context.commit('user/SET_CURRENT_SET', gameSet);
     context.commit('sceneController/HIDE_SETS_MENU');
-    context.dispatch('startGame');
+    context.dispatch('startPlay', options);
   },
 
-  startGame(context) {
+  startPlay(context, options) {
+    const { levelIndex } = options;
     const { levels } = context.state.user.currentSet;
-    context.commit('user/SET_CURRENT_LEVEL', levels[0]);
+
+    context.commit('user/SET_CURRENT_LEVEL', levels[levelIndex]);
     context.dispatch('startLevel');
-    context.commit('SET_GAME_STARTED', true);
   },
 
   startLevel(context) {
     const { user } = context.state;
+
     context.commit('GENERATE_ITEMS_ARRAY', levelConstructor(user.currentLevel));
     const { level } = context.state;
+
+    context.dispatch('resetComboMonitor');
+
+    context.commit('SET_GAME_STARTED', true);
 
     document.documentElement.style.setProperty('--matrix-width', level.matrixWidth, '');
     document.documentElement.style.setProperty('--matrix-height', level.matrixHeight, '');
@@ -90,8 +122,22 @@ export default {
     const { user } = context.state;
     const { levels } = user.currentSet;
     const nextLevelIndex = user.currentLevel.index + 1;
+
+    context.commit('user/INCREASE_FINISHED_LEVELS_COUNT', 1);
+
     context.commit('user/SET_CURRENT_LEVEL', levels[nextLevelIndex]);
     context.dispatch('startLevel');
+    context.dispatch('saveProgress');
+  },
+
+  applyLevelReward(context) {
+    const { level } = context.state;
+    level.winReward(context);
+  },
+
+  applyLevelPenalty(context) {
+    const { level } = context.state;
+    level.lostPenalty(context);
   },
 
   stopGame(context) {
@@ -105,12 +151,169 @@ export default {
     }));
   },
 
-  makeUserMove(context, options) {
-    const { row, col } = options;
+  restoreProgress(context) {
+    const { user } = JSON.parse(localStorage.getItem(saveRecordName));
 
+    const { currentCount, totalFinishedLevelsCount } = user;
+
+    context.commit('SET_DROPS_COUNTER', currentCount);
+    context.commit('user/SET_FINISHED_LEVELS_COUNT', totalFinishedLevelsCount);
+
+    context.dispatch('setGameMode', user.currentGame.type);
+    context.dispatch('startChapter', {
+      chapterIndex: user.currentChapter.index,
+      setIndex: user.currentSet.index,
+      levelIndex: user.currentLevel.index,
+    });
+  },
+
+  dropSave() {
+    localStorage.removeItem(saveRecordName);
+  },
+
+  resetComboMonitor(context) {
     context.commit('RESET_DISCHARGES_COUNT');
     context.commit('RESET_COMBOS_COUNT');
     context.commit('RESET_MULTIPLIER_INDEX');
+  },
+
+  executeUserAction(context, options) {
+    const { row, col, shiftKey, altKey } = options;
+
+    const { itemsArray: items } = context.state;
+    const item = items[row][col];
+    const { inputMode, inputLocked } = context.state.user;
+
+    if (inputLocked || !item.canReceiveUserInput || context.getters.animationsInProgress) {
+      return;
+    }
+
+    const inputModes = {
+      default: () => {
+        if (shiftKey) { ///DEV_MODE
+          item.value = item.maxItemValue;
+          return;
+        }
+
+        if (altKey) { ///DEV_MODE
+          item.value = 0;
+          return;
+        }
+
+        context.dispatch('makeUserMove', { row, col });
+      },
+      selectionMode: () => {
+        const { continuousSelectionMode } = context.state.user;
+        const { selectedItemsCache } = context.state;
+
+        const sameitemClick = !!selectedItemsCache[`item-${row}-${col}`];
+
+        if (continuousSelectionMode && !sameitemClick) {
+          context.dispatch('clearSelection');
+        }
+
+        context.dispatch('itemToggleSelected', { row, col });
+      },
+    };
+
+    inputModes[inputMode]();
+  },
+
+  itemToggleSelected(context, options) {
+    const { row, col } = options;
+    const { selectedItemsLimit, selectedItemsCache } = context.state;
+
+    if (selectedItemsCache[`item-${row}-${col}`] !== undefined) {
+      context.commit('DESELECT_ITEM', { row, col });
+      context.commit('REMOVE_ITEM_FROM_SELECTION_CACHE', { row, col });
+      return;
+    }
+
+    if (Object.keys(selectedItemsCache).length >= selectedItemsLimit) {
+      return;
+    }
+    context.commit('SELECT_ITEM', { row, col });
+    context.commit('ADD_ITEM_TO_SELECTION_CACHE', { row, col });
+  },
+
+  clearSelection(context) {
+    const { selectedItemsCache } = context.state;
+
+    Object.keys(selectedItemsCache).forEach((cacheItem) => {
+      const { row, col } = selectedItemsCache[cacheItem];
+      context.commit('DESELECT_ITEM', { row, col });
+      context.commit('REMOVE_ITEM_FROM_SELECTION_CACHE', { row, col });
+    });
+  },
+
+  executeDialogConfirmAction(context) {
+    const { dialogOnConfirmAction } = context.state;
+
+    if (dialogOnConfirmAction !== null) {
+      context.dispatch(dialogOnConfirmAction);
+      context.commit('CLEAR_DIALOG_CONFIRM_ACTION');
+    }
+  },
+
+  executeDialogCancelAction(context) {
+    const { dialogOnCancelAction } = context.state;
+
+    if (dialogOnCancelAction !== null) {
+      context.dispatch(dialogOnCancelAction);
+      context.commit('CLEAR_DIALOG_CONFIRM_ACTION');
+    }
+  },
+
+  placeUsersBobobmb(context) {
+    const { itemsArray: items } = context.state;
+    const { selectedItemsCache } = context.state;
+
+    Object.keys(selectedItemsCache).forEach((cacheItem) => {
+      const { row, col } = selectedItemsCache[cacheItem];
+
+      const unit = items[row][col];
+
+      const newItem = new BubbleBobomb({ row, col });
+
+      newItem.value = newItem.maxItemValue;
+
+      Object.keys(newItem).forEach((key) => {
+        unit[key] = newItem[key]; // REMOVE THIS ASAP
+      });
+
+      context.commit('inventory/REMOVE_BOBOMB');
+    });
+  },
+
+  swapSelectedItems(context) {
+    const { itemsArray: items } = context.state;
+    const { selectedItemsCache } = context.state;
+    const cacheKeys = Object.keys(selectedItemsCache);
+
+    if (cacheKeys.length < 2) {
+      return;
+    }
+
+    const from = selectedItemsCache[cacheKeys[0]];
+    const to = selectedItemsCache[cacheKeys[1]];
+
+    const buffer = Object.assign({}, items[to.row][to.col]);
+
+    Object.keys(items[from.row][from.col]).forEach((key) => {
+      items[to.row][to.col][key] = items[from.row][from.col][key];
+    });
+
+    Object.keys(items[from.row][from.col]).forEach((key) => {
+      items[from.row][from.col][key] = buffer[key];
+    });
+
+    context.commit('inventory/REMOVE_SWAP');
+  },
+
+  makeUserMove(context, options) {
+    const { row, col } = options;
+
+    context.dispatch('resetComboMonitor');
 
     context.commit('REMOVE_USER_DROP');
     context.commit('INCREASE_ITEM', { row, col });
@@ -118,11 +321,11 @@ export default {
   },
 
   attemptToPopBubble(context, options) {
-    const { itemsArray: items, level } = context.state;
+    const { itemsArray: items } = context.state;
     const { row, col } = options;
     const unit = items[row][col];
 
-    if (unit.value > level.maxItemValue) {
+    if (unit.value > unit.maxItemValue) {
       context.dispatch('makePopAnimation', options, { root: true });
 
       if (unit.injectionInProgress === true) {
@@ -132,7 +335,7 @@ export default {
       unit.injectionInProgress = true;
 
       setTimeout(() => {
-        context.commit('RESET_ITEM_VALUE', { row, col, value: level.minItemValue });
+        context.commit('RESET_ITEM_VALUE', { row, col, value: unit.minItemValue });
 
         const dropType = unit.type;
 
