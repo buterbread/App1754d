@@ -1,0 +1,16 @@
+<svg id="bgr-rectangle.svg" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+      }
+
+      .cls-2 {
+        fill: #2eefbf;
+        fill-rule: evenodd;
+      }
+    </style>
+  </defs>
+  <rect id="boundingbox" class="cls-1" width="40" height="40"/>
+  <path id="rectangle" class="cls-2" d="M166,270a19,19,0,1,1-19,19A19,19,0,0,1,166,270Zm0,1a18,18,0,1,1-18,18A18,18,0,0,1,166,271Z" transform="translate(-146 -269)"/>
+</svg>

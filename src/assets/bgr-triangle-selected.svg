@@ -1,0 +1,24 @@
+<svg id="bgr-triangle-selected.svg" xmlns="http://www.w3.org/2000/svg" width="60" height="100" viewBox="0 0 60 100">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+      }
+
+      .cls-2, .cls-3 {
+        fill: #fff;
+        fill-rule: evenodd;
+      }
+
+      .cls-3 {
+        fill-opacity: 0;
+        stroke: #1d40ed;
+        stroke-width: 1px;
+        stroke-dasharray: 4 2;
+      }
+    </style>
+  </defs>
+  <rect id="boundingbox" class="cls-1" width="60" height="100"/>
+  <path id="triangle-bgr" class="cls-2" d="M156,169l-28-48-0.007-1.015h58L186,121l-28,48h-2Zm1.01-4.187-24.969-42.251h49.938ZM156,71l-28,48-0.007,1.015h58L186,119,158,71h-2Zm1.01,4.187-24.969,42.251h49.938Z" transform="translate(-127 -70)"/>
+  <path id="triangle" class="cls-3" d="M156.994,168l-28-47.015h56Zm0.012-96,28,47.015h-56Z" transform="translate(-127 -70)"/>
+</svg>
