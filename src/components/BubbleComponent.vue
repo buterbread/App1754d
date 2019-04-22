@@ -205,7 +205,7 @@ export default {
     height: calc(var(--item-height) * (var(--matrix-height) - 1));
 
     .drop-platform {
-      animation-name: 'drop-passage-vertical';
+      animation-name: drop-passage-vertical;
       animation-duration: calc(var(--drop-passage-delay) * (var(--matrix-height) - 1) * 1ms);
     }
 
@@ -221,7 +221,7 @@ export default {
     height: var(--item-height);
 
     .drop-platform {
-      animation-name: 'drop-passage-horizontal';
+      animation-name: drop-passage-horizontal;
       animation-duration: calc(var(--drop-passage-delay) * (var(--matrix-width) - 1) * 1ms);
     }
 
@@ -237,7 +237,7 @@ export default {
     height: calc(var(--item-height) * (var(--matrix-height) - 1) * 1.4142);
 
     .drop-platform {
-      animation-name: 'drop-passage-vertical';
+      animation-name: drop-passage-vertical;
       animation-duration: calc(var(--drop-passage-delay) * (var(--matrix-height) - 1) * 1ms);
     }
 

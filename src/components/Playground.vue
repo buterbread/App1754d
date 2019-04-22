@@ -37,6 +37,7 @@ export default {
   font-size: 0;
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 
 .playground-row {
