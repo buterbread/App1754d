@@ -33,6 +33,7 @@ export default {
     },
 
     continueGame() {
+      this.$store.commit('sceneController/TEMP_HIDE_FASTRELAX');
       this.$store.dispatch('restoreProgress');
     },
   },

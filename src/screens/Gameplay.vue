@@ -17,12 +17,12 @@
             :disabled="!bobomsAvailable"
             v-on:click="onAddBobombClick"
             class="btn btn_add-bobomb"
-          >Add Bobomb {{bobombs}}</button>
+          >Add Bobomb: {{bobombs}}</button>
           <button
             :disabled="!swapsAvailable"
             v-on:click="onSwapItemsClick"
             class="btn btn_swap-items"
-          >Swap Items {{swaps}}</button>
+          >Swap Items: {{swaps}}</button>
         </template>
         <template v-if="showConfirmationDialog">
           <button

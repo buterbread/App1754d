@@ -17,33 +17,11 @@ export default {
         label: 'Relax set',
         index: 0,
         available: false,
-        levelsLength: 6,
+        levelsLength: 12,
         loop: true,
         levels: [
           {
-            index: 2,
-            id: 'level1',
-            type: 'default',
-            matrixHeight: 9,
-            matrixWidth: 9,
-          },
-          {
-            index: 4,
-            id: 'level2',
-            type: 'default',
-          },
-          {
             index: 5,
-            id: 'level2',
-            type: 'default',
-          },
-          {
-            index: 0,
-            id: 'level3',
-            type: 'hexagon',
-          },
-          {
-            index: 1,
             id: 'level3',
             type: 'hexagon',
             winReward: (context) => {
@@ -51,7 +29,7 @@ export default {
             },
           },
           {
-            index: 3,
+            index: 11,
             id: 'level2',
             type: 'triangle',
             matrixHeight: 6,
