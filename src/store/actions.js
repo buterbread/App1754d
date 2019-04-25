@@ -9,7 +9,7 @@ export default {
   startRelax(context) {
     context.commit('RESET_DROPS_COUNTER');
     context.commit('user/SET_FINISHED_LEVELS_COUNT', 0);
-    context.commit('inventory/RESET');
+    context.commit('inventory/INIT');
 
     context.dispatch('setGameMode', 'relax');
     context.dispatch('startChapter', { chapterIndex: 0, setIndex: 0, levelIndex: 0 });
@@ -18,7 +18,7 @@ export default {
   startNewGame(context, gameMode) {
     context.commit('RESET_DROPS_COUNTER');
     context.commit('user/SET_FINISHED_LEVELS_COUNT', 0);
-    context.commit('inventory/RESET');
+    context.commit('inventory/INIT');
 
     context.dispatch('setGameMode', gameMode);
     context.dispatch('startChapter', { chapterIndex: 0, setIndex: 0, levelIndex: 0 });
@@ -148,16 +148,18 @@ export default {
     localStorage.setItem(saveRecordName, JSON.stringify({
       date: +Date.now(),
       user: context.state.user,
+      inventory: context.state.inventory,
     }));
   },
 
   restoreProgress(context) {
-    const { user } = JSON.parse(localStorage.getItem(saveRecordName));
+    const { user, inventory } = JSON.parse(localStorage.getItem(saveRecordName));
 
     const { currentCount, totalFinishedLevelsCount } = user;
 
     context.commit('SET_DROPS_COUNTER', currentCount);
     context.commit('user/SET_FINISHED_LEVELS_COUNT', totalFinishedLevelsCount);
+    context.commit('inventory/INIT', inventory);
 
     context.dispatch('setGameMode', user.currentGame.type);
     context.dispatch('startChapter', {

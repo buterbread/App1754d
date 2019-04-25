@@ -25,6 +25,7 @@ export default {
       this.$store.commit('sceneController/SHOW_WIN_SCREEN', false);
 
       if (this.user.currentSet.loop && this.isLastLevel()) {
+        this.$store.commit('user/INCREASE_FINISHED_LEVELS_COUNT', 1);
         this.$store.dispatch('startSet', { setIndex: 0, levelIndex: 0 });
         return;
       }

@@ -25,9 +25,9 @@ export default {
   actions: {},
 
   mutations: {
-    RESET(state) {
+    INIT(state, params = defaults) {
       Object.keys(defaults).forEach(item => {
-        state[item] = defaults[item];
+        state[item] = params[item];
       });
     },
 
