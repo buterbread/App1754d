@@ -9,6 +9,8 @@ export default {
     showLostScreen: false,
     showWinScreen: false,
     showConfirmationDialog: false,
+    showRotationDialog: false,
+    showInventory: true,
   },
 
   actions: {},
@@ -63,6 +65,22 @@ export default {
 
     SHOW_CONFIRMATION_DIALOG(state) {
       state.showConfirmationDialog = true;
+    },
+
+    HIDE_ROTATION_DIALOG(state) {
+      state.showRotationDialog = false;
+    },
+
+    SHOW_ROTATION_DIALOG(state) {
+      state.showRotationDialog = true;
+    },
+
+    HIDE_INVENTORY(state) {
+      state.showInventory = false;
+    },
+
+    SHOW_INVENTORY(state) {
+      state.showInventory = true;
     },
   },
 

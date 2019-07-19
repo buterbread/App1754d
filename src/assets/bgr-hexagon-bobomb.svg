@@ -1,8 +1,9 @@
-<svg id="bgr-hexagon-bobomb.svg" xmlns="http://www.w3.org/2000/svg" width="40" height="42" viewBox="0 0 40 42">
+<svg id="bgr-hexagon-bobomb.svg" xmlns="http://www.w3.org/2000/svg" width="50" height="44" viewBox="0 0 50 44">
   <defs>
     <style>
       .cls-1 {
         fill: none;
+        opacity: 0.3;
       }
 
       .cls-2 {
@@ -11,6 +12,6 @@
       }
     </style>
   </defs>
-  <rect id="boundingbox" class="cls-1" width="40" height="42"/>
-  <path id="hexagon" class="cls-2" d="M320,165.005l19,10.011v22l-19,9.989-19-9.989v-22Zm0,1,18,9.437V196.5L320,206l-18-9.5V175.437Z" transform="translate(-300 -165)"/>
+  <rect id="boundingbox" class="cls-1" width="50" height="44"/>
+  <path id="hexagon" class="cls-2" d="M265.994,500l12-21.007H302l12,21.007-12,21.008H278Zm1,0,11.5-20.007H301.5L313.006,500l-11.5,20.008H278.5Z" transform="translate(-265 -478)"/>
 </svg>

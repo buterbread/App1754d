@@ -19,7 +19,7 @@ export default new Vuex.Store({
     comboMultiplierIndex: 0,
     combosCount: 0,
     selectedItemsCache: {},
-    selectedItemsLimit: null,
+    selectedItemsLimit: 1,
     dialogOnConfirmAction: null,
     dialogOnCancelAction: null,
   },

@@ -205,12 +205,11 @@ export default {
         context.dispatch('makeUserMove', { row, col });
       },
       selectionMode: () => {
-        const { continuousSelectionMode } = context.state.user;
-        const { selectedItemsCache } = context.state;
+        const { selectedItemsCache, selectedItemsLimit } = context.state;
 
-        const sameitemClick = !!selectedItemsCache[`item-${row}-${col}`];
+        const sameItemClick = !!selectedItemsCache[`item-${row}-${col}`];
 
-        if (continuousSelectionMode && !sameitemClick) {
+        if (selectedItemsLimit === 1 && !sameItemClick) {
           context.dispatch('clearSelection');
         }
 
@@ -232,8 +231,13 @@ export default {
     }
 
     if (Object.keys(selectedItemsCache).length >= selectedItemsLimit) {
-      return;
+      const { lastAdded } = selectedItemsCache;
+      const lastAddedCoordinates = selectedItemsCache[lastAdded];
+
+      context.commit('DESELECT_ITEM', lastAddedCoordinates);
+      context.commit('REMOVE_ITEM_FROM_SELECTION_CACHE', lastAddedCoordinates);
     }
+
     context.commit('SELECT_ITEM', { row, col });
     context.commit('ADD_ITEM_TO_SELECTION_CACHE', { row, col });
   },
@@ -252,7 +256,7 @@ export default {
     const { dialogOnConfirmAction } = context.state;
 
     if (dialogOnConfirmAction !== null) {
-      context.dispatch(dialogOnConfirmAction);
+      context.dispatch(dialogOnConfirmAction.id, dialogOnConfirmAction.options);
       context.commit('CLEAR_DIALOG_CONFIRM_ACTION');
     }
   },
@@ -312,6 +316,21 @@ export default {
     context.commit('inventory/REMOVE_SWAP');
   },
 
+  rotateSelectedItems(context, options) {
+    const { itemsArray: items, selectedItemsCache } = context.state;
+    const { direction } = options;
+
+    Object.keys(selectedItemsCache).forEach((cacheItem) => {
+      const { row, col } = selectedItemsCache[cacheItem];
+
+      const unit = items[row][col];
+
+      unit.emitters.forEach((emitter) => {
+        emitter.label = config.directions[emitter.label][direction === 'cv' ? 'next' : 'prev'];
+      });
+    });
+  },
+
   makeUserMove(context, options) {
     const { row, col } = options;
 
@@ -348,15 +367,23 @@ export default {
   },
 
   dischargeAllEmitters(context, options) {
-    const { itemsArray: items, level } = context.state;
+    const { itemsArray: items } = context.state;
     const { row, col, addBonusDrop } = options;
     const unit = items[row][col];
 
-    const unitEmitters = unit.emitters[level.type];
+    const unitEmitters = unit.emitters;
 
     unitEmitters.forEach((emitter) => {
       context.commit('INCREASE_ANIMS_COUNTER', null, { root: true });
-      context.dispatch('emitterDischarge', { row, col, emitter });
+
+      const { offsets } = config.directions[emitter.label];
+
+      context.dispatch('emitterDischarge', {
+        row,
+        col,
+        emitter,
+        offsets,
+      });
     });
 
     if (addBonusDrop === true) {
@@ -398,7 +425,7 @@ export default {
     }
 
     const dropCurrentDirection =
-        items[row][col].emitters[level.type].find(dir => dir.label === emitter.label);
+        items[row][col].emitters.find(dir => emitter && dir.label === emitter.label);
 
     if (dropCurrentDirection && !dropCurrentDirection.animation) {
       dropCurrentDirection.animation = true;
@@ -412,7 +439,7 @@ export default {
     const unit = items[row][col];
 
     const dropCurrentDirection =
-        unit.emitters[level.type].find(dir => dir.label === emitter.label);
+        unit.emitters.find(dir => dir.label === emitter.label);
 
     if (dropCurrentDirection && dropCurrentDirection.animation) {
       dropCurrentDirection.animation = false;

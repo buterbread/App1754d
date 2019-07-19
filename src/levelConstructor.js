@@ -75,7 +75,7 @@ class BaseLevel {
       const itemsRow = [];
       itemsRow.id = Math.random().toString(36).substr(2, 9);
       for (let j = 0; j < this.matrixWidth; j += 1) {
-        const col = new BubbleDefault(options);
+        const col = new BubbleDefault({ ...options, row: i, col: j });
 
         itemsRow.push(col);
       }
@@ -89,7 +89,8 @@ class BaseLevel {
 class TriangularLevel extends BaseLevel {
   generateRandomDefaultArray() {
     const itemsArray = super.generateRandomDefaultArray({
-      maxItemValue: 2,
+      maxItemValue: 3,
+      levelType: 'triangle',
     });
 
     for (let i = 0; i < itemsArray.length; i += 1) {
@@ -114,21 +115,36 @@ class HexagonalLevel extends BaseLevel {
   generateRandomDefaultArray() {
     return super.generateRandomDefaultArray({
       maxItemValue: 5,
+      levelType: 'hexagon',
     });
   }
 
   getMap() {
     const map = super.getMap();
 
-    for (let i = 0; i < this.cornerSize; i += 1) {
-      for (let j = this.cornerSize - i; j > 0; j -= 1) {
-        map[i][this.matrixWidth - j] = new InvisibleWall();
+    for (let i = 0; i < this.matrixHeight; i += 1) {
+      const cutSize = Math.floor(this.matrixWidth / 2) - (i * 2) - 1;
+
+      if (cutSize <= 0) {
+        break;
+      }
+
+      for (let j = 0; j < cutSize; j += 1) {
+        map[i][j] = new InvisibleWall();
+        map[i][this.matrixWidth - j - 1] = new InvisibleWall();
       }
     }
 
-    for (let i = 0; i < this.cornerSize; i += 1) {
-      for (let j = this.cornerSize - i; j > 0; j -= 1) {
-        map[this.matrixHeight - 1 - i][j - 1] = new InvisibleWall();
+    for (let i = this.matrixHeight - 1; i >= 0; i -= 1) {
+      const cutSize = Math.floor(this.matrixWidth / 2) - ((this.matrixHeight - i - 1) * 2);
+
+      if (cutSize <= 0) {
+        break;
+      }
+
+      for (let j = 0; j < cutSize; j += 1) {
+        map[i][j] = new InvisibleWall();
+        map[i][this.matrixWidth - j - 1] = new InvisibleWall();
       }
     }
 

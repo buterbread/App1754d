@@ -15,10 +15,6 @@ export default class BubbleInvisibleWall extends BubbleDefault {
     this.movable = false;
     this.rotatable = false;
     this.swappable = false;
-    this.emitters = {
-      default: [],
-      triangle: [],
-      hexagon: [],
-    };
+    this.emitters = [];
   }
 }

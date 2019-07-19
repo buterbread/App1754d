@@ -37,8 +37,8 @@ export default {
     state.selectedItemsLimit = value;
   },
 
-  SET_DIALOG_CONFIRM_ACTION(state, value) {
-    state.dialogOnConfirmAction = value;
+  SET_DIALOG_CONFIRM_ACTION(state, action) {
+    state.dialogOnConfirmAction = action;
   },
 
   CLEAR_DIALOG_CONFIRM_ACTION(state) {
@@ -57,6 +57,16 @@ export default {
     const { row, col } = options;
     const name = `item-${row}-${col}`;
     state.selectedItemsCache[name] = { row, col };
+
+    if (state.selectedItemsCache.lastAdded) {
+      delete state.selectedItemsCache.lastAdded;
+    }
+
+    Object.defineProperty(state.selectedItemsCache, 'lastAdded', { // TODO REFACTOR THIS
+      configurable: true,
+      enumerable: false,
+      value: name,
+    });
   },
 
   REMOVE_ITEM_FROM_SELECTION_CACHE(state, options) {

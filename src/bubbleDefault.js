@@ -1,3 +1,7 @@
+function isOdd(index) {
+  return ((index + 1) % 2) > 0;
+}
+
 class BubbleDefault {
   constructor(options) {
     const defaults = {
@@ -14,36 +18,18 @@ class BubbleDefault {
       canReceiveUserInput: true,
       canReceiveImpact: true,
       impactCallback: 'increaseItemValue',
-      userInputCallback: '',
+      userInputCallback: null,
       movable: true,
       rotatable: true,
       swappable: true,
       selected: false,
       selectable: true,
-
-      emitters: {
-        default: [
-          { top: 0, left: -1, label: 'left', animation: false, emissionType: 'tillImpact' },
-          { top: -1, left: 0, label: 'top', animation: false, emissionType: 'tillImpact' },
-          { top: 0, left: 1, label: 'right', animation: false, emissionType: 'tillImpact' },
-          { top: 1, left: 0, label: 'bottom', animation: false, emissionType: 'tillImpact' },
-        ],
-        triangle: [
-          { top: 0, left: -1, label: 'left', animation: false, emissionType: 'tillImpactTriangle' },
-          { top: 0, left: 1, label: 'right', animation: false, emissionType: 'tillImpactTriangle' },
-        ],
-        hexagon: [
-          { top: 0, left: -1, label: 'left', animation: false, emissionType: 'tillImpact' },
-          { top: -1, left: 0, label: 'top', animation: false, emissionType: 'tillImpact' },
-          { top: 0, left: 1, label: 'right', animation: false, emissionType: 'tillImpact' },
-          { top: 1, left: 0, label: 'bottom', animation: false, emissionType: 'tillImpact' },
-          { top: -1, left: -1, label: 'topLeft', animation: false, emissionType: 'tillImpact' },
-          { top: 1, left: 1, label: 'bottomRight', animation: false, emissionType: 'tillImpact' },
-        ],
-      },
+      emitters: [],
     };
 
     Object.assign(this, defaults, options);
+
+    this.emitters = this.getEmittersConfig(options).map(item => Object.assign({}, item));
 
     if (!options || !options.value) {
       this.value = Math.floor(Math.random() * ((this.maxItemValue - this.minItemValue) + 1))
@@ -51,6 +37,62 @@ class BubbleDefault {
     }
 
     this.id = Math.random().toString(36).substr(2, 9);
+  }
+
+  emittersConfig = {
+    default: [
+      { label: 'left', animation: false, emissionType: 'tillImpact' },
+      { label: 'top', animation: false, emissionType: 'tillImpact' },
+      { label: 'right', animation: false, emissionType: 'tillImpact' },
+      { label: 'bottom', animation: false, emissionType: 'tillImpact' },
+    ],
+    triangle: [
+      { label: 'triangle_left_top', animation: false, emissionType: 'tillImpact', noseDirection: 'up' },
+      { label: 'triangle_right_top', animation: false, emissionType: 'tillImpact', noseDirection: 'up' },
+      { label: 'triangle_left_bottom', animation: false, emissionType: 'tillImpact', noseDirection: 'down' },
+      { label: 'triangle_right_bottom', animation: false, emissionType: 'tillImpact', noseDirection: 'down' },
+    ],
+    hexagon: [
+      { label: 'hexagon_leftTop_left', animation: false, emissionType: 'tillImpact', odd: true },
+      { label: 'hexagon_top', animation: false, emissionType: 'tillImpact', odd: true },
+      { label: 'hexagon_rightTop_right', animation: false, emissionType: 'tillImpact', odd: true },
+      { label: 'hexagon_right_rightBottom', animation: false, emissionType: 'tillImpact', odd: true },
+      { label: 'hexagon_bottom', animation: false, emissionType: 'tillImpact', odd: true },
+      { label: 'hexagon_left_leftBottom', animation: false, emissionType: 'tillImpact', odd: true },
+
+      { label: 'hexagon_left_leftTop', animation: false, emissionType: 'tillImpact', odd: false },
+      { label: 'hexagon_top', animation: false, emissionType: 'tillImpact', odd: false },
+      { label: 'hexagon_right_rightTop', animation: false, emissionType: 'tillImpact', odd: false },
+      { label: 'hexagon_rightBottom_right', animation: false, emissionType: 'tillImpact', odd: false },
+      { label: 'hexagon_bottom', animation: false, emissionType: 'tillImpact', odd: false },
+      { label: 'hexagon_leftBottom_left', animation: false, emissionType: 'tillImpact', odd: false },
+    ],
+  }
+
+  getEmittersConfig = (options = {}) => {
+    const { levelType: type } = options;
+
+    if (type === 'triangle') {
+      const { row, col } = options;
+      let noseDirection;
+
+      if (isOdd(row)) {
+        noseDirection = isOdd(col) ? 'down' : 'up';
+      } else {
+        noseDirection = isOdd(col) ? 'up' : 'down';
+      }
+
+      return this.emittersConfig.triangle.filter(direction =>
+        direction.noseDirection === noseDirection);
+    }
+
+    if (type === 'hexagon') {
+      const { col } = options;
+
+      return this.emittersConfig.hexagon.filter(direction => direction.odd === isOdd(col));
+    }
+
+    return this.emittersConfig[type || 'default'];
   }
 }
 

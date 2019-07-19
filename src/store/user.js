@@ -12,7 +12,6 @@ export default {
     currentLevel: null,
     inputLocked: false,
     inputMode: 'default',
-    continuousSelectionMode: false,
   },
 
   actions: {},
@@ -52,10 +51,6 @@ export default {
 
     SET_USER_INPUT_MODE(state, value) {
       state.inputMode = value;
-    },
-
-    SET_CONTINUOUS_SELECTION_MODE(state, value) {
-      state.continuousSelectionMode = value;
     },
   },
 

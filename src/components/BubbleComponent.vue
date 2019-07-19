@@ -18,66 +18,19 @@
 
     <div class="drop-passage-anim-wrapper">
       <div class="drop-passage-anim-box">
-        <div class="drop-rail vertical to-top" v-if="getDirectionAnimState('top')">
+        <div
+          :class="['drop-rail', emitter.label]"
+          v-for="(emitter, idx) in item.emitters"
+          v-bind:key="idx"
+          v-if="emitter.animation"
+        >
           <div class="drop-platform">
             <span class="drop-box">
               <i class="drop"></i>
             </span>
           </div>
         </div>
-        <div class="drop-rail horizontal to-right" v-if="getDirectionAnimState('right')">
-          <div class="drop-platform">
-            <span class="drop-box">
-              <i class="drop"></i>
-            </span>
-          </div>
-        </div>
-        <div class="drop-rail vertical to-bottom" v-if="getDirectionAnimState('bottom')">
-          <div class="drop-platform">
-            <span class="drop-box">
-              <i class="drop"></i>
-            </span>
-          </div>
-        </div>
-        <div class="drop-rail horizontal to-left" v-if="getDirectionAnimState('left')">
-          <div class="drop-platform">
-            <span class="drop-box">
-              <i class="drop"></i>
-            </span>
-          </div>
-        </div>
-
-        <div class="drop-rail diagonal to-top-right" v-if="getDirectionAnimState('topRight')">
-          <div class="drop-platform">
-            <span class="drop-box">
-              <i class="drop"></i>
-            </span>
-          </div>
-        </div>
-
-        <div class="drop-rail diagonal to-bottom-right" v-if="getDirectionAnimState('bottomRight')">
-          <div class="drop-platform">
-            <span class="drop-box">
-              <i class="drop"></i>
-            </span>
-          </div>
-        </div>
-
-        <div class="drop-rail diagonal to-bottom-left" v-if="getDirectionAnimState('bottomLeft')">
-          <div class="drop-platform">
-            <span class="drop-box">
-              <i class="drop"></i>
-            </span>
-          </div>
-        </div>
-
-        <div class="drop-rail diagonal to-top-left" v-if="getDirectionAnimState('topLeft')">
-          <div class="drop-platform">
-            <span class="drop-box">
-              <i class="drop"></i>
-            </span>
-          </div>
-        </div>
+        <i :class="itemDirections"></i>
       </div>
     </div>
 
@@ -101,7 +54,7 @@ export default {
       };
 
       if (level.type === 'triangle') {
-        let initialOffsetY = 9;
+        let initialOffsetY = 10;
         let offsetY;
 
         if (row % 2 === 0) {
@@ -135,6 +88,18 @@ export default {
       const { row, col } = this.$props;
       return this.$store.state.itemsArray[row][col];
     },
+
+    itemDirections() {
+      const { row, col } = this.$props;
+
+      const { emitters } = this.$store.state.itemsArray[row][col];
+
+      const classNames = [];
+
+      emitters.forEach(emitter => classNames.push(emitter.label));
+
+      return `direction-arrow ${classNames.join(' ')}`;
+    },
   },
   methods: {
     onClick(event) {
@@ -150,10 +115,8 @@ export default {
     },
 
     getDirectionAnimState(direction) {
-      const { level } = this.$store.state;
-
       const currentDirection =
-        this.item.emitters[level.type].find(dir => dir.label === direction);
+        this.item.emitters.find(dir => dir.label === direction);
 
       if (!currentDirection || !this.$el) {
         return false;
@@ -167,24 +130,25 @@ export default {
 
 <style lang="scss">
 /*
-.playground-row {
-  .item-box:not(:nth-child(5)) {
-    .drop-passage-anim-box {
+.playground-row:not(:nth-child(5)) {
+  .item-box {
+    .drop-rail {
       display: none;
     }
   }
 }
 
-.playground-row:not(:nth-child(9)) {
-  .item-box {
-    .drop-passage-anim-box {
+.playground-row {
+  .item-box:not(:nth-child(6)) {
+    .drop-rail {
       display: none;
     }
   }
 }
 
 .drop-rail {
-  background: rgba(#17b6ed, 0.3);
+  width: 1px;
+  background: rgba(#17b6ed, 1);
 }
 //*/
 
@@ -196,101 +160,270 @@ export default {
   --drop-passage-delay: 200;
 }
 
+.direction-arrow {
+  position: absolute;
+  border: 3px solid transparent;
+  width: 0;
+  height: 0;
+  margin: auto;
+  z-index: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  opacity: 0.3;
+  transition: transform 0.2s ease;
+}
+
+.direction-arrow.triangle_bottom_left.triangleNoseUp_left {
+  transform: rotate(-120deg);
+}
+
+.direction-arrow.triangleNoseUp_right.triangle_bottom_right {
+  transform: rotate(120deg);
+}
+
+.direction-arrow.triangle_top_left.triangleNoseDown_left {
+  transform: rotate(150deg);
+}
+
+.direction-arrow.triangleNoseDown_right.triangle_top_right {
+  transform: rotate(-150deg);
+}
+
+.triangle {
+  .playground-row {
+    &:nth-of-type(odd) {
+      .item-box {
+        &:nth-of-type(odd) {
+          .direction-arrow {
+            border-top: 10px solid #000;
+          }
+        }
+
+        &:nth-of-type(even) {
+          .direction-arrow {
+            border-bottom: 10px solid #000;
+          }
+        }
+      }
+    }
+
+    &:nth-of-type(even) {
+      .item-box {
+        &:nth-of-type(odd) {
+          .direction-arrow {
+            border-bottom: 10px solid #000;
+          }
+        }
+
+        &:nth-of-type(even) {
+          .direction-arrow {
+            border-top: 10px solid #000;
+          }
+        }
+      }
+    }
+  }
+}
+
+.triangle {
+  .drop-rail {
+    --angle-coefficient: 1.17;
+
+    .drop-platform {
+      animation-duration: calc(var(--drop-passage-delay) * (var(--matrix-height) - 1) * 1ms);
+    }
+
+    .drop-box {
+      animation-duration: calc(var(--drop-passage-delay) * 2 * 1ms);
+      animation-iteration-count: calc(var(--matrix-height) - 1);
+    }
+  }
+}
+
 .drop-rail {
   position: absolute;
+  transform-origin: center top;
 
-  &.vertical {
-    transform-origin: center 0;
-    width: var(--item-width);
+  &.triangle_left_top {
+    height: calc(var(--item-height) * (var(--matrix-height) - 1) * var(--angle-coefficient));
+    transform: translate(30px, 34px) rotate(-211deg);
+
+    .drop-box {
+      animation-name: triangle-wave-left;
+    }
+  }
+
+  &.triangle_right_top {
+    height: calc(var(--item-height) * (var(--matrix-height) - 1) * var(--angle-coefficient));
+    transform: translate(30px, 34px) rotate(-149deg);
+
+    .drop-box {
+      animation-name: triangle-wave-right;
+    }
+  }
+
+  &.triangle_left_bottom {
+    height: calc(var(--item-height) * (var(--matrix-height) - 1) * var(--angle-coefficient));
+    transform: translate(30px, 16px) rotate(31deg);
+
+    .drop-box {
+      animation-name: triangle-wave-right;
+    }
+  }
+
+  &.triangle_right_bottom {
+    height: calc(var(--item-height) * (var(--matrix-height) - 1) * var(--angle-coefficient));
+    transform: translate(30px, 16px) rotate(-31deg);
+
+    .drop-box {
+      animation-name: triangle-wave-left;
+    }
+  }
+
+  &.triangleNoseUp_left {
+    height: calc(var(--item-width) / 2 * (var(--matrix-width) - 1));
+    transform: translate(30px, 34px) rotate(90deg);
+
+    .drop-box {
+      animation-name: triangle-wave-right;
+    }
+  }
+
+  &.triangleNoseUp_right {
+    height: calc(var(--item-width) / 2 * (var(--matrix-width) - 1));
+    transform: translate(30px, 34px) rotate(-90deg);
+
+    .drop-box {
+      animation-name: triangle-wave-left;
+    }
+  }
+
+  &.triangle_bottom_right {
+    height: calc(var(--item-height) * (var(--matrix-height) - 1) * var(--angle-coefficient));
+    transform: translate(30px, 34px) rotate(-31deg);
+
+    .drop-box {
+      animation-name: triangle-wave-right;
+    }
+  }
+
+  &.triangle_bottom_left {
+    height: calc(var(--item-height) * (var(--matrix-height) - 1) * var(--angle-coefficient));
+    transform: translate(30px, 34px) rotate(31deg);
+
+    .drop-box {
+      animation-name: triangle-wave-left;
+    }
+  }
+
+  &.triangle_top_left {
+    height: calc(var(--item-height) * (var(--matrix-height) - 1) * var(--angle-coefficient));
+    transform: translate(30px, 16px) rotate(-211deg);
+
+    .drop-box {
+      animation-name: triangle-wave-right;
+    }
+  }
+
+  &.triangle_top_right {
+    height: calc(var(--item-height) * (var(--matrix-height) - 1) * var(--angle-coefficient));
+    transform: translate(30px, 16px) rotate(211deg);
+
+    .drop-box {
+      animation-name: triangle-wave-left;
+    }
+  }
+
+  &.triangleNoseDown_left {
+    height: calc(var(--item-width) / 2 * (var(--matrix-width) - 1));
+    transform: translate(30px, 16px) rotate(90deg);
+
+    .drop-box {
+      animation-name: triangle-wave-left;
+    }
+  }
+
+  &.triangleNoseDown_right {
+    height: calc(var(--item-width) / 2 * (var(--matrix-width) - 1));
+    transform: translate(30px, 16px) rotate(-90deg);
+
+    .drop-box {
+      animation-name: triangle-wave-right;
+    }
+  }
+
+  &.top {
     height: calc(var(--item-height) * (var(--matrix-height) - 1));
-
-    .drop-platform {
-      animation-name: drop-passage-vertical;
-      animation-duration: calc(var(--drop-passage-delay) * (var(--matrix-height) - 1) * 1ms);
-    }
-
-    .drop-box {
-      width: 100%;
-      height: 0;
-    }
-  }
-
-  &.horizontal {
-    transform-origin: 0 center;
-    width: calc(var(--item-width) * (var(--matrix-width) - 1));
-    height: var(--item-height);
-
-    .drop-platform {
-      animation-name: drop-passage-horizontal;
-      animation-duration: calc(var(--drop-passage-delay) * (var(--matrix-width) - 1) * 1ms);
-    }
-
-    .drop-box {
-      width: 0;
-      height: 100%;
-    }
-  }
-
-  &.diagonal {
-    transform-origin: center 0;
-    width: var(--item-width);
-    height: calc(var(--item-height) * (var(--matrix-height) - 1) * 1.4142);
-
-    .drop-platform {
-      animation-name: drop-passage-vertical;
-      animation-duration: calc(var(--drop-passage-delay) * (var(--matrix-height) - 1) * 1ms);
-    }
-
-    .drop-box {
-      width: 100%;
-      height: 0;
-    }
-  }
-
-  &.to-top {
     top: calc(var(--item-height) / 2);
-    left: 0;
-    transform: rotate(180deg);
+    left: calc(var(--item-width) / 2);
+    transform: rotate(-180deg);
   }
 
-  &.to-right {
-    top: 0;
+  &.right {
+    height: calc(var(--item-width) * (var(--matrix-width) - 1));
+    top: calc(var(--item-height) / 2);
+    left: calc(var(--item-width) / 2);
+    transform: rotate(-90deg);
+  }
+
+  &.left {
+    height: calc(var(--item-width) * (var(--matrix-width) - 1));
+    top: calc(var(--item-height) / 2);
+    left: calc(var(--item-width) / 2);
+    transform: rotate(90deg);
+  }
+
+  &.bottom {
+    height: calc(var(--item-height) * (var(--matrix-height) - 1));
+    top: calc(var(--item-height) / 2);
     left: calc(var(--item-width) / 2);
   }
 
-  &.to-left {
-    top: 0;
+  &.hexagon_leftTop_left,
+  &.hexagon_left_leftTop {
+    height: calc(var(--item-height) * (var(--matrix-width) - 1));
+    top: calc(var(--item-height) / 2);
     left: calc(var(--item-width) / 2);
-    transform: rotate(180deg);
+    transform: rotate(120.15deg);
   }
 
-  &.to-bottom {
+  &.hexagon_top {
+    height: calc(var(--item-height) * (var(--matrix-height) - 1));
     top: calc(var(--item-height) / 2);
-    left: 0;
+    left: calc(var(--item-width) / 2);
+    transform: rotate(-180deg);
   }
 
-  &.to-top-right {
+  &.hexagon_rightTop_right,
+  &.hexagon_right_rightTop {
+    height: calc(var(--item-height) * (var(--matrix-width) - 1));
     top: calc(var(--item-height) / 2);
-    left: 0;
-    transform: rotate(225deg);
+    left: calc(var(--item-width) / 2);
+    transform: rotate(-120.15deg);
   }
 
-  &.to-bottom-right {
+  &.hexagon_right_rightBottom,
+  &.hexagon_rightBottom_right {
+    height: calc(var(--item-height) * (var(--matrix-width) - 1));
     top: calc(var(--item-height) / 2);
-    left: 0;
-    transform: rotate(315deg);
+    left: calc(var(--item-width) / 2);
+    transform: rotate(-59.85deg);
   }
 
-  &.to-bottom-left {
+  &.hexagon_bottom {
+    height: calc(var(--item-height) * (var(--matrix-height) - 1));
     top: calc(var(--item-height) / 2);
-    left: 0;
-    transform: rotate(45deg);
+    left: calc(var(--item-width) / 2);
   }
 
-  &.to-top-left {
+  &.hexagon_left_leftBottom,
+  &.hexagon_leftBottom_left {
+    height: calc(var(--item-height) * (var(--matrix-width) - 1));
     top: calc(var(--item-height) / 2);
-    left: 0;
-    transform: rotate(135deg);
+    left: calc(var(--item-width) / 2);
+    transform: rotate(59.85deg);
   }
 }
 
@@ -302,8 +435,10 @@ export default {
   right: 0;
   bottom: 0;
 
+  animation-name: drop-passage;
   animation-timing-function: linear;
   animation-delay: 0ms;
+  animation-duration: calc(var(--drop-passage-delay) * (var(--matrix-height) - 1) * 1ms);
   animation-iteration-count: 1;
   animation-fill-mode: forwards;
   backface-visibility: hidden;
@@ -316,6 +451,8 @@ export default {
   position: relative;
   justify-content: center;
   align-items: center;
+  width: 100%;
+  height: 0;
 }
 
 .drop {
@@ -326,21 +463,36 @@ export default {
   background: #EFBF2E;
 }
 
-@keyframes drop-passage-horizontal {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(100%);
-  }
-}
-
-@keyframes drop-passage-vertical {
+@keyframes drop-passage {
   0% {
     transform: translateY(0);
   }
   100% {
     transform: translateY(100%);
+  }
+}
+
+@keyframes triangle-wave-left {
+  0% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(17px, 0);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes triangle-wave-right {
+  0% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(-17px, 0);
+  }
+  100% {
+    transform: translate(0, 0);
   }
 }
 
@@ -461,61 +613,17 @@ export default {
 }
 
 .playground-box.hexagon {
-  .select {
-    background-image: url("../assets/bgr-hexagon-selected.svg");
-  }
-}
-
-.playground-box.triangle {
-  .select {
-    background-image: url("../assets/bgr-triangle-selected.svg");
-  }
-
-  .playground-row {
-    &:nth-of-type(odd) {
-      .item-box {
-        &:nth-of-type(odd) {
-          .select {
-            background-position: 0 bottom;
-          }
-        }
-        &:nth-of-type(even) {
-          .select {
-            background-position: 0 0;
-          }
-        }
-      }
-    }
-    &:nth-of-type(even) {
-      .item-box {
-        &:nth-of-type(odd) {
-          .select {
-            background-position: 0 0;
-          }
-        }
-        &:nth-of-type(even) {
-          .select {
-            background-position: 0 bottom;
-          }
-        }
-      }
-    }
-  }
-}
-
-.playground-box.hexagon {
-  --item-width: 40px;
-  --item-height: 42px;
-
-  padding: 4px 0;
-
-  .playground-row {
-    margin: -4px 0 -4px 0;
-  }
+  --item-width: 50px;
+  --item-height: 44px;
 
   .item-box {
     width: var(--item-width);
     height: var(--item-height);
+    margin: 0 -6px;
+
+    &:nth-child(even) {
+      top: calc(var(--item-height) / 2);
+    }
   }
 
   .item-bgr {
@@ -540,27 +648,8 @@ export default {
     background-size: 100% 100%;
   }
 
-  .drop-rail {
-    &.vertical,
-    &.diagonal {
-      height: calc((var(--item-height) - 4px) * (var(--matrix-height) - 1) * 1.04);
-    }
-
-    &.to-top {
-      transform: rotate(210.5deg);
-    }
-
-    &.to-bottom {
-      transform: rotate(30.5deg);
-    }
-
-    &.to-top-left {
-      transform: rotate(149.5deg);
-    }
-
-    &.to-bottom-right {
-      transform: rotate(329.5deg);
-    }
+  .select {
+    background-image: url("../assets/bgr-hexagon-selected.svg");
   }
 }
 
@@ -646,67 +735,38 @@ export default {
   }
 
   .drop-platform {
-    animation-duration: calc(var(--drop-passage-delay) * 2.2 * (var(--matrix-height) - 1) * 1ms);
+    animation-duration: calc(var(--drop-passage-delay) * 2 * (var(--matrix-height) - 1) * 1ms);
+  }
+
+  .select {
+    background-image: url("../assets/bgr-triangle-selected.svg");
   }
 
   .playground-row {
     &:nth-of-type(odd) {
       .item-box {
         &:nth-of-type(odd) {
-          .drop-rail {
-            &.to-right {
-              width: calc(var(--item-height) * (var(--matrix-height) - 1) * 1.23);
-              transform: rotate(59deg) translate(-4px, -8px);
-            }
-
-            &.to-left {
-              width: calc(var(--item-height) * (var(--matrix-height) - 1) * 1.23);
-              transform: rotate(121deg) translate(-4px, 8px);
-            }
+          .select {
+            background-position: 0 bottom;
           }
         }
         &:nth-of-type(even) {
-          .drop-rail {
-            &.to-right {
-              width: calc(var(--item-height) * (var(--matrix-height) - 1) * 1.23);
-              transform: rotate(-59deg) translate(-4px, 8px);
-            }
-
-            &.to-left {
-              width: calc(var(--item-height) * (var(--matrix-height) - 1) * 1.23);
-              transform: rotate(-121deg) translate(-4px, -8px);
-            }
+          .select {
+            background-position: 0 0;
           }
         }
       }
     }
-
     &:nth-of-type(even) {
       .item-box {
         &:nth-of-type(odd) {
-          .drop-rail {
-            &.to-right {
-              width: calc(var(--item-height) * (var(--matrix-height) - 1) * 1.23);
-              transform: rotate(-59deg) translate(-4px, 8px);
-            }
-
-            &.to-left {
-              width: calc(var(--item-height) * (var(--matrix-height) - 1) * 1.23);
-              transform: rotate(-121deg) translate(-4px, -8px);
-            }
+          .select {
+            background-position: 0 0;
           }
         }
         &:nth-of-type(even) {
-          .drop-rail {
-            &.to-right {
-              width: calc(var(--item-height) * (var(--matrix-height) - 1) * 1.23);
-              transform: rotate(59deg) translate(-4px, -8px);
-            }
-
-            &.to-left {
-              width: calc(var(--item-height) * (var(--matrix-height) - 1) * 1.23);
-              transform: rotate(121deg) translate(-4px, 8px);
-            }
+          .select {
+            background-position: 0 bottom;
           }
         }
       }
