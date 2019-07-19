@@ -130,8 +130,8 @@ class HexagonalLevel extends BaseLevel {
       }
 
       for (let j = 0; j < cutSize; j += 1) {
-        map[i][j] = new InvisibleWall();
-        map[i][this.matrixWidth - j - 1] = new InvisibleWall();
+        //map[i][j] = new InvisibleWall();
+        //map[i][this.matrixWidth - j - 1] = new InvisibleWall();
       }
     }
 
@@ -143,8 +143,8 @@ class HexagonalLevel extends BaseLevel {
       }
 
       for (let j = 0; j < cutSize; j += 1) {
-        map[i][j] = new InvisibleWall();
-        map[i][this.matrixWidth - j - 1] = new InvisibleWall();
+        //map[i][j] = new InvisibleWall();
+        //map[i][this.matrixWidth - j - 1] = new InvisibleWall();
       }
     }
 

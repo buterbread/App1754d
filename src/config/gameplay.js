@@ -108,88 +108,101 @@ const gameplayConfig = () => ({
       ],
     },
 
-    hexagon_top: {
-      prev: '',
-      next: '',
+    hexagon_topOdd: {
+      prev: 'hexagon_topLeft_left',
+      next: 'hexagon_topRight_right',
       offsets: [
         { top: -1, left: 0 },
       ],
     },
-    hexagon_bottom: {
-      prev: '',
-      next: '',
+    hexagon_topRight_right: {
+      prev: 'hexagon_topOdd',
+      next: 'hexagon_right_bottomRight',
+      offsets: [
+        { top: -1, left: 1 },
+        { top: 0, left: 1 },
+      ],
+    },
+    hexagon_right_bottomRight: {
+      prev: 'hexagon_topRight_right',
+      next: 'hexagon_bottomOdd',
+      offsets: [
+        { top: 0, left: 1 },
+        { top: 1, left: 1 },
+      ],
+    },
+    hexagon_bottomOdd: {
+      prev: 'hexagon_right_bottomRight',
+      next: 'hexagon_left_bottomLeft',
       offsets: [
         { top: 1, left: 0 },
       ],
     },
-    hexagon_leftTop_left: {
-      prev: '',
-      next: '',
-      offsets: [
-        { top: -1, left: -1 },
-        { top: 0, left: -1 },
-      ],
-    },
-    hexagon_rightTop_right: {
-      prev: '',
-      next: '',
-      offsets: [
-        { top: -1, left: 1 },
-        { top: 0, left: 1 },
-      ],
-    },
-    hexagon_right_rightBottom: {
-      prev: '',
-      next: '',
-      offsets: [
-        { top: 0, left: 1 },
-        { top: 1, left: 1 },
-      ],
-    },
-    hexagon_left_leftBottom: {
-      prev: '',
-      next: '',
+    hexagon_left_bottomLeft: {
+      prev: 'hexagon_bottomOdd',
+      next: 'hexagon_topLeft_left',
       offsets: [
         { top: 0, left: -1 },
         { top: 1, left: -1 },
       ],
     },
+    hexagon_topLeft_left: {
+      prev: 'hexagon_left_bottomLeft',
+      next: 'hexagon_topOdd',
+      offsets: [
+        { top: -1, left: -1 },
+        { top: 0, left: -1 },
+      ],
+    },
 
-    hexagon_left_leftTop: {
-      prev: '',
-      next: '',
+
+    hexagon_topEven: {
+      prev: 'hexagon_left_topLeftTop',
+      next: 'hexagon_right_topRight',
+      offsets: [
+        { top: -1, left: 0 },
+      ],
+    },
+    hexagon_right_topRight: {
+      prev: 'hexagon_topEven',
+      next: 'hexagon_bottomRight_right',
+      offsets: [
+        { top: 0, left: 1 },
+        { top: -1, left: 1 },
+      ],
+    },
+    hexagon_bottomRight_right: {
+      prev: 'hexagon_right_topRight',
+      next: 'hexagon_bottomEven',
+      offsets: [
+        { top: 1, left: 1 },
+        { top: 0, left: 1 },
+      ],
+    },
+    hexagon_bottomEven: {
+      prev: 'hexagon_bottomRight_right',
+      next: 'hexagon_bottomLeft_left',
+      offsets: [
+        { top: 1, left: 0 },
+      ],
+    },
+    hexagon_bottomLeft_left: {
+      prev: 'hexagon_bottomEven',
+      next: 'hexagon_left_topLeftTop',
+      offsets: [
+        { top: 1, left: -1 },
+        { top: 0, left: -1 },
+      ],
+    },
+    hexagon_left_topLeftTop: {
+      prev: 'hexagon_bottomLeft_left',
+      next: 'hexagon_topEven',
       offsets: [
         { top: 0, left: -1 },
         { top: -1, left: -1 },
       ],
     },
 
-    hexagon_right_rightTop: {
-      prev: '',
-      next: '',
-      offsets: [
-        { top: 0, left: 1 },
-        { top: -1, left: 1 },
-      ],
-    },
-
-    hexagon_rightBottom_right: {
-      prev: '',
-      next: '',
-      offsets: [
-        { top: 1, left: 1 },
-        { top: 0, left: 1 },
-      ],
-    },
-
-    hexagon_leftBottom_left: {
-      prev: '',
-      next: '',
-      offsets: [
-        { top: 1, left: -1 },
-        { top: 0, left: -1 },
-      ],
-    },
 
     left: {
       prev: '',

@@ -130,7 +130,7 @@ export default {
 
 <style lang="scss">
 /*
-.playground-row:not(:nth-child(5)) {
+.playground-row:not(:nth-child(1)) {
   .item-box {
     .drop-rail {
       display: none;
@@ -139,7 +139,7 @@ export default {
 }
 
 .playground-row {
-  .item-box:not(:nth-child(6)) {
+  .item-box:not(:nth-child(2)) {
     .drop-rail {
       display: none;
     }
@@ -381,45 +381,47 @@ export default {
     left: calc(var(--item-width) / 2);
   }
 
-  &.hexagon_leftTop_left,
-  &.hexagon_left_leftTop {
+  &.hexagon_topLeft_left,
+  &.hexagon_left_topLeftTop {
     height: calc(var(--item-height) * (var(--matrix-width) - 1));
     top: calc(var(--item-height) / 2);
     left: calc(var(--item-width) / 2);
     transform: rotate(120.15deg);
   }
 
-  &.hexagon_top {
+  &.hexagon_topOdd,
+  &.hexagon_topEven {
     height: calc(var(--item-height) * (var(--matrix-height) - 1));
     top: calc(var(--item-height) / 2);
     left: calc(var(--item-width) / 2);
     transform: rotate(-180deg);
   }
 
-  &.hexagon_rightTop_right,
-  &.hexagon_right_rightTop {
+  &.hexagon_topRight_right,
+  &.hexagon_right_topRight {
     height: calc(var(--item-height) * (var(--matrix-width) - 1));
     top: calc(var(--item-height) / 2);
     left: calc(var(--item-width) / 2);
     transform: rotate(-120.15deg);
   }
 
-  &.hexagon_right_rightBottom,
-  &.hexagon_rightBottom_right {
+  &.hexagon_right_bottomRight,
+  &.hexagon_bottomRight_right {
     height: calc(var(--item-height) * (var(--matrix-width) - 1));
     top: calc(var(--item-height) / 2);
     left: calc(var(--item-width) / 2);
     transform: rotate(-59.85deg);
   }
 
-  &.hexagon_bottom {
+  &.hexagon_bottomOdd,
+  &.hexagon_bottomEven {
     height: calc(var(--item-height) * (var(--matrix-height) - 1));
     top: calc(var(--item-height) / 2);
     left: calc(var(--item-width) / 2);
   }
 
-  &.hexagon_left_leftBottom,
-  &.hexagon_leftBottom_left {
+  &.hexagon_left_bottomLeft,
+  &.hexagon_bottomLeft_left {
     height: calc(var(--item-height) * (var(--matrix-width) - 1));
     top: calc(var(--item-height) / 2);
     left: calc(var(--item-width) / 2);
