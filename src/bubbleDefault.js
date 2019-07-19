@@ -54,18 +54,18 @@ class BubbleDefault {
     ],
     hexagon: [
       { label: 'hexagon_topOdd', animation: false, emissionType: 'tillImpact', odd: true },
-      //{ label: 'hexagon_topRight_right', animation: false, emissionType: 'tillImpact', odd: true },
-      // { label: 'hexagon_right_bottomRight', animation: false, emissionType: 'tillImpact', odd: true },
-      // { label: 'hexagon_bottomOdd', animation: false, emissionType: 'tillImpact', odd: true },
-      // { label: 'hexagon_left_bottomLeft', animation: false, emissionType: 'tillImpact', odd: true },
-      // { label: 'hexagon_topLeft_left', animation: false, emissionType: 'tillImpact', odd: true },
+      { label: 'hexagon_topRight_right', animation: false, emissionType: 'tillImpact', odd: true },
+      { label: 'hexagon_right_bottomRight', animation: false, emissionType: 'tillImpact', odd: true },
+      { label: 'hexagon_bottomOdd', animation: false, emissionType: 'tillImpact', odd: true },
+      { label: 'hexagon_left_bottomLeft', animation: false, emissionType: 'tillImpact', odd: true },
+      { label: 'hexagon_topLeft_left', animation: false, emissionType: 'tillImpact', odd: true },
 
       { label: 'hexagon_topEven', animation: false, emissionType: 'tillImpact', odd: false },
-      // { label: 'hexagon_right_topRight', animation: false, emissionType: 'tillImpact', odd: false },
-      // { label: 'hexagon_bottomRight_right', animation: false, emissionType: 'tillImpact', odd: false },
-      // { label: 'hexagon_bottomEven', animation: false, emissionType: 'tillImpact', odd: false },
-      // { label: 'hexagon_bottomLeft_left', animation: false, emissionType: 'tillImpact', odd: false },
-      // { label: 'hexagon_left_topLeftTop', animation: false, emissionType: 'tillImpact', odd: false },
+      { label: 'hexagon_right_topRight', animation: false, emissionType: 'tillImpact', odd: false },
+      { label: 'hexagon_bottomRight_right', animation: false, emissionType: 'tillImpact', odd: false },
+      { label: 'hexagon_bottomEven', animation: false, emissionType: 'tillImpact', odd: false },
+      { label: 'hexagon_bottomLeft_left', animation: false, emissionType: 'tillImpact', odd: false },
+      { label: 'hexagon_left_topLeftTop', animation: false, emissionType: 'tillImpact', odd: false },
     ],
   }
 
