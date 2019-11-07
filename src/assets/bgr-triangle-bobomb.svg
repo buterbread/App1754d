@@ -1,0 +1,16 @@
+<svg id="bgr-triangle-bobomb.svg" xmlns="http://www.w3.org/2000/svg" width="60" height="100" viewBox="0 0 60 100">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+      }
+
+      .cls-2 {
+        fill: #f2c230;
+        fill-rule: evenodd;
+      }
+    </style>
+  </defs>
+  <rect id="boundingbox" class="cls-1" width="60" height="100"/>
+  <path id="triangle" class="cls-2" d="M320.006,59l28,47h-56Zm0,96,28-47.033h-56ZM319.99,61l26,43.994h-52ZM320.011,153l-26-43.994h52Z" transform="translate(-290 -57)"/>
+</svg>

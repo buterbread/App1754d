@@ -1,0 +1,26 @@
+<svg id="bgr-hexagon-selected.svg" xmlns="http://www.w3.org/2000/svg" width="50" height="44" viewBox="0 0 50 44">
+  <defs>
+    <style>
+      .cls-1, .cls-3 {
+        fill: none;
+      }
+
+      .cls-2 {
+        fill: #fff;
+      }
+
+      .cls-2, .cls-3 {
+        fill-rule: evenodd;
+      }
+
+      .cls-3 {
+        stroke: #1d40ed;
+        stroke-width: 1px;
+        stroke-dasharray: 2 2;
+      }
+    </style>
+  </defs>
+  <rect id="boundingbox" class="cls-1" width="50" height="44"/>
+  <path id="bgr" class="cls-2" d="M109.993,376l12.5-22.008H147.5L160.007,376l-12.5,22.008H122.5Zm3.151,0,10.928-19.007h21.856L156.856,376l-10.928,19.007H124.072Z" transform="translate(-110 -354)"/>
+  <path id="frame" class="cls-3" d="M110.994,376l12-21.007H147l12,21.007-12,21.008H123Z" transform="translate(-110 -354)"/>
+</svg>

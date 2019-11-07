@@ -1,0 +1,16 @@
+<svg id="img-hexagon-item.svg" xmlns="http://www.w3.org/2000/svg" width="50" height="44" viewBox="0 0 50 44">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+      }
+
+      .cls-2 {
+        fill: #17b6ed;
+        fill-rule: evenodd;
+      }
+    </style>
+  </defs>
+  <rect id="boundingbox" class="cls-1" width="50" height="44"/>
+  <path id="hexagon" class="cls-2" d="M1776.99,227L1789,205.99h24L1825.01,227,1813,248.005h-24Z" transform="translate(-1776 -205)"/>
+</svg>

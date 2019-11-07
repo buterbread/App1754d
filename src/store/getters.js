@@ -1,5 +1,5 @@
 export default {
-  youLost(state, getters) {
+  noMoreMoves(state, getters) {
     const { level } = state;
     return state.gameStarted && !getters.animationsInProgress && level.lost(state);
   },

@@ -1,0 +1,17 @@
+<svg id="bgr-hexagon.svg" xmlns="http://www.w3.org/2000/svg" width="50" height="44" viewBox="0 0 50 44">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+        opacity: 0.3;
+      }
+
+      .cls-2 {
+        fill: #2eefbf;
+        fill-rule: evenodd;
+      }
+    </style>
+  </defs>
+  <rect id="boundingbox" class="cls-1" width="50" height="44"/>
+  <path id="hexagon" class="cls-2" d="M1776.99,285L1789,263.99h24L1825.01,285,1813,306.005h-24Zm1,0,11.51-20.007h23L1824.01,285l-11.51,20.008h-23Z" transform="translate(-1776 -263)"/>
+</svg>

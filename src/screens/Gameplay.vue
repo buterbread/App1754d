@@ -1,200 +1,186 @@
 <template>
-  <div>
+  <div class="scene scene_playground">
     <div class="gameplay-screen">
-      <drops-counter></drops-counter>
-      <div class="levels-counter">
-        Level: {{ this.$store.state.user.currentLevel }}
+      <div class="gameplay-screen__top">
+        <drops-counter></drops-counter>
+        <div class="levels-counter">
+          Level: {{ this.user.totalFinishedLevelsCount + 1 }}
+        </div>
+        <comboMonitor></comboMonitor>
       </div>
-      <comboMonitor v-if="this.$store.state.gameStarted"></comboMonitor>
-      <playground></playground>
-    </div>
-
-    <div class="hello-screen" v-if="showHelloScreen">
-      <a href="#" v-on:click.prevent="startNewGame" class="start-new-game">Start New Game</a>
-      <br />
-      <a href="#" v-on:click.prevent="continueGame" v-if="saveRecord"
-        class="start-new-game">Continue Game</a>
-    </div>
-    <div class="you-lost" v-if="showLostScreen">
-      <h1>Game Over</h1>
-      <a href="#" v-on:click.prevent="restart" class="restart">Restart</a>
-    </div>
-    <div class="you-win" v-if="showWinScreen">
-      <a href="#"
-         v-on:click.prevent="nextLevel"
-         class="next-level">Level {{ this.$store.state.user.currentLevel + 1}}</a>
+      <div class="gameplay-screen__middle">
+        <playground></playground>
+      </div>
+      <div class="gameplay-screen__bottom">
+        <template v-if="showInventory">
+          <button
+            :disabled="!bobomsAvailable"
+            v-on:click="onAddBobombClick"
+            class="btn btn_add-bobomb"
+          ><i class="btn-icon fas fa-bomb"></i> {{bobombs}}</button>
+          <button
+            v-on:click="onRotateClick"
+            class="btn">
+            <i class="btn-icon fa fa-sync"></i>
+          </button>
+          <button
+            :disabled="!swapsAvailable"
+            v-on:click="onSwapItemsClick"
+            class="btn btn_swap-items"
+          ><i class="btn-icon fas fa-exchange-alt"></i> {{swaps}}</button>
+        </template>
+        <template v-if="showRotationDialog">
+          <button
+            v-on:click="onRotateLeftClick"
+            class="btn">
+            <i class="btn-icon fa fa-undo"></i>
+          </button>
+          <button
+            v-on:click="onRotateRightClick"
+            class="btn">
+            <i class="btn-icon fa fa-redo"></i>
+          </button>
+          <button
+            v-on:click="onRotateFinishedClick"
+            class="btn btn_ok"
+          ><i class="btn-icon fa fa-check"></i></button>
+        </template>
+        <template v-if="showConfirmationDialog">
+          <button
+            v-on:click="onDialogCancel"
+            class="btn btn_cancel"
+          ><i class="btn-icon fa fa-times"></i></button>
+          <button
+            v-on:click="onDialogConfirm"
+            class="btn btn_ok"
+          ><i class="btn-icon fa fa-check"></i></button>
+        </template>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 import dropsCounter from '../components/DropsCounter';
-import playground from '../components/Playground';
 import comboMonitor from '../components/ComboMonitor';
-import config from '../config/gameplay';
-
-const { saveRecordName } = config;
+import playground from '../components/Playground';
 
 export default {
-  name: 'ScreenGameplay',
   components: {
     dropsCounter,
-    playground,
     comboMonitor,
+    playground,
   },
-
-  data() {
-    return {
-      showHelloScreen: true,
-      showWinScreen: false,
-      showLostScreen: false,
-      saveRecord: this.getSaveRecord(),
-    };
-  },
-
-  computed: {
-    ...mapGetters([
-      'youLost',
-      'youWin',
-    ]),
-  },
-
-  watch: {
-    youLost(value) {
-      if (!value) {
-        return;
-      }
-
-      this.$store.dispatch('stopGame');
-      setTimeout(() => { this.showLostScreen = true; }, 1000);
-    },
-    youWin(value) {
-      if (!value) {
-        return;
-      }
-      this.$store.commit('ADD_USER_DROP', 1);
-      this.$store.dispatch('stopGame');
-      this.$store.dispatch('saveProgress');
-      setTimeout(() => { this.showWinScreen = true; }, 500);
-    },
-  },
-
   methods: {
-    startSet() {
-      this.$store.dispatch('startNewGame');
-      localStorage.removeItem(saveRecordName);
+    onAddBobombClick() {
+      this.$store.commit('user/SET_USER_INPUT_MODE', 'selectionMode');
+      this.$store.commit('SET_SELECTED_ITEMS_LIMIT', 1);
+      this.$store.commit('sceneController/HIDE_INVENTORY');
+      this.$store.commit('sceneController/SHOW_CONFIRMATION_DIALOG');
+      this.$store.commit('SET_DIALOG_CONFIRM_ACTION', { id: 'placeUsersBobobmb' });
+    },
+    onSwapItemsClick() {
+      this.$store.commit('user/SET_USER_INPUT_MODE', 'selectionMode');
+      this.$store.commit('SET_SELECTED_ITEMS_LIMIT', 2);
+      this.$store.commit('sceneController/HIDE_INVENTORY');
+      this.$store.commit('sceneController/SHOW_CONFIRMATION_DIALOG');
+      this.$store.commit('SET_DIALOG_CONFIRM_ACTION', { id: 'swapSelectedItems' });
+    },
+    onRotateClick() {
+      this.$store.commit('user/SET_USER_INPUT_MODE', 'selectionMode');
+      this.$store.commit('SET_SELECTED_ITEMS_LIMIT', 1);
+      this.$store.commit('sceneController/HIDE_INVENTORY');
+      this.$store.commit('sceneController/SHOW_ROTATION_DIALOG');
+    },
+    onRotateLeftClick() {
+      this.$store.dispatch('rotateSelectedItems', { direction: 'ccv' });
+    },
+    onRotateRightClick() {
+      this.$store.dispatch('rotateSelectedItems', { direction: 'cv' });
+    },
+    onRotateFinishedClick() {
+      this.$store.commit('sceneController/HIDE_ROTATION_DIALOG');
+      this.$store.commit('sceneController/SHOW_INVENTORY');
+      this.$store.dispatch('clearSelection');
+      this.$store.commit('user/SET_USER_INPUT_MODE', 'default');
     },
 
-    startNewGame() {
-      this.showHelloScreen = false;
-      this.$store.dispatch('startNewGame');
-      localStorage.removeItem(saveRecordName);
+    onDialogCancel() {
+      this.$store.dispatch('executeDialogCancelAction');
+      this.$store.commit('sceneController/HIDE_CONFIRMATION_DIALOG');
+      this.$store.commit('sceneController/SHOW_INVENTORY');
+      this.$store.dispatch('clearSelection');
+      this.$store.commit('user/SET_USER_INPUT_MODE', 'default');
     },
 
-    restart() {
-      this.showLostScreen = false;
-      this.$store.dispatch('startNewGame');
+    onDialogConfirm() {
+      this.$store.dispatch('executeDialogConfirmAction');
+      this.$store.commit('sceneController/HIDE_CONFIRMATION_DIALOG');
+      this.$store.commit('sceneController/SHOW_INVENTORY');
+      this.$store.dispatch('clearSelection');
+      this.$store.commit('user/SET_USER_INPUT_MODE', 'default');
     },
-
-    nextLevel() {
-      this.showWinScreen = false;
-      this.$store.dispatch('startNextLevel');
-    },
-
-    getSaveRecord() {
-      const saveRecord = localStorage.getItem(saveRecordName);
-      if (saveRecord) {
-        return JSON.parse(saveRecord);
-      }
-
-      return false;
-    },
-
-    continueGame() {
-      this.showHelloScreen = false;
-      this.$store.dispatch('continueGame', this.getSaveRecord());
-    },
+  },
+  computed: {
+    ...mapState({
+      user: state => state.user,
+      bobombs: state => state.inventory.bobombs,
+      swaps: state => state.inventory.swaps,
+      showConfirmationDialog: state => state.sceneController.showConfirmationDialog,
+      showRotationDialog: state => state.sceneController.showRotationDialog,
+      showInventory: state => state.sceneController.showInventory,
+    }),
+    ...mapGetters({
+      bobomsAvailable: 'inventory/bobomsAvailable',
+      swapsAvailable: 'inventory/swapsAvailable',
+    }),
   },
 };
 </script>
 
 <style lang="scss">
-  .gameplay-screen {
-    width: 375px;
-    min-width: 320px;
-    height: 100%;
-    position: relative;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: center;
-    margin: auto;
-  }
-
-  .hello-screen {
-    position: fixed;
-    display: flex;
-    align-items: center;
+  .gameplay-screen__bottom {
+    padding: 0 5px;
     justify-content: center;
-    flex-direction: column;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    text-align: center;
-    padding: 50px 20px;
-    z-index: 9999;
-    background: #ffffff;
-    font-size: 36px;
-    color: cornflowerblue;
+    justify-items: stretch;
   }
 
-  .you-win {
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 50px 20px;
-    z-index: 9999;
-    background: #fafafa;
-    font-size: 36px;
-    color: mediumseagreen;
-  }
-
-  .next-level {
-    text-decoration: none;
-  }
-
-  .you-lost {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    text-align: center;
-    padding: 50px 20px;
-    z-index: 9999;
-    background: #333;
-    font-size: 36px;
-    color: coral;
-  }
-
-  .restart {
+  .btn {
+    display: block;
+    flex: 1 1 0;
+    margin: 0 5px;
+    padding: 10px 20px;
+    border-radius: 9999px;
+    background-color: chocolate;
     color: #ffffff;
+    font-size: 14px;
+    border: 3px solid transparent;
   }
 
-  .gameplay-footer {
-    text-align: center;
-    margin: auto;
-    clear: both;
+  .btn-icon {
+    font-size: 25px;
+  }
+
+  .btn_add-bobomb {}
+
+  .btn_rotate {}
+
+  .btn_swap-items {}
+
+  .btn_cancel {
+    background-color: #ffffff;
+    color: chocolate;
+    border: 3px solid #ff8040;
+  }
+
+  .btn_ok {
+    background-color: #ffffff;
+    color: #1f991f;
+    border: 3px solid #1f991f;
+  }
+
+  .btn[disabled] {
+    opacity: 0.5;
   }
 </style>

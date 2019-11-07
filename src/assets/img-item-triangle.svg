@@ -1,0 +1,16 @@
+<svg id="img-item-triangle.svg" xmlns="http://www.w3.org/2000/svg" width="60" height="100" viewBox="0 0 60 100">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+      }
+
+      .cls-2 {
+        fill: #17b6ed;
+        fill-rule: evenodd;
+      }
+    </style>
+  </defs>
+  <rect id="boundingbox" class="cls-1" width="60" height="100"/>
+  <path id="triangle-item" class="cls-2" d="M97.006,72l28,47.015h-56Zm-0.013,96-28-47.015h56Z" transform="translate(-67 -70)"/>
+</svg>

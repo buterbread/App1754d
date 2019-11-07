@@ -1,0 +1,16 @@
+<svg id="img-hexagon-item-bobomb.svg" xmlns="http://www.w3.org/2000/svg" width="50" height="44" viewBox="0 0 50 44">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+      }
+
+      .cls-2 {
+        fill: #ed1818;
+        fill-rule: evenodd;
+      }
+    </style>
+  </defs>
+  <rect id="boundingbox" class="cls-1" width="50" height="44"/>
+  <path id="hexagon" class="cls-2" d="M277.994,376l12-21.007H314l12,21.007-12,21.008H290Z" transform="translate(-277 -354)"/>
+</svg>

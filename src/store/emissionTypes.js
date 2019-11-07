@@ -4,92 +4,75 @@ export default {
   namespaced: true,
 
   actions: {
-    explodeNearest(context, options) {
-      const { rootState, dispatch, commit } = context;
-      const { level, itemsArray: items } = rootState;
-
-      const row = options.row + options.emitter.top;
-      const col = options.col + options.emitter.left;
-
-      if (!items[row] || !items[row][col]) {
-        dispatch('stopDropPassageAnimation', options, { root: true });
-        return;
-      }
-
-      dispatch('startDropPassageAnimation', options, { root: true });
-
-      if (items[row][col].disabled) {
-        dispatch('stopDropPassageAnimation', options, { root: true });
-        return;
-      }
-
-      setTimeout(() => {
-        if (items[row][col].value !== 0 && !items[row][col].disabled) {
-          commit('INCREASE_ITEM', { row, col, amount: level.maxItemValue }, { root: true });
-        }
-        dispatch('stopDropPassageAnimation', options, { root: true });
-        dispatch('attemptToPopBubble', { row, col, addBonusDrop: true }, { root: true });
-      }, config.dropInjectionDelay);
-    },
-
     tillImpact(context, options) {
-      const { rootState, dispatch, commit } = context;
-      const { level, itemsArray: items } = rootState;
+      const { rootState, dispatch } = context;
+      const { itemsArray: items } = rootState;
 
       const initialItemCords = options.initialItemCords || options;
+      const iteration = options.iteration || 0;
 
-      const row = options.row + options.emitter.top;
-      const col = options.col + options.emitter.left;
+      const currentOffsets = options.offsets[iteration % options.offsets.length];
 
-      if (!items[row] || !items[row][col]) {
+      const row = options.row + currentOffsets.top;
+      const col = options.col + currentOffsets.left;
+
+      if (!items[row] || !items[row][col] || items[row][col].isWall) {
         dispatch('stopDropPassageAnimation', initialItemCords, { root: true });
         return;
       }
 
+      const item = items[row][col];
+
       dispatch('startDropPassageAnimation', options, { root: true });
 
-      const top = options.emitter.top;
-      const left = options.emitter.left;
-
-      if (items[row][col].value === level.minItemValue || items[row][col].disabled) {
-        let newTop;
-        let newLeft;
-
-        if (top === 0) {
-          newTop = top;
-        } else if (top < 0) {
-          newTop = top - 1;
-        } else {
-          newTop = top + 1;
-        }
-
-        if (left === 0) {
-          newLeft = left;
-        } else if (left < 0) {
-          newLeft = left - 1;
-        } else {
-          newLeft = left + 1;
-        }
-
+      if (item.value === item.minItemValue || !item.canReceiveImpact) {
         setTimeout(() => {
           dispatch('tillImpact', {
-            row: options.row,
-            col: options.col,
-            emitter: {
-              top: newTop,
-              left: newLeft,
-            },
+            row,
+            col,
+            offsets: options.offsets,
             initialItemCords,
+            iteration: iteration + 1,
           });
         }, config.dropInjectionDelay);
         return;
       }
 
       setTimeout(() => {
-        if (items[row][col].value !== 0 && !items[row][col].disabled) {
-          commit('INCREASE_ITEM', { row, col }, { root: true });
+        if (items[row][col].value !== 0) {
+          dispatch(items[row][col].impactCallback, { row, col }, { root: true });
         }
         dispatch('stopDropPassageAnimation', initialItemCords, { root: true });
+        dispatch('attemptToPopBubble', { row, col, addBonusDrop: true }, { root: true });
+      }, config.dropInjectionDelay);
+    },
+
+    explodeNearest(context, options) {
+      const { rootState, dispatch, commit } = context;
+      const { itemsArray: items } = rootState;
+
+      const row = options.row + options.offsets.top;
+      const col = options.col + options.offsets.left;
+
+      if (!items[row] || !items[row][col] || items[row][col].isWall) {
+        dispatch('stopDropPassageAnimation', options, { root: true });
+        return;
+      }
+
+      const item = items[row][col];
+
+      dispatch('startDropPassageAnimation', options, { root: true });
+
+      if (item.disabled) {
+        dispatch('stopDropPassageAnimation', options, { root: true });
+        return;
+      }
+
+      setTimeout(() => {
+        if (item.value !== 0) {
+          commit('INCREASE_ITEM', { row, col, amount: item.maxItemValue }, { root: true });
+        }
+        dispatch('stopDropPassageAnimation', options, { root: true });
         dispatch('attemptToPopBubble', { row, col, addBonusDrop: true }, { root: true });
       }, config.dropInjectionDelay);
     },

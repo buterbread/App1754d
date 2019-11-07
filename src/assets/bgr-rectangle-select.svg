@@ -1,0 +1,27 @@
+<svg id="bgr-rectangle-select.svg" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+      }
+
+      .cls-2, .cls-3 {
+        fill: #fff;
+      }
+
+      .cls-2 {
+        fill-rule: evenodd;
+      }
+
+      .cls-3 {
+        fill-opacity: 0;
+        stroke: #1d40ed;
+        stroke-width: 1px;
+        stroke-dasharray: 4 2;
+      }
+    </style>
+  </defs>
+  <rect id="boundingbox" class="cls-1" width="40" height="40"/>
+  <path id="selsectbg" class="cls-2" d="M167,270.5A19.5,19.5,0,1,1,147.5,290,19.5,19.5,0,0,1,167,270.5Zm0,2.5a17,17,0,1,1-17,17A17,17,0,0,1,167,273Z" transform="translate(-147 -270)"/>
+  <circle id="rectangle" class="cls-3" cx="20" cy="20" r="19.5"/>
+</svg>

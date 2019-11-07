@@ -3,7 +3,6 @@ import Router from 'vue-router';
 import store from '../store';
 
 import Hello from '../screens/Hello';
-import Gameplay from '../screens/Gameplay';
 
 Vue.use(Router);
 
@@ -12,8 +11,7 @@ export default new Router({
   mode: 'history',
   scrollBehavior: () => ({ y: 0 }),
   routes: [
-    { path: '/start', component: Hello },
-    { path: '/', component: Gameplay },
-    { path: '*', component: Gameplay },
+    { path: '/', component: Hello },
+    { path: '*', component: Hello },
   ],
 });
