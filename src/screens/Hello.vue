@@ -1,27 +1,36 @@
 <template>
 <div>
   <gameModesMenu v-if="showGameModesMenu"></gameModesMenu>
-  <chaptersMenu v-if="showChaptersMenu"></chaptersMenu>
-  <setsMenu v-if="showSetsMenu"></setsMenu>
+  <ChaptersMenu v-if="showChaptersMenu"></ChaptersMenu>
+  <SetsMenu v-if="showSetsMenu"></SetsMenu>
   <div class="scene scene_playground" v-if="gameStarted">
-      <playground></playground>
+    <div class="playground-header">
+      <Drops-counter></Drops-counter>
+      <div class="levels-counter">Level: {{ this.$store.state.user.currentLevel.index + 1 }}</div>
+      <ComboMonitor v-if="this.$store.state.gameStarted"></ComboMonitor>
+    </div>
+    <Playground></Playground>
   </div>
 </div>
 </template>
 
 <script>
 import { mapState, mapGetters } from 'vuex';
-import gameModesMenu from './gameModesMenu';
-import chaptersMenu from './chaptersMenu';
-import setsMenu from './setsMenu';
-import playground from '../components/Playground';
+import GameModesMenu from './GameModesMenu';
+import ChaptersMenu from './ChaptersMenu';
+import SetsMenu from './SetsMenu';
+import Playground from '../components/Playground';
+import DropsCounter from '../components/DropsCounter';
+import ComboMonitor from '../components/ComboMonitor';
 
 export default {
   components: {
-    gameModesMenu,
-    chaptersMenu,
-    setsMenu,
-    playground,
+    GameModesMenu,
+    ChaptersMenu,
+    SetsMenu,
+    Playground,
+    DropsCounter,
+    ComboMonitor,
   },
   methods: {
     isLastLevel() {
@@ -125,6 +134,12 @@ export default {
   &[disabled] {
     opacity: .5;
   }
+}
+
+.playground-header {
+  display: flex;
+  width: 100%;
+  align-items: center;
 }
 
 </style>

@@ -1,6 +1,5 @@
 <template>
   <div :class="['playground-box']">
-    <h1>123</h1>
     <div :class="['playground-row']" v-for="(itemRow, rowIndex) in itemsArray"
          v-bind:key="itemRow.id">
       <item v-for="(item, colIndex) in itemRow"

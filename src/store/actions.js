@@ -144,7 +144,7 @@ export default {
     const unit = items[row][col];
 
     const unitEmitters = unit.emitters[level.type];
-  
+
     unitEmitters.forEach((emitter) => {
       context.commit('INCREASE_ANIMS_COUNTER', null, { root: true });
       context.dispatch('emitterDischarge', { row, col, emitter });
