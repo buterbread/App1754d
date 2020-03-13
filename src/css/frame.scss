@@ -1,0 +1,63 @@
+*, :before, :after {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+
+html, body {
+  background-color: var(--bgColor);
+  color: var(--textColor);
+  font-family: var(--fontFamily);
+  font-size: var(--fontSize);
+  line-height: var(--lineHeight);
+  padding: 0;
+  margin: 0;
+}
+
+a {
+  color: #ffffff;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.link {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.wrapper {
+  min-width: 320px;
+  min-height: 480px;
+}
+
+.button {
+  font-family: var(--fontFamily);
+
+  &:focus {
+    outline: none;
+  }
+
+  &:active {
+    transform: translateY(2px);
+  }
+}
+
+.scene {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  z-index: 9999;
+  background: #030613;
+}
+
+.container {
+  min-width: 320px;
+  min-height: 480px;
+  height: 100%;
+
+  max-width: 375px;
+  padding: 0 10px;
+}

@@ -1,0 +1,120 @@
+.gameplayScene {
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.gameplayScene-header {
+  display: flex;
+  width: 100%;
+  padding: 22px 0 18px 0;
+  margin-top: auto;
+}
+
+.gameplayScene-headerCol {}
+
+.gameplayScene-headerCol--progress {
+  flex: 1 1 0;
+}
+
+.gameplayScene-buttonMenu {
+  display: block;
+  width: 33px;
+  height: 33px;
+  padding: 0;
+  background-color: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 50%;
+  margin: 3px 0 0 2px;
+}
+
+.gameplayScene-gameProgress {
+  margin-bottom: 22px;
+  flex: 1 1 0;
+}
+
+.gameplayScene-gameProgressLevels {
+  text-transform: uppercase;
+  font-size: 20px;
+  line-height: 26px;
+}
+
+.gameplayScene-gameProgressRooms {
+  text-transform: uppercase;
+  font-size: 13px;
+  line-height: 14px;
+}
+
+.gameplayScene-buttonReset {
+  display: block;
+  width: 33px;
+  height: 33px;
+  padding: 0;
+  background-color: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 50%;
+  margin: 3px 2px 0 0;
+}
+
+.gameplayScene-armoryBox {
+  margin: auto 0;
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+
+.gameplayScene-armoryItemBox {
+  display: flex;
+  align-items: center;
+  margin: 0 6px 13px 6px;
+}
+
+.gameplayScene-armoryItem {
+  width: 39px;
+  height: 39px;
+  background-color: #2EEFBF;
+  margin-right: 4px;
+}
+
+.gameplayScene-armoryItemText {
+  display: block;
+  width: 17px;
+  font-size: 12px;
+  line-height: 14px;
+  margin-top: 4px;
+}
+
+
+.gameplayScene-tools {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  padding-bottom: 10px;
+  margin: auto 0;
+}
+
+.gameplayScene-tool {
+  display: block;
+  padding: 0;
+  border: none;
+  background-color: transparent;
+  color: #ffffff;
+  margin: 0 13px;
+}
+
+.gameplayScene-toolIcon {
+  display: block;
+  width: 34px;
+  height: 34px;
+  background-color: #403f5b;
+  border-radius: 50%;
+}
+
+.gameplayScene-toolText {
+  margin-top: 8px;
+  display: block;
+  font-size: 12px;
+  line-height: 12px;
+}

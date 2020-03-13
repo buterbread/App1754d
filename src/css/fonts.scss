@@ -21,3 +21,23 @@
   font-weight: 100;
   font-style: italic;
 }
+
+@font-face {
+  font-family: 'Telegrama Raw';
+  src: url('./assets/fonts/telegrama-raw/TELEGRAMA-RAW.eot');
+  src: url('./assets/fonts/telegrama-raw/TELEGRAMA-RAW.eot?#iefix') format('embedded-opentype'),
+  url('./assets/fonts/telegrama-raw/TELEGRAMA-RAW.woff2') format('woff2'),
+  url('./assets/fonts/telegrama-raw/TELEGRAMA-RAW.woff') format('woff'),
+  //url('./assets/fonts/telegrama-raw/TELEGRAMA-RAW.ttf')  format('truetype'),
+  url('./assets/fonts/telegrama-raw/TELEGRAMA-RAW.svg#Telegrama') format('svg');
+}
+
+@font-face {
+  font-family: 'Telegrama Raw Osn';
+  src: url('/assets/fonts/telegrama-raw/TELEGRAMA-RAWOSN.eot');
+  src: url('/assets/fonts/telegrama-raw/TELEGRAMA-RAWOSN.eot?#iefix') format('embedded-opentype'),
+  url('/assets/fonts/telegrama-raw/TELEGRAMA-RAWOSN.woff2') format('woff2'),
+  url('/assets/fonts/telegrama-raw/TELEGRAMA-RAWOSN.woff') format('woff'),
+  //url('/assets/fonts/telegrama-raw/TELEGRAMA-RAWOSN.ttf')  format('truetype'),
+  url('/assets/fonts/telegrama-raw/TELEGRAMA-RAWOSN.svg#Telegrama') format('svg');
+}

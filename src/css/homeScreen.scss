@@ -1,0 +1,39 @@
+.home-screen__header {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: auto 0;
+}
+
+.home-screen__settings-link {
+  font-size: 24px;
+}
+
+.main-menu {
+  margin: auto 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.main-menu__list {
+  display: block;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.main-menu__item {
+  display: block;
+  font-size: 36px;
+  line-height: 70px;
+  text-transform: uppercase;
+}
+
+.main-menu__item-link {
+  cursor: pointer;
+
+  &[disabled] {
+    opacity: .5;
+  }
+}

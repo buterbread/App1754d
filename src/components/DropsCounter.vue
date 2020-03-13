@@ -1,5 +1,5 @@
 <template>
-  <div v-bind:class="counterClassNames">{{ dropsCount }}</div>
+  <div v-bind:class="counterClassNames">Score {{ dropsCount }}</div>
 </template>
 
 <script>
@@ -37,42 +37,4 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.drops-counter {
-  margin: 20px auto 20px 20px;
-  font-size: 20px;
-  line-height: 60px;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background-color: #17b6ed;
-  color: #ffffff;
-  text-align: center;
-}
-
-.drops-counter_warning-lvl-1 {
-  background-color: #EFBF2E;
-}
-
-.drops-counter_warning-lvl-2 {
-  background-color: tomato;
-}
-
-.drops-counter_warning-lvl-3 {
-  background-color: orangered;
-  animation: blink 1s infinite;
-}
-
-.drops-counter_last-hope {
-  background-color: darkgray;
-}
-
-@keyframes blink {
-  0% {
-    opacity: 0.2;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-</style>
+<style lang="scss"></style>

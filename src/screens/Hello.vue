@@ -1,24 +1,83 @@
 <template>
 <div>
-  <gameModesMenu v-if="showGameModesMenu"></gameModesMenu>
+  <GameModesMenu v-if="showGameModesMenu"></GameModesMenu>
   <ChaptersMenu v-if="showChaptersMenu"></ChaptersMenu>
   <SetsMenu v-if="showSetsMenu"></SetsMenu>
-  <div class="scene scene_playground" v-if="gameStarted">
-    <div class="playground-header">
-      <Drops-counter></Drops-counter>
-      <div class="levels-counter">Level: {{ this.$store.state.user.currentLevel.index + 1 }}</div>
-      <ComboMonitor v-if="this.$store.state.gameStarted"></ComboMonitor>
+  <div class="scene" v-if="gameStarted">
+    <div class="container">
+      <div class="gameplayScene">
+        <div class="gameplayScene-header">
+          <div class="gameplayScene-headerCol">
+            <button class="button gameplayScene-buttonMenu"></button>
+          </div>
+          <div class="gameplayScene-headerCol gameplayScene-headerCol--progress">
+            <div class="gameplayScene-gameProgress">
+              <div class="gameplayScene-gameProgressLevels">
+                Level {{ this.$store.state.user.currentLevel.index + 1 }}
+              </div>
+              <div class="gameplayScene-gameProgressRooms">
+                Room {{ this.$store.state.user.currentLevel.index + 1 }}/12
+              </div>
+            </div>
+            <Drops-counter></Drops-counter>
+          </div>
+          <div class="gameplayScene-headerCol">
+            <button class="button gameplayScene-buttonReset"></button>
+          </div>
+          <ComboMonitor v-if="false && this.$store.state.gameStarted"></ComboMonitor>
+        </div>
+        <Playground></Playground>
+        <div class="gameplayScene-armoryBox">
+          <div class="gameplayScene-armoryItemBox">
+            <div class="gameplayScene-armoryItem"></div>
+            <span class="gameplayScene-armoryItemText">05</span>
+          </div>
+
+          <div class="gameplayScene-armoryItemBox">
+            <div class="gameplayScene-armoryItem"></div>
+            <span class="gameplayScene-armoryItemText">05</span>
+          </div>
+
+          <div class="gameplayScene-armoryItemBox">
+            <div class="gameplayScene-armoryItem"></div>
+            <span class="gameplayScene-armoryItemText">05</span>
+          </div>
+
+          <div class="gameplayScene-armoryItemBox">
+            <div class="gameplayScene-armoryItem"></div>
+            <span class="gameplayScene-armoryItemText">05</span>
+          </div>
+        </div>
+
+        <div class="gameplayScene-tools">
+          <button class="button gameplayScene-tool">
+            <i class="gameplayScene-toolIcon"></i>
+            <span class="gameplayScene-toolText">08</span>
+          </button>
+          <button class="button gameplayScene-tool">
+            <i class="gameplayScene-toolIcon"></i>
+            <span class="gameplayScene-toolText">08</span>
+          </button>
+          <button class="button gameplayScene-tool">
+            <i class="gameplayScene-toolIcon"></i>
+            <span class="gameplayScene-toolText">08</span>
+          </button>
+          <button class="button gameplayScene-tool">
+            <i class="gameplayScene-toolIcon"></i>
+            <span class="gameplayScene-toolText">08</span>
+          </button>
+        </div>
+      </div>
     </div>
-    <Playground></Playground>
   </div>
 </div>
 </template>
 
 <script>
 import { mapState, mapGetters } from 'vuex';
-import GameModesMenu from './GameModesMenu';
-import ChaptersMenu from './ChaptersMenu';
-import SetsMenu from './SetsMenu';
+import GameModesMenu from './MenuGameModes';
+import ChaptersMenu from './MenuChapters';
+import SetsMenu from './MenuSets';
 import Playground from '../components/Playground';
 import DropsCounter from '../components/DropsCounter';
 import ComboMonitor from '../components/ComboMonitor';
@@ -93,47 +152,9 @@ export default {
 </script>
 
 <style lang="scss">
-.scene_playground {
+.gameplay {
   padding-left: 5px;
   padding-right: 5px
-}
-
-.home-screen__header {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.home-screen__settings-link {
-  font-size: 24px;
-}
-
-.main-menu {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.main-menu__list {
-  display: block;
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-}
-
-.main-menu__item {
-  display: block;
-  font-size: 36px;
-  line-height: 70px;
-  text-transform: uppercase;
-}
-
-.main-menu__item-link {
-  cursor: pointer;
-
-  &[disabled] {
-    opacity: .5;
-  }
 }
 
 .playground-header {
