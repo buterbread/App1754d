@@ -28,22 +28,20 @@
 .item__charge {
   width: 36px;
   height: 36px;
-  border-radius: 50%;
   display: block;
   transform: rotate(-135deg);
-  overflow: hidden;
+  clip-path: url('#item__charge-delimiters-mask');
 }
 
 .item__charge-pie {
   fill: transparent;
   stroke: #c31ec3;
-  stroke-width: 12;
+  stroke-width: 6;
   stroke-dasharray: 0, 128;
   transition: stroke-dasharray .15s ease;
-  r: 18px;
+  r: 15px;
   cx: 18px;
   cy: 18px;
-  clip-path: url('#item__charge-delimiters-mask');
 }
 
 .item__charge-pie {
