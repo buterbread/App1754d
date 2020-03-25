@@ -1,3 +1,5 @@
+import BubbleBobomb from '../bubbleBobomb';
+
 export default {
   defaultSet: {
     available: false,
@@ -24,6 +26,13 @@ export default {
             index: 0,
             id: 'level1',
             type: 'default',
+            customDrops: [
+              {
+                unitConstructor: BubbleBobomb,
+                col: 1,
+                row: 1,
+              },
+            ],
           },
         ],
       },

@@ -1,5 +1,5 @@
 <template>
-  <div class="scene">
+  <div class="scene scene_main-menu">
     <header class="home-screen__header">
       <a v-on:click.prevent="onSettingsClick" class="home-screen__settings-link">Settings</a>
     </header>

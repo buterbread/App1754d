@@ -12,4 +12,5 @@
   @import "css/homeScreen";
   @import "css/gameplayScene.scss";
   @import "css/dropsCounter.scss";
+  @import "css/bubbleComponentRect";
 </style>

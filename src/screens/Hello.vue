@@ -27,6 +27,7 @@
           <ComboMonitor v-if="false && this.$store.state.gameStarted"></ComboMonitor>
         </div>
         <Playground></Playground>
+
         <div class="gameplayScene-armoryBox">
           <div class="gameplayScene-armoryItemBox">
             <div class="gameplayScene-armoryItem"></div>

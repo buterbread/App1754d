@@ -1,14 +1,14 @@
 <template>
-  <bubbleComponent v-bind:item="item"></bubbleComponent>
+  <BubbleComponentQuad v-bind:item="item"></BubbleComponentQuad>
 </template>
 
 <script>
-import bubbleComponent from './BubbleComponent';
+import BubbleComponentQuad from './BubbleComponentRect';
 
 export default {
   props: ['item'],
   components: {
-    bubbleComponent,
+    BubbleComponentQuad,
   },
 };
 </script>
