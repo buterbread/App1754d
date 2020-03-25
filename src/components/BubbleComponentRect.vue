@@ -3,6 +3,12 @@
        v-on:click.prevent="onClick"
        :disabled="item.disabled">
     <svg class="item__charge">
+      <defs>
+        <path id="item__charge-delimiters-4" d="M0,0H17V17H0V0ZM19,0H36V17H19V0ZM0,19H17V36H0V19Zm19,0H36V36H19V19Z"/>
+      </defs>
+      <clipPath id="item__charge-delimiters-mask">
+        <use xlink:href="#item__charge-delimiters-4" style="overflow:visible;" />
+      </clipPath>
       <circle class="item__charge-pie"
         :style="`stroke-dasharray: ${chart.dash}, ${chart.gap};`"></circle>
     </svg>

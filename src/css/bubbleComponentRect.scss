@@ -31,6 +31,7 @@
   border-radius: 50%;
   display: block;
   transform: rotate(-135deg);
+  overflow: hidden;
 }
 
 .item__charge-pie {
@@ -42,6 +43,7 @@
   r: 18px;
   cx: 18px;
   cy: 18px;
+  clip-path: url('#item__charge-delimiters-mask');
 }
 
 .item__charge-pie {

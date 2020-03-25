@@ -4,20 +4,20 @@
 }
 
 .drops-counter_warning-lvl-1 {
-  background-color: #EFBF2E;
+  color: #EFBF2E;
 }
 
 .drops-counter_warning-lvl-2 {
-  background-color: tomato;
+  color: tomato;
 }
 
 .drops-counter_warning-lvl-3 {
-  background-color: orangered;
+  color: #ff0000;
   animation: blink 1s infinite;
 }
 
 .drops-counter_last-hope {
-  background-color: darkgray;
+  color: darkgray;
 }
 
 @keyframes blink {
