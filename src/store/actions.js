@@ -147,7 +147,10 @@ export default {
 
     unitEmitters.forEach((emitter) => {
       context.commit('INCREASE_ANIMS_COUNTER', null, { root: true });
-      context.dispatch('emitterDischarge', { row, col, emitter });
+
+      const { offsets } = config.directions[emitter.label];
+
+      context.dispatch('emitterDischarge', { row, col, emitter, offsets });
     });
 
     if (addBonusDrop === true) {
@@ -174,6 +177,12 @@ export default {
     context.dispatch(`emissions/${emissionType}`, options);
   },
 
+  increaseItemValue(context, options) {
+    const { row, col } = options;
+
+    context.commit('INCREASE_ITEM', { row, col });
+  },
+
   startDropPassageAnimation(context, options) {
     const { itemsArray: items, level } = context.state;
     const { row, col, emitter } = options;
@@ -183,7 +192,7 @@ export default {
     }
 
     const dropCurrentDirection =
-        items[row][col].emitters[level.type].find(dir => dir.label === emitter.label);
+        items[row][col].emitters[level.type].find(dir => emitter && dir.label === emitter.label);
 
     if (dropCurrentDirection && !dropCurrentDirection.animation) {
       dropCurrentDirection.animation = true;

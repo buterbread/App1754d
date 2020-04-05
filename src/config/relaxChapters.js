@@ -25,7 +25,7 @@ export default {
           {
             index: 0,
             id: 'level1',
-            type: 'default',
+            type: 'triangle',
             customDrops: [
               {
                 unitConstructor: BubbleBobomb,
@@ -33,6 +33,16 @@ export default {
                 row: 1,
               },
             ],
+          },
+          {
+            index: 1,
+            id: 'level2',
+            type: 'triangle',
+          },
+          {
+            index: 2,
+            id: 'level3',
+            type: 'hexagon',
           },
         ],
       },
