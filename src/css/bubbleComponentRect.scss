@@ -29,8 +29,32 @@
   width: 36px;
   height: 36px;
   display: block;
-  transform: rotate(-135deg);
-  clip-path: url('#item__charge-delimiters-mask');
+
+  &[data-maxvalue="2"] {
+    clip-path: url('#item__charge-delimiters-mask-2');
+
+    .item__charge-pie {
+      transform: rotate(-90deg);
+    }
+  }
+
+  &[data-maxvalue="3"] {
+    clip-path: url('#item__charge-delimiters-mask-3');
+  }
+
+  &[data-maxvalue="4"] {
+    clip-path: url('#item__charge-delimiters-mask-4');
+
+    .item__charge-pie {
+      transform: rotate(-135deg);
+    }
+  }
+}
+
+.item__charge-placeholder {
+  fill: #d0d0ee;
+  fill-rule: evenodd;
+  opacity: 0.2;
 }
 
 .item__charge-pie {
@@ -39,13 +63,11 @@
   stroke-width: 6;
   stroke-dasharray: 0, 128;
   transition: stroke-dasharray .15s ease;
+  transform: rotate(-90deg);
+  transform-origin: center;
   r: 15px;
   cx: 18px;
   cy: 18px;
-}
-
-.item__charge-pie {
-
 }
 
 .item {

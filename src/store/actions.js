@@ -114,11 +114,11 @@ export default {
   },
 
   attemptToPopBubble(context, options) {
-    const { itemsArray: items, level } = context.state;
+    const { itemsArray: items } = context.state;
     const { row, col } = options;
     const unit = items[row][col];
 
-    if (unit.value > level.maxItemValue) {
+    if (unit.value > unit.maxItemValue) {
       context.dispatch('makePopAnimation', options, { root: true });
 
       if (unit.injectionInProgress === true) {
@@ -128,7 +128,7 @@ export default {
       unit.injectionInProgress = true;
 
       setTimeout(() => {
-        context.commit('RESET_ITEM_VALUE', { row, col, value: level.minItemValue });
+        context.commit('RESET_ITEM_VALUE', { row, col, value: unit.minItemValue });
 
         const dropType = unit.type;
 

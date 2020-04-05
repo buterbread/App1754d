@@ -25,12 +25,55 @@ export default {
           {
             index: 0,
             id: 'level1',
-            type: 'triangle',
+            type: 'default',
             customDrops: [
               {
-                unitConstructor: BubbleBobomb,
+                row: 0,
+                col: 0,
+                options: {
+                  maxItemValue: 1,
+                  value: 1,
+                },
+              },
+              {
+                row: 0,
                 col: 1,
-                row: 1,
+                options: {
+                  maxItemValue: 2,
+                  value: 2,
+                },
+              },
+              {
+                row: 0,
+                col: 2,
+                options: {
+                  maxItemValue: 3,
+                  value: 3,
+                },
+              },
+              {
+                row: 0,
+                col: 3,
+                options: {
+                  maxItemValue: 4,
+                  value: 4,
+                },
+              },
+              {
+                row: 0,
+                col: 4,
+                options: {
+                  maxItemValue: 5,
+                  value: 5,
+                },
+              },
+              {
+                row: 0,
+                col: 5,
+                options: {
+                  maxItemValue: 6,
+                  value: 6,
+                },
               },
             ],
           },
