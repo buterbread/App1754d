@@ -34,12 +34,16 @@
     clip-path: url('#item__charge-delimiters-mask-2');
 
     .item__charge-pie {
-      transform: rotate(-90deg);
+      transform: rotate(-180deg);
     }
   }
 
   &[data-maxvalue="3"] {
     clip-path: url('#item__charge-delimiters-mask-3');
+
+    .item__charge-pie {
+      transform: rotate(-150deg);
+    }
   }
 
   &[data-maxvalue="4"] {
@@ -47,6 +51,22 @@
 
     .item__charge-pie {
       transform: rotate(-135deg);
+    }
+  }
+
+  &[data-maxvalue="5"] {
+    clip-path: url('#item__charge-delimiters-mask-5');
+
+    .item__charge-pie {
+      transform: rotate(-126deg);
+    }
+  }
+
+  &[data-maxvalue="6"] {
+    clip-path: url('#item__charge-delimiters-mask-6');
+
+    .item__charge-pie {
+      transform: rotate(-120deg);
     }
   }
 }
