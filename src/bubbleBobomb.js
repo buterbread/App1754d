@@ -12,12 +12,39 @@ class BubbleBobomb extends BubbleDefault {
           label: 'left',
           animation: false,
           emissionType: 'explodeNearest',
-        }, {
+        },
+        {
+          label: 'leftTop',
+          animation: false,
+          emissionType: 'explodeNearest',
+        },
+        {
           label: 'top',
           animation: false,
           emissionType: 'explodeNearest',
-        }, { label: 'right', animation: false, emissionType: 'explodeNearest' }, {
+        },
+        {
+          label: 'topRight',
+          animation: false,
+          emissionType: 'explodeNearest',
+        },
+        {
+          label: 'right',
+          animation: false,
+          emissionType: 'explodeNearest',
+        },
+        {
+          label: 'rightBottom',
+          animation: false,
+          emissionType: 'explodeNearest',
+        },
+        {
           label: 'bottom',
+          animation: false,
+          emissionType: 'explodeNearest',
+        },
+        {
+          label: 'bottomLeft',
           animation: false,
           emissionType: 'explodeNearest',
         },
@@ -28,12 +55,14 @@ class BubbleBobomb extends BubbleDefault {
           animation: false,
           emissionType: 'explodeNearest',
           noseDirection: 'up',
-        }, {
+        },
+        {
           label: 'triangle_right_top',
           animation: false,
           emissionType: 'explodeNearest',
           noseDirection: 'up',
-        }, {
+        },
+        {
           label: 'triangle_left_bottom',
           animation: false,
           emissionType: 'explodeNearest',

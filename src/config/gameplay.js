@@ -131,10 +131,86 @@ const gameplayConfig = () => ({
       next: 'hexagon_topEven',
       offsets: [{ top: 0, left: -1 }, { top: -1, left: -1 }],
     },
-    left: { prev: 'bottom', next: 'top', offsets: [{ top: 0, left: -1 }] },
-    top: { prev: 'left', next: 'right', offsets: [{ top: -1, left: 0 }] },
-    right: { prev: 'top', next: 'bottom', offsets: [{ top: 0, left: 1 }] },
-    bottom: { prev: 'right', next: 'left', offsets: [{ top: 1, left: 0 }] },
+    left: {
+      prev: 'bottom',
+      next: 'top',
+      offsets: [
+        {
+          top: 0,
+          left: -1,
+        },
+      ],
+    },
+    top: {
+      prev: 'left',
+      next: 'right',
+      offsets: [
+        {
+          top: -1,
+          left: 0,
+        },
+      ],
+    },
+    right: {
+      prev: 'top',
+      next: 'bottom',
+      offsets: [
+        {
+          top: 0,
+          left: 1,
+        },
+      ],
+    },
+    bottom: {
+      prev: 'right',
+      next: 'left',
+      offsets: [
+        {
+          top: 1,
+          left: 0,
+        },
+      ],
+    },
+    leftTop: {
+      //prev: 'bottom',
+      //next: 'top',
+      offsets: [
+        {
+          top: -1,
+          left: -1,
+        },
+      ],
+    },
+    topRight: {
+      //prev: 'bottom',
+      //next: 'top',
+      offsets: [
+        {
+          top: -1,
+          left: 1,
+        },
+      ],
+    },
+    rightBottom: {
+      //prev: 'bottom',
+      //next: 'top',
+      offsets: [
+        {
+          top: 1,
+          left: 1,
+        },
+      ],
+    },
+    bottomLeft: {
+      //prev: 'bottom',
+      //next: 'top',
+      offsets: [
+        {
+          top: 1,
+          left: -1,
+        },
+      ],
+    },
   },
 });
 

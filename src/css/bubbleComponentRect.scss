@@ -17,11 +17,34 @@
     opacity: 0.3;
     cursor: default;
   }
+}
 
-  &.bobomb {
-    .item {
-      background-color: chocolate;
-    }
+.item__explosion {
+  width: 22px;
+  height: 22px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  background: #fff;
+  z-index: 5;
+  border-radius: 50%;
+  box-shadow: 0 0 5px 5px #ffffff, 0 0 18px 7px #c31ec3;
+
+  animation: explosion 0.2s ease-out 0s infinite;
+  animation-fill-mode: forwards;
+}
+
+@keyframes explosion {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2);
   }
 }
 
