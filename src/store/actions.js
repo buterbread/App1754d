@@ -181,6 +181,11 @@ export default {
     const { row, col } = options;
 
     context.commit('INCREASE_ITEM', { row, col });
+    context.commit('TOGGLE_ITEM_INCREASE_STATE', { row, col, value: true });
+
+    setTimeout(() => {
+      context.commit('TOGGLE_ITEM_INCREASE_STATE', { row, col, value: false });
+    }, 200);
   },
 
   startDropPassageAnimation(context, options) {

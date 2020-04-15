@@ -3,6 +3,8 @@
        v-on:click.prevent="onClick"
        :disabled="item.disabled">
     <div v-if="item.isPopAnimationActive" class="item__explosion"></div>
+    <div v-if="!item.isPopAnimationActive && item.increaseProgress" class="item__injection"></div>
+
     <svg class="item__charge" :data-maxvalue="item.maxItemValue">
       <path class="item__charge-placeholder"
         d="M18,0A18,18,0,1,1,0,18,18,18,0,0,1,18,0Zm0,6A12,12,0,1,1,6,18,12,12,0,0,1,18,6Z" />

@@ -33,6 +33,12 @@ export default {
     state.itemsArray[row][col].isPopAnimationActive = value;
   },
 
+  TOGGLE_ITEM_INCREASE_STATE(state, options) {
+    const { row, col, value } = options;
+
+    state.itemsArray[row][col].increaseProgress = value;
+  },
+
   INCREASE_ANIMS_COUNTER(state) {
     state.animationsCounter += 1;
   },

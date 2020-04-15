@@ -5,6 +5,7 @@ class BubbleDefault {
       value: 0,
       isPopAnimationActive: false,
       injectionInProgress: false,
+      increaseProgress: false,
       disabled: false,
       affectsWinning: true,
       minItemValue: 0,
