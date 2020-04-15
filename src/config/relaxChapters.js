@@ -36,6 +36,15 @@ export default {
                 },
               },
               {
+                row: 1,
+                col: 1,
+                unitConstructor: BubbleBobomb,
+                options: {
+                  maxItemValue: 1,
+                  value: 1,
+                },
+              },
+              {
                 row: 0,
                 col: 1,
                 options: {

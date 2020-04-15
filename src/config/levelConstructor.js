@@ -54,13 +54,14 @@ class BaseLevel {
         row = Math.floor(Math.random() * this.matrixHeight),
         col = Math.floor(Math.random() * this.matrixWidth),
         options = {},
+        unitConstructor,
       } = customDrop;
 
       if (!options.value) {
         options.value = this.getRandomValue();
       }
 
-      const Constructor = customDrop.unitConstructor || BubbleDefault;
+      const Constructor = unitConstructor || BubbleDefault;
 
       map[row][col] = new Constructor(options);
     });

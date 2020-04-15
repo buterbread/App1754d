@@ -8,28 +8,75 @@ class BubbleBobomb extends BubbleDefault {
 
     this.emitters = {
       default: [
-        { top: 0, left: -1, label: 'left', animation: false, emissionType: 'explodeNearest' },
-        { top: -1, left: 0, label: 'top', animation: false, emissionType: 'explodeNearest' },
-        { top: 0, left: 1, label: 'right', animation: false, emissionType: 'explodeNearest' },
-        { top: 1, left: 0, label: 'bottom', animation: false, emissionType: 'explodeNearest' },
-        { top: -1, left: -1, label: 'topLeft', animation: false, emissionType: 'explodeNearest' },
-        { top: -1, left: 1, label: 'topRight', animation: false, emissionType: 'explodeNearest' },
-        { top: 1, left: -1, label: 'bottomLeft', animation: false, emissionType: 'explodeNearest' },
-        { top: 1, left: 1, label: 'bottomRight', animation: false, emissionType: 'explodeNearest' },
+        {
+          label: 'left',
+          animation: false,
+          emissionType: 'explodeNearest',
+        }, {
+          label: 'top',
+          animation: false,
+          emissionType: 'explodeNearest',
+        }, { label: 'right', animation: false, emissionType: 'explodeNearest' }, {
+          label: 'bottom',
+          animation: false,
+          emissionType: 'explodeNearest',
+        },
       ],
       triangle: [
-        { top: 0, left: -1, label: 'left', animation: false, emissionType: 'explodeNearest', forOddCell: true, forEvenCell: true },
-        { top: 0, left: 1, label: 'right', animation: false, emissionType: 'explodeNearest', forOddCell: true, forEvenCell: true },
-        { top: -1, left: -1, label: 'topLeft', animation: false, emissionType: 'explodeNearest', forOddCell: false, forEvenCell: true },
-        { top: 1, left: 1, label: 'bottomRight', animation: false, emissionType: 'explodeNearest', forOddCell: true, forEvenCell: false },
+        {
+          label: 'triangle_left_top',
+          animation: false,
+          emissionType: 'explodeNearest',
+          noseDirection: 'up',
+        }, {
+          label: 'triangle_right_top',
+          animation: false,
+          emissionType: 'explodeNearest',
+          noseDirection: 'up',
+        }, {
+          label: 'triangle_left_bottom',
+          animation: false,
+          emissionType: 'explodeNearest',
+          noseDirection: 'down',
+        },
+        {
+          label: 'triangle_right_bottom',
+          animation: false,
+          emissionType: 'explodeNearest',
+          noseDirection: 'down',
+        },
       ],
       hexagon: [
-        { top: 0, left: -1, label: 'left', animation: false, emissionType: 'explodeNearest' },
-        { top: -1, left: 0, label: 'top', animation: false, emissionType: 'explodeNearest' },
-        { top: 0, left: 1, label: 'right', animation: false, emissionType: 'explodeNearest' },
-        { top: 1, left: 0, label: 'bottom', animation: false, emissionType: 'explodeNearest' },
-        { top: -1, left: -1, label: 'topLeft', animation: false, emissionType: 'explodeNearest' },
-        { top: 1, left: -1, label: 'bottomRight', animation: false, emissionType: 'explodeNearest' },
+        {
+          label: 'hexagon_left',
+          animation: false,
+          emissionType: 'explodeNearest',
+        },
+        {
+          label: 'hexagon_top',
+          animation: false,
+          emissionType: 'explodeNearest',
+        },
+        {
+          label: 'hexagon_right',
+          animation: false,
+          emissionType: 'explodeNearest',
+        },
+        {
+          label: 'hexagon_bottom',
+          animation: false,
+          emissionType: 'explodeNearest',
+        },
+        {
+          label: 'hexagon_topLeft',
+          animation: false,
+          emissionType: 'explodeNearest',
+        },
+        {
+          label: 'hexagon_bottomRight',
+          animation: false,
+          emissionType: 'explodeNearest',
+        },
       ],
     };
   }

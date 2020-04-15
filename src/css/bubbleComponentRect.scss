@@ -200,3 +200,12 @@
     transform: translateY(100%);
   }
 }
+
+
+.item-box {
+  &.bobomb {
+    .item__charge-pie {
+      stroke: #dcac1a;
+    }
+  }
+}
