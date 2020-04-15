@@ -176,12 +176,15 @@
   &.top {
     transform: rotate(-180deg);
   }
+
   &.right {
     transform: rotate(-90deg);
   }
+
   &.bottom {
     transform: rotate(0);
   }
+
   &.left {
     transform: rotate(90deg);
   }
@@ -219,6 +222,10 @@
   &.bobomb {
     .item__charge-pie {
       stroke: #dcac1a;
+    }
+    .item__emitter-bullet-mark {
+      background-color: #dcac1a;
+      box-shadow: 0 0 4px 2px #dcac1a;
     }
   }
 }
