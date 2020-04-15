@@ -172,8 +172,8 @@ const gameplayConfig = () => ({
       ],
     },
     leftTop: {
-      //prev: 'bottom',
-      //next: 'top',
+      prev: 'left',
+      next: 'top',
       offsets: [
         {
           top: -1,
@@ -182,8 +182,8 @@ const gameplayConfig = () => ({
       ],
     },
     topRight: {
-      //prev: 'bottom',
-      //next: 'top',
+      prev: 'top',
+      next: 'right',
       offsets: [
         {
           top: -1,
@@ -192,8 +192,8 @@ const gameplayConfig = () => ({
       ],
     },
     rightBottom: {
-      //prev: 'bottom',
-      //next: 'top',
+      prev: 'right',
+      next: 'bottom',
       offsets: [
         {
           top: 1,
@@ -202,8 +202,8 @@ const gameplayConfig = () => ({
       ],
     },
     bottomLeft: {
-      //prev: 'bottom',
-      //next: 'top',
+      prev: 'bottom',
+      next: 'left',
       offsets: [
         {
           top: 1,
