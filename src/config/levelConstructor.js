@@ -63,7 +63,7 @@ class BaseLevel {
 
       const Constructor = unitConstructor || BubbleDefault;
 
-      map[row][col] = new Constructor(options);
+      map[row][col] = new Constructor({ ...options, levelType: 'default' });
     });
 
     return map;
@@ -75,7 +75,7 @@ class BaseLevel {
       const itemsRow = [];
       itemsRow.id = Math.random().toString(36).substr(2, 9);
       for (let j = 0; j < this.matrixWidth; j += 1) {
-        const col = new BubbleDefault({ value: this.getRandomValue() });
+        const col = new BubbleDefault({ levelType: 'default', value: this.getRandomValue() });
         itemsRow.push(col);
       }
       itemsArray.push(itemsRow);

@@ -35,11 +35,9 @@ export default {
   props: ['item'],
   computed: {
     emitters() {
-      const { currentLevel } = this.user;
-      const { type } = currentLevel;
       const { item } = this.$props;
 
-      return item.emitters[type];
+      return item.emitters;
     },
     chart() {
       const { value, maxItemValue } = this.$props.item;
@@ -62,8 +60,6 @@ export default {
   methods: {
     onClick(event) {
       const { item } = this.$props;
-
-      console.log(item);
 
       if (!this.gameStarted
           || item.disabled
