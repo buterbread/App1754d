@@ -1,5 +1,5 @@
 <template>
-  <div :class="['item-box', item.type ]"
+  <div :class="['item-box', { 'item-box_armed': armed }, item.type ]"
        v-on:click.prevent="onClick"
        :disabled="item.disabled">
     <div v-if="item.isPopAnimationActive" class="item__explosion"></div>
@@ -21,6 +21,13 @@
         </div>
       </template>
     </div>
+
+    <div class="item__emitter-indicators-box">
+      <template v-for="(emitter, idx) in emitters">
+        <div :class="['item__emitter-indicator', emitter.label]"
+          v-bind:key="idx"></div>
+      </template>
+    </div>
   </div>
 </template>
 
@@ -38,6 +45,12 @@ export default {
       const { item } = this.$props;
 
       return item.emitters;
+    },
+    armed() {
+      const { item } = this.$props;
+      const { value, maxItemValue } = item;
+
+      return value === maxItemValue;
     },
     chart() {
       const { value, maxItemValue } = this.$props.item;

@@ -33,7 +33,7 @@
   border-radius: 50%;
   box-shadow: 0 0 5px 5px #ffffff, 0 0 18px 7px #c31ec3;
 
-  animation: explosion 0.2s ease-out 0s infinite;
+  animation: explosion 1s ease-out 0s 1;
   animation-fill-mode: forwards;
   will-change: transform, opacity;
 }
@@ -59,7 +59,7 @@
 
 @keyframes explosion {
   0% {
-    opacity: 0.5;
+    opacity: 1;
     transform: scale(1);
   }
   100% {
@@ -244,8 +244,87 @@
   }
 }
 
+.item__emitter-indicators-box {
+  display: block;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+}
+
+.item__emitter-indicator {
+  --railLength: 8px;
+
+  position: absolute;
+  z-index: 1;
+  min-width: 4px;
+  height: var(--railLength);
+  left: -2px;
+  top: 0;
+  transform-origin: center top;
+
+  &:after {
+    content: '';
+    display: block;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    width: 2px;
+    height: 2px;
+    border-radius: 50%;
+    background-color: #d0d0ee;
+    opacity: 0.4;
+  }
+
+  &.top {
+    transform: rotate(-180deg);
+  }
+
+  &.right {
+    transform: rotate(-90deg);
+  }
+
+  &.bottom {
+    transform: rotate(0);
+  }
+
+  &.left {
+    transform: rotate(90deg);
+  }
+
+  &.leftTop {
+    transform: rotate(-225deg);
+  }
+
+  &.topRight {
+    transform: rotate(-135deg);
+  }
+
+  &.rightBottom {
+    transform: rotate(-45deg);
+  }
+
+  &.bottomLeft {
+    transform: rotate(45deg);
+  }
+}
+
 
 .item-box {
+  &.default {
+    &.item-box_armed {
+      .item__emitter-indicator {
+        &:after {
+          background-color: #c31ec3;
+          opacity: 1;
+        }
+      }
+    }
+  }
+
   &.bobomb {
     .item__charge-pie {
       stroke: #dcac1a;
@@ -254,6 +333,15 @@
     .item__emitter-bullet-mark {
       background-color: #dcac1a;
       box-shadow: 0 0 4px 2px #dcac1a;
+    }
+
+    &.item-box_armed {
+      .item__emitter-indicator {
+        &:after {
+          background-color: #dcac1a;
+          opacity: 1;
+        }
+      }
     }
   }
 }
