@@ -35,6 +35,7 @@
 
   animation: explosion 0.2s ease-out 0s infinite;
   animation-fill-mode: forwards;
+  will-change: transform, opacity;
 }
 
 .item__injection {
@@ -53,6 +54,7 @@
 
   animation: injection 0.2s linear 0s 1;
   animation-fill-mode: forwards;
+  will-change: transform, opacity;
 }
 
 @keyframes explosion {
@@ -165,10 +167,12 @@
 }
 
 .item__emitter {
+  --railLength: 320px;
+
   position: absolute;
   z-index: 1;
   min-width: 6px;
-  height: 320px;
+  height: var(--railLength);
   left: -3px;
   top: 0;
   transform-origin: center top;
@@ -188,6 +192,28 @@
   &.left {
     transform: rotate(90deg);
   }
+
+  --diagonalRailLength: calc(var(--railLength) * 1.41);
+
+  &.leftTop {
+    height: var(--diagonalRailLength);
+    transform: rotate(-225deg);
+  }
+
+  &.topRight {
+    height: var(--diagonalRailLength);
+    transform: rotate(-135deg);
+  }
+
+  &.rightBottom {
+    height: var(--diagonalRailLength);
+    transform: rotate(-45deg);
+  }
+
+  &.bottomLeft {
+    height: var(--diagonalRailLength);
+    transform: rotate(45deg);
+  }
 }
 
 .item__emitter-bullet {
@@ -195,6 +221,7 @@
   height: 100%;
   animation: drop-passage 1600ms linear 0s 1;
   animation-fill-mode: forwards;
+  will-change: transform;
 }
 
 .item__emitter-bullet-mark {
@@ -223,6 +250,7 @@
     .item__charge-pie {
       stroke: #dcac1a;
     }
+
     .item__emitter-bullet-mark {
       background-color: #dcac1a;
       box-shadow: 0 0 4px 2px #dcac1a;

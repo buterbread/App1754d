@@ -149,8 +149,6 @@ export default {
 
       const { label } = emitter;
 
-      console.log(type, label, config, config.directions[type][label]);
-
       const { offsets } = config.directions[type][label];
 
       context.dispatch('emitterDischarge', { row, col, emitter, offsets });
