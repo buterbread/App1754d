@@ -5,13 +5,13 @@
     <div v-if="item.isPopAnimationActive" class="item__explosion"></div>
     <div v-if="!item.isPopAnimationActive && item.increaseProgress" class="item__injection"></div>
 
+    <div :class="['item__type', item.type ]"></div>
+
     <svg class="item__charge" :data-maxvalue="item.maxItemValue">
-      <path class="item__charge-placeholder"
-        d="M18,0A18,18,0,1,1,0,18,18,18,0,0,1,18,0Zm0,6A12,12,0,1,1,6,18,12,12,0,0,1,18,6Z" />
-      <circle
-        class="item__charge-pie"
-        :style="`stroke-dasharray: ${chart.dash}, ${chart.gap};`"></circle>
+      <circle class="item__charge-placeholder"></circle>
+      <circle class="item__charge-pie" :style="`--chart-angle: ${angle}`"></circle>
     </svg>
+
     <div class="item__emitter-box">
       <template v-for="(emitter, idx) in emitters">
         <div v-if="emitter.animation" :class="['item__emitter', emitter.label]" v-bind:key="idx">
@@ -20,12 +20,9 @@
           </div>
         </div>
       </template>
-    </div>
-
-    <div class="item__emitter-indicators-box">
       <template v-for="(emitter, idx) in emitters">
         <div :class="['item__emitter-indicator', emitter.label]"
-          v-bind:key="idx"></div>
+             v-bind:key="idx"></div>
       </template>
     </div>
   </div>
@@ -33,10 +30,6 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex';
-
-const CHART_RADIUS = 15;
-const CHART_PERIMETER = Math.PI * (CHART_RADIUS * 2);
-const CHART_ANGLE_SIZE = CHART_PERIMETER / 360;
 
 export default {
   props: ['item'],
@@ -52,14 +45,9 @@ export default {
 
       return value === maxItemValue;
     },
-    chart() {
+    angle() {
       const { value, maxItemValue } = this.$props.item;
-      const angle = (value / maxItemValue) * 360;
-
-      return {
-        dash: CHART_ANGLE_SIZE * angle,
-        gap: CHART_ANGLE_SIZE * (360 - angle),
-      };
+      return (value / maxItemValue) * 360;
     },
     ...mapState({
       user: state => state.user,
