@@ -3,7 +3,7 @@
   <GameModesMenu v-if="showGameModesMenu"></GameModesMenu>
   <ChaptersMenu v-if="showChaptersMenu"></ChaptersMenu>
   <SetsMenu v-if="showSetsMenu"></SetsMenu>
-  <div class="scene" v-if="gameStarted">
+  <div class="scene scene_gameplay" v-if="gameStarted">
     <div class="container">
       <div class="gameplayScene">
         <div class="gameplayScene-header">
@@ -156,6 +156,11 @@ export default {
 .gameplay {
   padding-left: 5px;
   padding-right: 5px
+}
+
+.scene_gameplay {
+  background: url("../assets/bgr--playground.jpg") top center no-repeat;
+  background-size: cover;
 }
 
 .playground-header {

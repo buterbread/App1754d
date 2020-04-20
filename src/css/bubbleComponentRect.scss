@@ -1,6 +1,6 @@
 :root {
-  --chart-radius: 13px;
-  --stroke-width: 4px;
+  --chart-radius: 15px;
+  --stroke-width: 6px;
   --bubble-mainColor: #c31ec3;
   --bubble-placeholderColor: #d0d0ee;
 }
@@ -21,7 +21,7 @@
   user-select: none;
 
   &[disabled] {
-    opacity: 0.3;
+    opacity: 0.5;
     cursor: default;
   }
 }
@@ -137,7 +137,7 @@
   stroke: var(--bubble-placeholderColor);
   stroke-width: var(--stroke-width);
   fill-rule: evenodd;
-  opacity: 0.2;
+  opacity: 0.3;
   r: var(--chart-radius);
   cx: 18px;
   cy: 18px;
@@ -282,7 +282,7 @@
     height: 2px;
     border-radius: 50%;
     background-color: var(--bubble-placeholderColor);
-    opacity: 0.4;
+    opacity: 0.5;
   }
 
   &.top {
@@ -325,15 +325,17 @@
   z-index: 1;
   left: 1px;
   top: 1px;
-  border-radius: 50%;
-
-  &.bobomb {
-    background-image: url("assets/item--type-indicator--bobomb.svg");
-  }
+  fill: var(--bubble-placeholderColor);
+  opacity: 0.4;
 }
 
 .item-box {
   &.item-box_armed {
+    .item__type {
+      fill: var(--bubble-mainColor);
+      opacity: 1;
+    }
+
     .item__emitter-indicator {
       &:after {
         background-color: var(--bubble-mainColor);
@@ -345,6 +347,8 @@
   }
 
   &.bobomb {
+    --chart-radius: 13px;
+    --stroke-width: 4px;
     --bubble-mainColor: #dcac1a;
   }
 }

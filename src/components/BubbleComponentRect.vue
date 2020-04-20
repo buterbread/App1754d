@@ -5,7 +5,7 @@
     <div v-if="item.isPopAnimationActive" class="item__explosion"></div>
     <div v-if="!item.isPopAnimationActive && item.increaseProgress" class="item__injection"></div>
 
-    <div :class="['item__type', item.type ]"></div>
+    <BubbleIndicator v-bind:type="item.type"></BubbleIndicator>
 
     <svg class="item__charge" :data-maxvalue="item.maxItemValue">
       <circle class="item__charge-placeholder"></circle>
@@ -22,7 +22,7 @@
       </template>
       <template v-for="(emitter, idx) in emitters">
         <div :class="['item__emitter-indicator', emitter.label]"
-             v-bind:key="idx"></div>
+             v-bind:key="`indicator-${idx}`"></div>
       </template>
     </div>
   </div>
@@ -30,8 +30,12 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex';
+import BubbleIndicator from './BubbleIndicator';
 
 export default {
+  components: {
+    BubbleIndicator,
+  },
   props: ['item'],
   computed: {
     emitters() {
