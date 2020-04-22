@@ -57,7 +57,7 @@ class BaseLevel {
         unitConstructor,
       } = customDrop;
 
-      if (!options.value) {
+      if (options.value === undefined) {
         options.value = this.getRandomValue();
       }
 

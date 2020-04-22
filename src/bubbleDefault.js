@@ -5,7 +5,7 @@ class BubbleDefault {
     const defaults = {
       type: 'default',
       levelType: null,
-      value: 0,
+      value: null,
       isPopAnimationActive: false,
       injectionInProgress: false,
       increaseProgress: false,

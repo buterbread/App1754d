@@ -105,7 +105,7 @@ export default {
     isLastChapter() {
       return this.currentChapter.index + 1 === this.currentGame.chaptersMap.length;
     },
-    onArmoryItemClick() {
+    onArmoryItemClick(event) {
       const { type } = event.target.dataset;
 
       this.$store.commit('user/PUT_ITEM_IN_USER_SLOT', type);

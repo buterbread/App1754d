@@ -5,6 +5,47 @@ import BubbleBobomb from '../bubbleBobomb';
 
 const { saveRecordName } = config;
 
+function cloneItem(item) {
+  const { emitters } = item;
+
+  const clone = {
+    options: {},
+  };
+
+  Object.keys(item).forEach((key) => {
+    clone.options[key] = item[key];
+  });
+
+  clone.options.emitters = emitters.map(emitter => ({ ...emitter }));
+
+  return clone;
+}
+
+function cloneLevel(itemsArray) {
+  const newArray = [];
+
+  itemsArray.forEach((newRow, rowIdx) => {
+    newRow.forEach((item, colIdx) => {
+      const clone = cloneItem(item);
+
+      clone.row = rowIdx;
+      clone.col = colIdx;
+
+      newArray.push(clone);
+    });
+  });
+
+  return newArray;
+}
+
+function generateNewBubble(itemType, levelType) {
+  const Constructor = {
+    bobomb: BubbleBobomb,
+  }[itemType];
+
+  return new Constructor({ levelType, value: 4 });
+}
+
 export default {
   setGameMode(context, gameMode) {
     const game = roadmap.find(item => item.type === gameMode);
@@ -117,18 +158,27 @@ export default {
   },
 
   placeBubble(context, options) {
-    const { user } = context.state;
+    const { user, level } = context.state;
     const { activeSlot } = user;
+    const { type } = level;
 
     const { itemsArray } = context.state;
-
     const { row, col } = options;
 
-    const newArray = [...itemsArray];
+    const newArray = cloneLevel(itemsArray);
 
-    itemsArray[row][col] = new BubbleBobomb({ levelType: 'default' });
+    const newItem = generateNewBubble(activeSlot, type);
 
-    console.log(row, col, activeSlot);
+    const newItemIndex = newArray.findIndex(item => item.row === row && item.col === col);
+
+    newArray[newItemIndex].options = newItem;
+
+    const newLevel = levelConstructor({
+      unitConstructor: type,
+      customDrops: newArray,
+    });
+
+    context.commit('GENERATE_ITEMS_ARRAY', newLevel);
   },
 
   toggleBubbleSelect(context, options) {
