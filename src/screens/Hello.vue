@@ -30,7 +30,8 @@
 
         <div class="gameplayScene-armoryBox">
           <div class="gameplayScene-armoryItemBox">
-            <div class="gameplayScene-armoryItem"></div>
+            <div class="gameplayScene-armoryItem" data-type="bobomb"
+              v-on:click="onArmoryItemClick"></div>
             <span class="gameplayScene-armoryItemText">05</span>
           </div>
 
@@ -103,6 +104,12 @@ export default {
 
     isLastChapter() {
       return this.currentChapter.index + 1 === this.currentGame.chaptersMap.length;
+    },
+    onArmoryItemClick() {
+      const { type } = event.target.dataset;
+
+      this.$store.commit('user/PUT_ITEM_IN_USER_SLOT', type);
+      this.$store.commit('user/SET_USER_INPUT_MODE', 'placement');
     },
   },
   watch: {

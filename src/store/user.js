@@ -9,6 +9,9 @@ export default {
     currentGame: null,
     currentChapter: null,
     currentSet: null,
+    inputLocked: false,
+    inputMode: 'default',
+    activeSlot: '',
   },
 
   actions: {},
@@ -28,6 +31,22 @@ export default {
 
     SET_CURRENT_LEVEL(state, level) {
       state.currentLevel = level;
+    },
+
+    LOCK_USER_INPUT(state) {
+      state.inputLocked = true;
+    },
+
+    UNLOCK_USER_INPUT(state) {
+      state.inputLocked = false;
+    },
+
+    SET_USER_INPUT_MODE(state, mode) {
+      state.inputMode = mode;
+    },
+
+    PUT_ITEM_IN_USER_SLOT(state, item) {
+      state.activeSlot = item;
     },
   },
 

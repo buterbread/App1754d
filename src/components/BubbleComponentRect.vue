@@ -4,6 +4,7 @@
        :disabled="item.disabled">
     <div v-if="item.isPopAnimationActive" class="item__explosion"></div>
     <div v-if="!item.isPopAnimationActive && item.increaseProgress" class="item__injection"></div>
+    <div v-if="item.selected" class="item__selection"></div>
 
     <BubbleIndicator v-bind:type="item.type"></BubbleIndicator>
 

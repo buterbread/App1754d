@@ -1,6 +1,7 @@
 import config from '../config/gameplay';
 import roadmap from '../config/roadmap';
 import levelConstructor from '../config/levelConstructor';
+import BubbleBobomb from '../bubbleBobomb';
 
 const { saveRecordName } = config;
 
@@ -102,6 +103,43 @@ export default {
   },
 
   makeUserMove(context, options) {
+    const { state } = context;
+    const { user } = state;
+    const { inputMode } = user;
+
+    const actions = {
+      default: 'increaseBubble',
+      placement: 'placeBubble',
+      selection: 'toggleBubbleSelect',
+    };
+
+    context.dispatch(actions[inputMode], options);
+  },
+
+  placeBubble(context, options) {
+    const { user } = context.state;
+    const { activeSlot } = user;
+
+    const { itemsArray } = context.state;
+
+    const { row, col } = options;
+
+    const newArray = [...itemsArray];
+
+    itemsArray[row][col] = new BubbleBobomb({ levelType: 'default' });
+
+    console.log(row, col, activeSlot);
+  },
+
+  toggleBubbleSelect(context, options) {
+    const { itemsArray: items } = context.state;
+    const { row, col } = options;
+    const unit = items[row][col];
+
+    unit.selected = !unit.selected;
+  },
+
+  increaseBubble(context, options) {
     const { row, col } = options;
 
     context.commit('RESET_DISCHARGES_COUNT');

@@ -1,8 +1,15 @@
 :root {
-  --chart-radius: 15px;
-  --stroke-width: 6px;
   --bubble-mainColor: #c31ec3;
   --bubble-placeholderColor: #d0d0ee;
+
+  --cell-width: 40px;
+  --cell-height: 40px;
+
+  --charge-width: 36px;
+  --charge-height: 36px;
+
+  --stroke-width: 6px;
+  --chart-radius: calc(var(--charge-width) / 2 - var(--stroke-width) / 2);
 }
 
 .item-box {
@@ -12,9 +19,9 @@
 
   vertical-align: top;
   position: relative;
-  min-width: 40px;
-  width: 40px;
-  height: 40px;
+  min-width: var(--cell-width);
+  width: var(--cell-width);
+  height: var(--cell-height);
   text-align: center;
   cursor: pointer;
   box-sizing: border-box;
@@ -23,6 +30,32 @@
   &[disabled] {
     opacity: 0.5;
     cursor: default;
+  }
+}
+
+.item__selection {
+  width: calc(var(--cell-width) - 2px);
+  height: calc(var(--cell-height) - 2px);
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  margin: auto;
+  border-radius: 3px;
+  overflow: hidden;
+  opacity: 0.8;
+
+  &:before {
+    content: '';
+    display: block;
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    border: 7px solid var(--bubble-placeholderColor);
+    top: -11px;
+    right: -11px;
+    border-radius: 50%;
   }
 }
 
@@ -87,8 +120,8 @@
 }
 
 .item__charge {
-  width: 36px;
-  height: 36px;
+  width: var(--charge-width);
+  height: var(--charge-height);
   display: block;
 
   &[data-maxvalue="2"] {
@@ -137,10 +170,10 @@
   stroke: var(--bubble-placeholderColor);
   stroke-width: var(--stroke-width);
   fill-rule: evenodd;
-  opacity: 0.3;
+  opacity: 0.23;
   r: var(--chart-radius);
-  cx: 18px;
-  cy: 18px;
+  cx: calc(var(--charge-width) / 2);
+  cy: calc(var(--charge-height) / 2);
 }
 
 .item__charge-pie {
@@ -155,8 +188,8 @@
   transform: rotate(-90deg);
   transform-origin: center;
   r: var(--chart-radius);
-  cx: 18px;
-  cy: 18px;
+  cx: calc(var(--charge-width) / 2);
+  cy: calc(var(--charge-height) / 2);
 }
 
 .item__emitter-box {
