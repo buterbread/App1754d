@@ -38,6 +38,19 @@ function cloneLevel(itemsArray) {
   return newArray;
 }
 
+function cloneStash(stash) {
+  return stash.map((item) => {
+    const { options } = item;
+    const optionsClone = { ...options };
+    optionsClone.emitters = options.emitters.map(emitter => ({ ...emitter }));
+
+    return {
+      ...item,
+      options: { ...options },
+    };
+  });
+}
+
 function generateNewBubble(itemType, levelType) {
   const Constructor = {
     bobomb: BubbleBobomb,
@@ -159,13 +172,20 @@ export default {
 
   placeBubble(context, options) {
     const { user, level } = context.state;
-    const { activeSlot } = user;
+    const { activeSlot, levelStash } = user;
     const { type } = level;
 
     const { itemsArray } = context.state;
     const { row, col } = options;
 
-    const newArray = cloneLevel(itemsArray);
+    let newArray;
+
+    if (levelStash !== null) {
+      newArray = cloneStash(levelStash);
+    } else {
+      newArray = cloneLevel(itemsArray);
+      context.commit('user/PUT_LEVEL_IN_STASH', cloneLevel(itemsArray));
+    }
 
     const newItem = generateNewBubble(activeSlot, type);
 

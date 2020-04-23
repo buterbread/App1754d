@@ -12,6 +12,7 @@ export default {
     inputLocked: false,
     inputMode: 'default',
     activeSlot: '',
+    levelStash: null,
   },
 
   actions: {},
@@ -47,6 +48,10 @@ export default {
 
     PUT_ITEM_IN_USER_SLOT(state, item) {
       state.activeSlot = item;
+    },
+
+    PUT_LEVEL_IN_STASH(state, level) {
+      state.levelStash = level;
     },
   },
 
