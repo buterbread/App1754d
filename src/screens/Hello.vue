@@ -49,6 +49,21 @@
             <div class="gameplayScene-armoryItem"></div>
             <span class="gameplayScene-armoryItemText">05</span>
           </div>
+
+          <div class="gameplayScene-armoryItemBox">
+            <div class="gameplayScene-armoryItem"></div>
+            <span class="gameplayScene-armoryItemText">05</span>
+          </div>
+
+          <div class="gameplayScene-armoryItemBox">
+            <div class="gameplayScene-armoryItem"></div>
+            <span class="gameplayScene-armoryItemText">05</span>
+          </div>
+
+          <div class="gameplayScene-armoryItemBox">
+            <div class="gameplayScene-armoryItem"></div>
+            <span class="gameplayScene-armoryItemText">05</span>
+          </div>
         </div>
 
         <div class="gameplayScene-tools">
