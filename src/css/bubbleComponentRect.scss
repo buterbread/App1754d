@@ -384,4 +384,10 @@
     --stroke-width: 4px;
     --bubble-mainColor: #dcac1a;
   }
+
+  &.laser {
+    --chart-radius: 13px;
+    --stroke-width: 4px;
+    --bubble-mainColor: #dd1d1d;
+  }
 }

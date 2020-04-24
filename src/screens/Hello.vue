@@ -44,7 +44,8 @@
             </div>
 
             <div class="gameplayScene-armoryItemBox">
-              <div class="gameplayScene-armoryItem"></div>
+              <div class="gameplayScene-armoryItem" data-type="laser"
+                v-on:click="onArmoryItemClick"></div>
               <span class="gameplayScene-armoryItemText">05</span>
             </div>
 

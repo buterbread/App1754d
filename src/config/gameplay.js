@@ -1,5 +1,6 @@
 import directionsDefault from './directionsDefault';
 import directionsBobomb from './directionsBobomb';
+import directionsLaser from './directionsLaser';
 
 const gameplayConfig = () => ({
   initialDropsCounter: 10,
@@ -16,6 +17,7 @@ const gameplayConfig = () => ({
   directions: {
     default: directionsDefault,
     bobomb: directionsBobomb,
+    laser: directionsLaser,
   },
 });
 

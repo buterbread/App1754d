@@ -2,6 +2,7 @@ import config from '../config/gameplay';
 import roadmap from '../config/roadmap';
 import levelConstructor from '../config/levelConstructor';
 import BubbleBobomb from '../bubbleBobomb';
+import BubbleLaser from '../bubbleLaser';
 
 const { saveRecordName } = config;
 
@@ -54,6 +55,7 @@ function cloneStash(stash) {
 function generateNewBubble(itemType, levelType) {
   const Constructor = {
     bobomb: BubbleBobomb,
+    laser: BubbleLaser,
   }[itemType];
 
   return new Constructor({ levelType, value: 4 });
@@ -256,6 +258,20 @@ export default {
         unit.injectionInProgress = false;
       }, config.dropPopDuration - 1);
     }
+  },
+
+  desintegrateBubble(context, options) {
+    const { itemsArray: items } = context.state;
+    const { row, col } = options;
+    const unit = items[row][col];
+
+    unit.injectionInProgress = true;
+
+    setTimeout(() => {
+      context.commit('RESET_ITEM_VALUE', { row, col, value: unit.minItemValue });
+
+      unit.injectionInProgress = false;
+    }, config.dropPopDuration - 1);
   },
 
   dischargeAllEmitters(context, options) {

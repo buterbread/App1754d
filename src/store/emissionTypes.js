@@ -12,7 +12,7 @@ export default {
       const row = options.row + offset.top;
       const col = options.col + offset.left;
 
-      if (!items[row] || !items[row][col] || items[row][col].isWall) {
+      if (!items[row] || !items[row][col] || items[row][col].isWall || items[row][col].disabled) {
         dispatch('stopDropPassageAnimation', options, { root: true });
         return;
       }
@@ -20,11 +20,6 @@ export default {
       const unit = items[row][col];
 
       dispatch('startDropPassageAnimation', options, { root: true });
-
-      if (items[row][col].disabled) {
-        dispatch('stopDropPassageAnimation', options, { root: true });
-        return;
-      }
 
       setTimeout(() => {
         if (items[row][col].value !== 0 && !items[row][col].disabled) {
@@ -84,6 +79,52 @@ export default {
           });
         }, config.dropInjectionDelay);
       }
+    },
+
+    desintegrate(context, options) {
+      const { rootState, dispatch } = context;
+      const { itemsArray: items } = rootState;
+
+      const initialItemCords = options.initialItemCords || options;
+      const iteration = options.iteration || 0;
+
+      const offset = options.offsets[iteration % options.offsets.length];
+      const row = options.row + offset.top;
+      const col = options.col + offset.left;
+
+      if (!items[row] || !items[row][col] || items[row][col].isWall) {
+        dispatch('stopDropPassageAnimation', initialItemCords, { root: true });
+        return;
+      }
+
+      const unit = items[row][col];
+
+      dispatch('startDropPassageAnimation', options, { root: true });
+
+      setTimeout(() => {
+        if (items[row][col].value !== 0) {
+          dispatch(items[row][col].impactCallback, {
+            row,
+            col,
+          }, { root: true });
+        }
+
+        dispatch('desintegrateBubble', {
+          row,
+          col,
+          addBonusDrop: true,
+        }, {
+          root: true,
+        });
+
+        dispatch('desintegrate', {
+          row,
+          col,
+          offsets: options.offsets,
+          initialItemCords,
+          iteration: iteration + 1,
+        });
+      }, config.dropInjectionDelay);
     },
   },
 };
