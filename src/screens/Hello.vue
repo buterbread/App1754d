@@ -28,62 +28,71 @@
         </div>
         <Playground></Playground>
 
-        <div class="gameplayScene-armoryBox">
-          <div class="gameplayScene-armoryItemBox">
-            <div class="gameplayScene-armoryItem" data-type="bobomb"
-              v-on:click="onArmoryItemClick"></div>
-            <span class="gameplayScene-armoryItemText">05</span>
+        <footer class="gameplayScene-footer">
+          <Dialog
+            v-if="showArmoryDialog"
+            v-bind:classNames="'gameplayScene-armoryDialog'"
+            v-bind:on-no="onArmoryDialogNo"
+            v-bind:on-yes="onArmoryDialogYes"
+          />
+
+          <div class="gameplayScene-armoryBox">
+            <div class="gameplayScene-armoryItemBox">
+              <div class="gameplayScene-armoryItem" data-type="bobomb"
+                v-on:click="onArmoryItemClick"></div>
+              <span class="gameplayScene-armoryItemText">05</span>
+            </div>
+
+            <div class="gameplayScene-armoryItemBox">
+              <div class="gameplayScene-armoryItem"></div>
+              <span class="gameplayScene-armoryItemText">05</span>
+            </div>
+
+            <div class="gameplayScene-armoryItemBox">
+              <div class="gameplayScene-armoryItem"></div>
+              <span class="gameplayScene-armoryItemText">05</span>
+            </div>
+
+            <div class="gameplayScene-armoryItemBox">
+              <div class="gameplayScene-armoryItem"></div>
+              <span class="gameplayScene-armoryItemText">05</span>
+            </div>
+
+            <div class="gameplayScene-armoryItemBox">
+              <div class="gameplayScene-armoryItem"></div>
+              <span class="gameplayScene-armoryItemText">05</span>
+            </div>
+
+            <div class="gameplayScene-armoryItemBox">
+              <div class="gameplayScene-armoryItem"></div>
+              <span class="gameplayScene-armoryItemText">05</span>
+            </div>
+
+            <div class="gameplayScene-armoryItemBox">
+              <div class="gameplayScene-armoryItem"></div>
+              <span class="gameplayScene-armoryItemText">05</span>
+            </div>
           </div>
 
-          <div class="gameplayScene-armoryItemBox">
-            <div class="gameplayScene-armoryItem"></div>
-            <span class="gameplayScene-armoryItemText">05</span>
+          <div class="gameplayScene-tools">
+            <button class="button gameplayScene-tool">
+              <i class="gameplayScene-toolIcon"></i>
+              <span class="gameplayScene-toolText">08</span>
+            </button>
+            <button class="button gameplayScene-tool">
+              <i class="gameplayScene-toolIcon"></i>
+              <span class="gameplayScene-toolText">08</span>
+            </button>
+            <button class="button gameplayScene-tool">
+              <i class="gameplayScene-toolIcon"></i>
+              <span class="gameplayScene-toolText">08</span>
+            </button>
+            <button class="button gameplayScene-tool">
+              <i class="gameplayScene-toolIcon"></i>
+              <span class="gameplayScene-toolText">08</span>
+            </button>
           </div>
-
-          <div class="gameplayScene-armoryItemBox">
-            <div class="gameplayScene-armoryItem"></div>
-            <span class="gameplayScene-armoryItemText">05</span>
-          </div>
-
-          <div class="gameplayScene-armoryItemBox">
-            <div class="gameplayScene-armoryItem"></div>
-            <span class="gameplayScene-armoryItemText">05</span>
-          </div>
-
-          <div class="gameplayScene-armoryItemBox">
-            <div class="gameplayScene-armoryItem"></div>
-            <span class="gameplayScene-armoryItemText">05</span>
-          </div>
-
-          <div class="gameplayScene-armoryItemBox">
-            <div class="gameplayScene-armoryItem"></div>
-            <span class="gameplayScene-armoryItemText">05</span>
-          </div>
-
-          <div class="gameplayScene-armoryItemBox">
-            <div class="gameplayScene-armoryItem"></div>
-            <span class="gameplayScene-armoryItemText">05</span>
-          </div>
-        </div>
-
-        <div class="gameplayScene-tools">
-          <button class="button gameplayScene-tool">
-            <i class="gameplayScene-toolIcon"></i>
-            <span class="gameplayScene-toolText">08</span>
-          </button>
-          <button class="button gameplayScene-tool">
-            <i class="gameplayScene-toolIcon"></i>
-            <span class="gameplayScene-toolText">08</span>
-          </button>
-          <button class="button gameplayScene-tool">
-            <i class="gameplayScene-toolIcon"></i>
-            <span class="gameplayScene-toolText">08</span>
-          </button>
-          <button class="button gameplayScene-tool">
-            <i class="gameplayScene-toolIcon"></i>
-            <span class="gameplayScene-toolText">08</span>
-          </button>
-        </div>
+        </footer>
       </div>
     </div>
   </div>
@@ -98,6 +107,7 @@ import SetsMenu from './MenuSets';
 import Playground from '../components/Playground';
 import DropsCounter from '../components/DropsCounter';
 import ComboMonitor from '../components/ComboMonitor';
+import Dialog from '../components/Dialog';
 
 export default {
   components: {
@@ -107,6 +117,7 @@ export default {
     Playground,
     DropsCounter,
     ComboMonitor,
+    Dialog,
   },
   methods: {
     isLastLevel() {
@@ -125,6 +136,18 @@ export default {
 
       this.$store.commit('user/PUT_ITEM_IN_USER_SLOT', type);
       this.$store.commit('user/SET_USER_INPUT_MODE', 'placement');
+      this.$store.commit('sceneController/SHOW_ARMORY_DIALOG');
+    },
+    onArmoryDialogYes() {
+      this.$store.commit('user/CLEAR_LEVEL_STASH', 'default');
+      this.$store.commit('user/SET_USER_INPUT_MODE', 'default');
+      this.$store.commit('sceneController/HIDE_ARMORY_DIALOG');
+    },
+    onArmoryDialogNo() {
+      this.$store.dispatch('revertLevel');
+      this.$store.commit('user/CLEAR_LEVEL_STASH', 'default');
+      this.$store.commit('user/SET_USER_INPUT_MODE', 'default');
+      this.$store.commit('sceneController/HIDE_ARMORY_DIALOG');
     },
   },
   watch: {
@@ -161,6 +184,7 @@ export default {
       showGameModesMenu: state => state.sceneController.showGameModesMenu,
       showChaptersMenu: state => state.sceneController.showChaptersMenu,
       showSetsMenu: state => state.sceneController.showSetsMenu,
+      showArmoryDialog: state => state.sceneController.showArmoryDialog,
       gameStarted: state => state.gameStarted,
       currentGame: state => state.user.currentGame,
       currentChapter: state => state.user.currentChapter,

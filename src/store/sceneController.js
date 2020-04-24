@@ -5,6 +5,7 @@ export default {
     showGameModesMenu: true,
     showChaptersMenu: false,
     showSetsMenu: false,
+    showArmoryDialog: false,
   },
 
   actions: {},
@@ -32,6 +33,14 @@ export default {
 
     HIDE_SETS_MENU(state) {
       state.showSetsMenu = false;
+    },
+
+    SHOW_ARMORY_DIALOG(state) {
+      state.showArmoryDialog = true;
+    },
+
+    HIDE_ARMORY_DIALOG(state) {
+      state.showArmoryDialog = false;
     },
   },
 

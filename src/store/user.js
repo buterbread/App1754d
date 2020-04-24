@@ -53,6 +53,10 @@ export default {
     PUT_LEVEL_IN_STASH(state, level) {
       state.levelStash = level;
     },
+
+    CLEAR_LEVEL_STASH(state) {
+      state.levelStash = null;
+    },
   },
 
   getters: {},

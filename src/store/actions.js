@@ -194,9 +194,21 @@ export default {
     newArray[newItemIndex].options = newItem;
 
     const newLevel = levelConstructor({
-      unitConstructor: type,
       customDrops: newArray,
     });
+
+    context.commit('GENERATE_ITEMS_ARRAY', newLevel);
+  },
+
+  revertLevel(context) {
+    const { user } = context.state;
+    const { levelStash } = user;
+
+    if (!levelStash) {
+      return;
+    }
+
+    const newLevel = levelConstructor({ customDrops: levelStash });
 
     context.commit('GENERATE_ITEMS_ARRAY', newLevel);
   },

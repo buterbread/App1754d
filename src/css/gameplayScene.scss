@@ -14,6 +14,11 @@
   margin-top: auto;
 }
 
+.gameplayScene-footer {
+  margin: auto 0 0 0;
+  position: relative;
+}
+
 .gameplayScene-headerCol {}
 
 .gameplayScene-headerCol--progress {
@@ -64,14 +69,23 @@
   padding: 4px 0;
   display: flex;
   width: 100%;
-  justify-content: center;
   flex-wrap: wrap;
 }
 
 .gameplayScene-armoryItemBox {
   display: flex;
   align-items: center;
-  margin: 6px;
+  margin: 6px 0;
+  padding: 0 6px;
+  width: 25%;
+}
+
+.gameplayScene-armoryDialog {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .gameplayScene-armoryItem {
