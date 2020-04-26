@@ -1,7 +1,9 @@
 <template>
   <div :class="['item-box', { 'item-box_armed': armed }, item.type ]"
        v-on:click.prevent="onClick"
-       :disabled="item.disabled">
+       :disabled="item.disabled"
+       :data-value="value"
+  >
     <div v-if="item.isPopAnimationActive" class="item__explosion"></div>
     <div v-if="!item.isPopAnimationActive && item.increaseProgress" class="item__injection"></div>
     <div v-if="item.selected" class="item__selection"></div>
@@ -39,6 +41,12 @@ export default {
   },
   props: ['item'],
   computed: {
+    value() {
+      const { item } = this.$props;
+      const { value } = item;
+
+      return value;
+    },
     emitters() {
       const { item } = this.$props;
 

@@ -97,25 +97,10 @@ export default {
         return;
       }
 
-      const unit = items[row][col];
-
       dispatch('startDropPassageAnimation', options, { root: true });
 
       setTimeout(() => {
-        if (items[row][col].value !== 0) {
-          dispatch(items[row][col].impactCallback, {
-            row,
-            col,
-          }, { root: true });
-        }
-
-        dispatch('desintegrateBubble', {
-          row,
-          col,
-          addBonusDrop: true,
-        }, {
-          root: true,
-        });
+        dispatch('desintegrateBubble', { row, col }, { root: true });
 
         dispatch('desintegrate', {
           row,
