@@ -32,7 +32,16 @@
           <Dialog
             v-if="showArmoryDialog"
             v-bind:classNames="'gameplayScene-armoryDialog'"
-          />
+          >
+            <div class="rotateCtrl" v-if="isRotationActive">
+              <button
+                class="button rotateCtrl-button"
+                v-on:click="() => onRotateClick('ccv')">CCV</button>
+              <button
+                class="button rotateCtrl-button"
+                v-on:click="() => onRotateClick('cv')">CV</button>
+            </div>
+          </Dialog>
 
           <div class="gameplayScene-armoryBox">
             <div class="gameplayScene-armoryItemBox">
@@ -59,12 +68,8 @@
               <i class="gameplayScene-toolIcon gameplayScene-toolIcon--swap"></i>
               <span class="gameplayScene-toolText">08</span>
             </button>
-            <button class="button gameplayScene-tool" v-on:click="onRotateClick">
+            <button class="button gameplayScene-tool" v-on:click="onRotationClick">
               <i class="gameplayScene-toolIcon gameplayScene-toolIcon--rotate"></i>
-              <span class="gameplayScene-toolText">08</span>
-            </button>
-            <button class="button gameplayScene-tool">
-              <i class="gameplayScene-toolIcon gameplayScene-toolIcon--move"></i>
               <span class="gameplayScene-toolText">08</span>
             </button>
           </div>
@@ -77,6 +82,7 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex';
+
 import GameModesMenu from './MenuGameModes';
 import ChaptersMenu from './MenuChapters';
 import SetsMenu from './MenuSets';
@@ -113,7 +119,7 @@ export default {
       this.$store.commit('user/PUT_ITEM_IN_USER_SLOT', type);
       this.$store.commit('user/SET_USER_INPUT_MODE', 'placement');
       this.$store.commit('sceneController/SHOW_ARMORY_DIALOG');
-      this.$store.commit('dialog/SET_YES_ACTION', 'performBubblePlacing');
+      this.$store.commit('dialog/SET_YES_ACTION', 'applyBubblePlacing');
       this.$store.commit('dialog/SET_NO_ACTION', 'revertBubblePlacing');
     },
     onSwapClick() {
@@ -121,16 +127,20 @@ export default {
       this.$store.commit('user/SET_SELECTION_MAX_LENGTH', 2);
       this.$store.commit('user/SET_USER_INPUT_MODE', 'selection');
 
-      this.$store.commit('dialog/SET_YES_ACTION', 'performSwap');
+      this.$store.commit('dialog/SET_YES_ACTION', 'applySwap');
       this.$store.commit('dialog/SET_NO_ACTION', 'revertSwap');
     },
-    onRotateClick() {
+    onRotationClick() {
       this.$store.commit('sceneController/SHOW_ARMORY_DIALOG');
+      this.$store.commit('user/ENABLE_ROTATION_MODE');
       this.$store.commit('user/SET_SELECTION_MAX_LENGTH', 1);
       this.$store.commit('user/SET_USER_INPUT_MODE', 'selection');
 
-      this.$store.commit('dialog/SET_YES_ACTION', 'performRotate');
+      this.$store.commit('dialog/SET_YES_ACTION', 'applyRotate');
       this.$store.commit('dialog/SET_NO_ACTION', 'revertRotate');
+    },
+    onRotateClick(direction) {
+      this.$store.dispatch('rotate', direction);
     },
   },
   watch: {
@@ -174,6 +184,7 @@ export default {
       currentChapter: state => state.user.currentChapter,
       currentSet: state => state.user.currentSet,
       user: state => state.user,
+      isRotationActive: state => state.user.isRotationActive,
     }),
     ...mapGetters([
       'levelPassed',

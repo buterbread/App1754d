@@ -16,6 +16,7 @@ export default {
       const { item } = this.$props;
 
       if (!this.gameStarted
+        || this.inputLocked
         || item.disabled
         || this.animationsInProgress) {
         return;
@@ -42,6 +43,7 @@ export default {
     ...mapState({
       itemsArray: state => state.itemsArray,
       gameStarted: state => state.gameStarted,
+      inputLocked: state => state.user.inputLocked,
     }),
     ...mapGetters([
       'animationsInProgress',

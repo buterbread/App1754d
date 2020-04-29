@@ -1,5 +1,6 @@
 <template>
   <div :class="['dialog', classNames]">
+    <slot></slot>
     <div class="dialog-buttonsBox">
       <button class="button dialog-button" v-on:click="onNoClick">N</button>
       <button class="button dialog-button" v-on:click="onYesClick">Y</button>
@@ -59,4 +60,24 @@ export default {
     border: 1px solid transparent;
     padding: 11px 10px 9px 10px;
   }
+
+  .rotateCtrl {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .rotateCtrl-button {
+    max-width: 40px;
+    height: 40px;
+    display: block;
+    flex: 1 1 0;
+    color: #fff;
+    background-color: #403f5b;
+    border-radius: 65536px;
+    margin: 0 10px 10px 10px;
+    border: 1px solid transparent;
+    padding: 11px 0 9px 0;
+  }
+
 </style>

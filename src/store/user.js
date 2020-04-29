@@ -11,8 +11,10 @@ export default {
     currentSet: null,
     inputLocked: false,
     inputMode: 'default',
+    isRotationActive: false,
     activeSlot: '',
     levelStash: null,
+    itemStash: null,
     selectionMaxLength: 1,
     selection: [],
   },
@@ -60,12 +62,28 @@ export default {
       state.levelStash = null;
     },
 
+    PUT_ITEM_IN_STASH(state, item) {
+      state.itemStash = item;
+    },
+
+    CLEAR_ITEM_STASH(state) {
+      state.itemStash = null;
+    },
+
     SET_SELECTION_MAX_LENGTH(state, value) {
       state.selectionMaxLength = value;
     },
 
     SET_SELECTION(state, value) {
       state.selection = value;
+    },
+
+    ENABLE_ROTATION_MODE(state) {
+      state.isRotationActive = true;
+    },
+
+    DISABLE_ROTATION_MODE(state) {
+      state.isRotationActive = false;
     },
   },
 

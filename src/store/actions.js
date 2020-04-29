@@ -250,6 +250,10 @@ export default {
     const { itemsArray: items, user } = context.state;
     const { selection } = user;
 
+    if (!selection.length) {
+      return;
+    }
+
     selection.forEach((selectionItem) => {
       const [row, col] = selectionItem.split('/');
       items[row][col].selected = false;
@@ -258,7 +262,7 @@ export default {
     selection.length = 0;
   },
 
-  performBubblePlacing(context) {
+  applyBubblePlacing(context) {
     context.commit('user/CLEAR_LEVEL_STASH', 'default');
     context.commit('user/SET_USER_INPUT_MODE', 'default');
     context.commit('sceneController/HIDE_ARMORY_DIALOG');
@@ -271,9 +275,13 @@ export default {
     context.commit('sceneController/HIDE_ARMORY_DIALOG');
   },
 
-  performSwap(context) {
+  applySwap(context) {
     const { itemsArray: items, user } = context.state;
     const { selection } = user;
+
+    if (selection.length < 2) {
+      return;
+    }
 
     const newArray = cloneLevel(items);
 
@@ -308,25 +316,68 @@ export default {
     context.commit('sceneController/HIDE_ARMORY_DIALOG');
   },
 
-  performRotate(context) {
+  rotate(context, direction) {
+    context.commit('user/SET_USER_INPUT_MODE', 'default');
+    context.commit('user/LOCK_USER_INPUT');
+
     const { itemsArray: items, user } = context.state;
-    const { selection } = user;
+    const { selection, itemStash } = user;
+
+    if (!selection[0]) {
+      return;
+    }
+
     const [row, col] = selection[0].split('/');
 
     const unit = items[row][col];
+
+    if (itemStash === null) {
+      context.commit('user/PUT_ITEM_IN_STASH', cloneItem(unit));
+    }
+
     const { emitters, type: unitType } = unit;
 
     emitters.forEach((emitter, idx) => {
       const { label } = emitter;
-      emitters[idx].label = config.directions[unitType][label].next;
+      const dir = direction === 'cv' ? 'next' : 'prev';
+
+      emitters[idx].label = config.directions[unitType][label][dir];
     });
   },
 
-  revertRotate(context) {
+  applyRotate(context) {
     context.dispatch('removeSelection');
-    context.commit('user/CLEAR_LEVEL_STASH', 'default');
+    context.commit('user/DISABLE_ROTATION_MODE');
+    context.commit('user/CLEAR_ITEM_STASH');
     context.commit('user/SET_USER_INPUT_MODE', 'default');
     context.commit('sceneController/HIDE_ARMORY_DIALOG');
+    context.commit('user/UNLOCK_USER_INPUT');
+  },
+
+  revertRotate(context) {
+    const { itemsArray: items, user } = context.state;
+    const { selection, itemStash } = user;
+
+    if (selection.length && itemStash !== null) {
+      const { options } = itemStash;
+      const { emitters: origEmitters } = options;
+
+      const [row, col] = selection[0].split('/');
+
+      const unit = items[row][col];
+      const { emitters } = unit;
+
+      origEmitters.forEach((emitter, idx) => {
+        emitters[idx].label = origEmitters[idx].label;
+      });
+    }
+
+    context.dispatch('removeSelection');
+    context.commit('user/DISABLE_ROTATION_MODE');
+    context.commit('user/CLEAR_ITEM_STASH');
+    context.commit('user/SET_USER_INPUT_MODE', 'default');
+    context.commit('sceneController/HIDE_ARMORY_DIALOG');
+    context.commit('user/UNLOCK_USER_INPUT');
   },
 
   increaseBubble(context, options) {

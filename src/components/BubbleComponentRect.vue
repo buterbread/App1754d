@@ -1,6 +1,6 @@
 <template>
   <div :class="['item-box', { 'item-box_armed': armed }, item.type ]"
-       v-on:click.prevent="onItemClick"
+       v-on:click="onItemClick"
        :disabled="item.disabled"
        :data-value="value"
   >
