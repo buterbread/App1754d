@@ -32,8 +32,6 @@
           <Dialog
             v-if="showArmoryDialog"
             v-bind:classNames="'gameplayScene-armoryDialog'"
-            v-bind:on-no="onArmoryDialogNo"
-            v-bind:on-yes="onArmoryDialogYes"
           />
 
           <div class="gameplayScene-armoryBox">
@@ -58,15 +56,15 @@
 
           <div class="gameplayScene-tools">
             <button class="button gameplayScene-tool" v-on:click="onSwapClick">
-              <i class="gameplayScene-toolIcon"></i>
+              <i class="gameplayScene-toolIcon gameplayScene-toolIcon--swap"></i>
               <span class="gameplayScene-toolText">08</span>
             </button>
-            <button class="button gameplayScene-tool" v-on:click="() => onToolItemClick('rotate')">
-              <i class="gameplayScene-toolIcon"></i>
+            <button class="button gameplayScene-tool" v-on:click="onRotateClick">
+              <i class="gameplayScene-toolIcon gameplayScene-toolIcon--rotate"></i>
               <span class="gameplayScene-toolText">08</span>
             </button>
-            <button class="button gameplayScene-tool" v-on:click="() => onToolItemClick('move')">
-              <i class="gameplayScene-toolIcon"></i>
+            <button class="button gameplayScene-tool">
+              <i class="gameplayScene-toolIcon gameplayScene-toolIcon--move"></i>
               <span class="gameplayScene-toolText">08</span>
             </button>
           </div>
@@ -115,21 +113,24 @@ export default {
       this.$store.commit('user/PUT_ITEM_IN_USER_SLOT', type);
       this.$store.commit('user/SET_USER_INPUT_MODE', 'placement');
       this.$store.commit('sceneController/SHOW_ARMORY_DIALOG');
-    },
-    onArmoryDialogYes() {
-      this.$store.commit('user/CLEAR_LEVEL_STASH', 'default');
-      this.$store.commit('user/SET_USER_INPUT_MODE', 'default');
-      this.$store.commit('sceneController/HIDE_ARMORY_DIALOG');
-    },
-    onArmoryDialogNo() {
-      this.$store.dispatch('revertLevel');
-      this.$store.commit('user/CLEAR_LEVEL_STASH', 'default');
-      this.$store.commit('user/SET_USER_INPUT_MODE', 'default');
-      this.$store.commit('sceneController/HIDE_ARMORY_DIALOG');
+      this.$store.commit('dialog/SET_YES_ACTION', 'performBubblePlacing');
+      this.$store.commit('dialog/SET_NO_ACTION', 'revertBubblePlacing');
     },
     onSwapClick() {
+      this.$store.commit('sceneController/SHOW_ARMORY_DIALOG');
       this.$store.commit('user/SET_SELECTION_MAX_LENGTH', 2);
       this.$store.commit('user/SET_USER_INPUT_MODE', 'selection');
+
+      this.$store.commit('dialog/SET_YES_ACTION', 'performSwap');
+      this.$store.commit('dialog/SET_NO_ACTION', 'revertSwap');
+    },
+    onRotateClick() {
+      this.$store.commit('sceneController/SHOW_ARMORY_DIALOG');
+      this.$store.commit('user/SET_SELECTION_MAX_LENGTH', 1);
+      this.$store.commit('user/SET_USER_INPUT_MODE', 'selection');
+
+      this.$store.commit('dialog/SET_YES_ACTION', 'performRotate');
+      this.$store.commit('dialog/SET_NO_ACTION', 'revertRotate');
     },
   },
   watch: {
@@ -167,6 +168,7 @@ export default {
       showChaptersMenu: state => state.sceneController.showChaptersMenu,
       showSetsMenu: state => state.sceneController.showSetsMenu,
       showArmoryDialog: state => state.sceneController.showArmoryDialog,
+      showInventoryDialog: state => state.sceneController.showInventoryDialog,
       gameStarted: state => state.gameStarted,
       currentGame: state => state.user.currentGame,
       currentChapter: state => state.user.currentChapter,

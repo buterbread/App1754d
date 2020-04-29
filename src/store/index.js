@@ -6,6 +6,7 @@ import getters from './getters';
 import user from './user';
 import emissions from './emissionTypes';
 import sceneController from './sceneController';
+import dialog from './dialog';
 
 Vue.use(Vuex);
 
@@ -22,6 +23,7 @@ export default new Vuex.Store({
     user,
     emissions,
     sceneController,
+    dialog,
   },
   actions,
   mutations,

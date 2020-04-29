@@ -8,26 +8,27 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
   props: {
     classNames: String,
-    onYes: Function,
-    onNo: Function,
   },
 
   methods: {
     onYesClick() {
-      const { onYes } = this.$props;
-      if (onYes) {
-        onYes();
-      }
+      this.$store.dispatch(this.yesAction);
     },
     onNoClick() {
-      const { onNo } = this.$props;
-      if (onNo) {
-        onNo();
-      }
+      this.$store.dispatch(this.noAction);
     },
+  },
+
+  computed: {
+    ...mapState({
+      yesAction: state => state.dialog.yesAction,
+      noAction: state => state.dialog.noAction,
+    }),
   },
 };
 </script>

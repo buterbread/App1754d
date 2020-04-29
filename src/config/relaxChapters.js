@@ -1,4 +1,5 @@
 import BubbleBobomb from '../bubbleBobomb';
+import BubbleLaser from '../bubbleLaser';
 
 export default {
   defaultSet: {
@@ -82,6 +83,15 @@ export default {
                 options: {
                   maxItemValue: 6,
                   value: 6,
+                },
+              },
+              {
+                row: 6,
+                col: 4,
+                unitConstructor: BubbleLaser,
+                options: {
+                  maxItemValue: 1,
+                  value: 1,
                 },
               },
             ],

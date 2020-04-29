@@ -246,6 +246,89 @@ export default {
     selectionBuffer.filter(Boolean).forEach(item => selection.push(item));
   },
 
+  removeSelection(context) {
+    const { itemsArray: items, user } = context.state;
+    const { selection } = user;
+
+    selection.forEach((selectionItem) => {
+      const [row, col] = selectionItem.split('/');
+      items[row][col].selected = false;
+    });
+
+    selection.length = 0;
+  },
+
+  performBubblePlacing(context) {
+    context.commit('user/CLEAR_LEVEL_STASH', 'default');
+    context.commit('user/SET_USER_INPUT_MODE', 'default');
+    context.commit('sceneController/HIDE_ARMORY_DIALOG');
+  },
+
+  revertBubblePlacing(context) {
+    context.dispatch('revertLevel');
+    context.commit('user/CLEAR_LEVEL_STASH', 'default');
+    context.commit('user/SET_USER_INPUT_MODE', 'default');
+    context.commit('sceneController/HIDE_ARMORY_DIALOG');
+  },
+
+  performSwap(context) {
+    const { itemsArray: items, user } = context.state;
+    const { selection } = user;
+
+    const newArray = cloneLevel(items);
+
+    const [from, to] = selection;
+
+    const [fromRow, fromCol] = from.split('/');
+    const [toRow, toCol] = to.split('/');
+
+    const itemFrom = newArray.find(({ row, col }) => +fromRow === row && +fromCol === col);
+    const itemTo = newArray.find(({ row, col }) => +toRow === row && +toCol === col);
+
+    itemFrom.row = toRow;
+    itemFrom.col = toCol;
+
+    itemTo.row = fromRow;
+    itemTo.col = fromCol;
+
+    const newLevel = levelConstructor({
+      customDrops: newArray,
+    });
+
+    context.commit('GENERATE_ITEMS_ARRAY', newLevel);
+
+    context.dispatch('removeSelection');
+    context.commit('user/SET_USER_INPUT_MODE', 'default');
+    context.commit('sceneController/HIDE_ARMORY_DIALOG');
+  },
+
+  revertSwap(context) {
+    context.dispatch('removeSelection');
+    context.commit('user/SET_USER_INPUT_MODE', 'default');
+    context.commit('sceneController/HIDE_ARMORY_DIALOG');
+  },
+
+  performRotate(context) {
+    const { itemsArray: items, user } = context.state;
+    const { selection } = user;
+    const [row, col] = selection[0].split('/');
+
+    const unit = items[row][col];
+    const { emitters, type: unitType } = unit;
+
+    emitters.forEach((emitter, idx) => {
+      const { label } = emitter;
+      emitters[idx].label = config.directions[unitType][label].next;
+    });
+  },
+
+  revertRotate(context) {
+    context.dispatch('removeSelection');
+    context.commit('user/CLEAR_LEVEL_STASH', 'default');
+    context.commit('user/SET_USER_INPUT_MODE', 'default');
+    context.commit('sceneController/HIDE_ARMORY_DIALOG');
+  },
+
   increaseBubble(context, options) {
     const { row, col } = options;
 
@@ -349,7 +432,7 @@ export default {
   },
 
   startDropPassageAnimation(context, options) {
-    const { itemsArray: items, level } = context.state;
+    const { itemsArray: items } = context.state;
     const { row, col, emitter } = options;
 
     if (!items[row] || !items[row][col]) {
@@ -366,7 +449,7 @@ export default {
 
   stopDropPassageAnimation(context, options) {
     context.commit('DECREASE_ANIMS_COUNTER');
-    const { itemsArray: items, level } = context.state;
+    const { itemsArray: items } = context.state;
     const { row, col, emitter } = options;
     const unit = items[row][col];
 
