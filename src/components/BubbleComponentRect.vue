@@ -1,6 +1,6 @@
 <template>
   <div :class="['item-box', { 'item-box_armed': armed }, item.type ]"
-       v-on:click.prevent="onClick"
+       v-on:click.prevent="onItemClick"
        :disabled="item.disabled"
        :data-value="value"
   >
@@ -32,14 +32,16 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex';
 import BubbleIndicator from './BubbleIndicator';
 
 export default {
   components: {
     BubbleIndicator,
   },
-  props: ['item'],
+  props: {
+    item: Object,
+    onItemClick: Function,
+  },
   computed: {
     value() {
       const { item } = this.$props;
@@ -61,41 +63,6 @@ export default {
     angle() {
       const { value, maxItemValue } = this.$props.item;
       return (value / maxItemValue) * 360;
-    },
-    ...mapState({
-      user: state => state.user,
-      itemsArray: state => state.itemsArray,
-      gameStarted: state => state.gameStarted,
-    }),
-    ...mapGetters([
-      'animationsInProgress',
-    ]),
-  },
-  methods: {
-    onClick(event) {
-      const { item } = this.$props;
-
-      if (!this.gameStarted
-          || item.disabled
-          || this.animationsInProgress) {
-        return;
-      }
-
-      const { row, col } = event.currentTarget.dataset;
-
-      if (event.shiftKey) {
-        this.itemsArray[row][col].value
-          = this.itemsArray[row][col].maxItemValue;
-        return;
-      }
-
-      if (event.altKey) {
-        this.itemsArray[row][col].value
-          = this.itemsArray[row][col].minItemValue;
-        return;
-      }
-
-      this.$store.dispatch('makeUserMove', { row: +row, col: +col });
     },
   },
 };

@@ -13,6 +13,8 @@ export default {
     inputMode: 'default',
     activeSlot: '',
     levelStash: null,
+    selectionMaxLength: 1,
+    selection: [],
   },
 
   actions: {},
@@ -56,6 +58,14 @@ export default {
 
     CLEAR_LEVEL_STASH(state) {
       state.levelStash = null;
+    },
+
+    SET_SELECTION_MAX_LENGTH(state, value) {
+      state.selectionMaxLength = value;
+    },
+
+    SET_SELECTION(state, value) {
+      state.selection = value;
     },
   },
 

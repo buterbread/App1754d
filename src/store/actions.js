@@ -166,7 +166,7 @@ export default {
     const actions = {
       default: 'increaseBubble',
       placement: 'placeBubble',
-      selection: 'toggleBubbleSelect',
+      selection: 'selectBubble',
     };
 
     context.dispatch(actions[inputMode], options);
@@ -215,12 +215,35 @@ export default {
     context.commit('GENERATE_ITEMS_ARRAY', newLevel);
   },
 
-  toggleBubbleSelect(context, options) {
-    const { itemsArray: items } = context.state;
+  selectBubble(context, options) {
+    const { itemsArray: items, user } = context.state;
+    const { selection, selectionMaxLength } = user;
     const { row, col } = options;
     const unit = items[row][col];
 
-    unit.selected = !unit.selected;
+    const selectionBuffer = [...selection];
+
+    if (selectionBuffer.indexOf(`${row}/${col}`) === -1) {
+      if (selectionBuffer.length < selectionMaxLength) {
+        selectionBuffer.push(`${row}/${col}`);
+      } else {
+        const lastSelectedItem = selectionBuffer[selectionBuffer.length - 1];
+
+        const [lastSelectedItemRow, lastSelectedItemCol] = lastSelectedItem.split('/');
+
+        items[+lastSelectedItemRow][+lastSelectedItemCol].selected = false;
+        selectionBuffer[selectionBuffer.length - 1] = `${row}/${col}`;
+      }
+
+      unit.selected = true;
+    } else {
+      unit.selected = false;
+      const selectedIdx = selectionBuffer.indexOf(`${row}/${col}`);
+      selectionBuffer[selectedIdx] = null;
+    }
+
+    selection.length = 0;
+    selectionBuffer.filter(Boolean).forEach(item => selection.push(item));
   },
 
   increaseBubble(context, options) {
@@ -271,7 +294,7 @@ export default {
       context.commit('RESET_ITEM_VALUE', { row, col, value: unit.minItemValue });
 
       unit.injectionInProgress = false;
-    }, config.dropPopDuration - 1);
+    }, 1);
   },
 
   dischargeAllEmitters(context, options) {

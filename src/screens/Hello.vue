@@ -38,57 +38,34 @@
 
           <div class="gameplayScene-armoryBox">
             <div class="gameplayScene-armoryItemBox">
-              <div class="gameplayScene-armoryItem" data-type="bobomb"
-                v-on:click="onArmoryItemClick"></div>
+              <div class="gameplayScene-armoryItem">
+                <Bubble
+                  v-bind:item="{ type: 'bobomb', value: 4, maxItemValue: 4, emitters: [] }"
+                  v-bind:on-item-click="() => onArmoryItemClick('bobomb')" />
+              </div>
               <span class="gameplayScene-armoryItemText">05</span>
             </div>
 
             <div class="gameplayScene-armoryItemBox">
-              <div class="gameplayScene-armoryItem" data-type="laser"
-                v-on:click="onArmoryItemClick"></div>
-              <span class="gameplayScene-armoryItemText">05</span>
-            </div>
-
-            <div class="gameplayScene-armoryItemBox">
-              <div class="gameplayScene-armoryItem"></div>
-              <span class="gameplayScene-armoryItemText">05</span>
-            </div>
-
-            <div class="gameplayScene-armoryItemBox">
-              <div class="gameplayScene-armoryItem"></div>
-              <span class="gameplayScene-armoryItemText">05</span>
-            </div>
-
-            <div class="gameplayScene-armoryItemBox">
-              <div class="gameplayScene-armoryItem"></div>
-              <span class="gameplayScene-armoryItemText">05</span>
-            </div>
-
-            <div class="gameplayScene-armoryItemBox">
-              <div class="gameplayScene-armoryItem"></div>
-              <span class="gameplayScene-armoryItemText">05</span>
-            </div>
-
-            <div class="gameplayScene-armoryItemBox">
-              <div class="gameplayScene-armoryItem"></div>
+              <div class="gameplayScene-armoryItem">
+                <Bubble
+                  v-bind:item="{ type: 'laser', value: 1, maxItemValue: 1, emitters: [] }"
+                  v-bind:on-item-click="() => onArmoryItemClick('laser')" />
+              </div>
               <span class="gameplayScene-armoryItemText">05</span>
             </div>
           </div>
 
           <div class="gameplayScene-tools">
-            <button class="button gameplayScene-tool">
+            <button class="button gameplayScene-tool" v-on:click="onSwapClick">
               <i class="gameplayScene-toolIcon"></i>
               <span class="gameplayScene-toolText">08</span>
             </button>
-            <button class="button gameplayScene-tool">
+            <button class="button gameplayScene-tool" v-on:click="() => onToolItemClick('rotate')">
               <i class="gameplayScene-toolIcon"></i>
               <span class="gameplayScene-toolText">08</span>
             </button>
-            <button class="button gameplayScene-tool">
-              <i class="gameplayScene-toolIcon"></i>
-              <span class="gameplayScene-toolText">08</span>
-            </button>
-            <button class="button gameplayScene-tool">
+            <button class="button gameplayScene-tool" v-on:click="() => onToolItemClick('move')">
               <i class="gameplayScene-toolIcon"></i>
               <span class="gameplayScene-toolText">08</span>
             </button>
@@ -109,6 +86,7 @@ import Playground from '../components/Playground';
 import DropsCounter from '../components/DropsCounter';
 import ComboMonitor from '../components/ComboMonitor';
 import Dialog from '../components/Dialog';
+import Bubble from '../components/BubbleComponentRect';
 
 export default {
   components: {
@@ -119,6 +97,7 @@ export default {
     DropsCounter,
     ComboMonitor,
     Dialog,
+    Bubble,
   },
   methods: {
     isLastLevel() {
@@ -132,9 +111,7 @@ export default {
     isLastChapter() {
       return this.currentChapter.index + 1 === this.currentGame.chaptersMap.length;
     },
-    onArmoryItemClick(event) {
-      const { type } = event.target.dataset;
-
+    onArmoryItemClick(type) {
       this.$store.commit('user/PUT_ITEM_IN_USER_SLOT', type);
       this.$store.commit('user/SET_USER_INPUT_MODE', 'placement');
       this.$store.commit('sceneController/SHOW_ARMORY_DIALOG');
@@ -149,6 +126,10 @@ export default {
       this.$store.commit('user/CLEAR_LEVEL_STASH', 'default');
       this.$store.commit('user/SET_USER_INPUT_MODE', 'default');
       this.$store.commit('sceneController/HIDE_ARMORY_DIALOG');
+    },
+    onSwapClick() {
+      this.$store.commit('user/SET_SELECTION_MAX_LENGTH', 2);
+      this.$store.commit('user/SET_USER_INPUT_MODE', 'selection');
     },
   },
   watch: {
