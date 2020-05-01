@@ -4,6 +4,7 @@ import actions from './actions';
 import mutations from './mutations';
 import getters from './getters';
 import user from './user';
+import inventory from './inventory';
 import emissions from './emissionTypes';
 import sceneController from './sceneController';
 import dialog from './dialog';
@@ -24,6 +25,7 @@ export default new Vuex.Store({
     emissions,
     sceneController,
     dialog,
+    inventory,
   },
   actions,
   mutations,

@@ -64,7 +64,7 @@
   margin: 3px 20px 0 0;
 }
 
-.gameplayScene-armoryBox {
+.gameplayScene-armory {
   margin: auto 0;
   padding: 4px 0;
   display: flex;
@@ -125,11 +125,36 @@
 }
 
 .gameplayScene-toolIcon {
-  display: block;
+  display: flex;
   width: 34px;
   height: 34px;
   background-color: #403f5b;
   border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+}
+
+.gameplayScene-toolIcon--swap {
+  &:before {
+    content: '';
+    display: block;
+    width: 20px;
+    height: 20px;
+    background: url("assets/icon--swap.svg") center no-repeat;
+    background-size: contain;
+  }
+}
+
+.gameplayScene-toolIcon--rotate {
+  &:before {
+    content: '';
+    display: block;
+    width: 20px;
+    height: 20px;
+    background: url("assets/icon--rotate.svg") center no-repeat;
+    background-size: contain;
+    margin-top: 2px;
+  }
 }
 
 .gameplayScene-toolText {

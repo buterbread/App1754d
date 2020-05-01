@@ -191,6 +191,8 @@ export default {
 
     const newItem = generateNewBubble(activeSlot, type);
 
+    context.commit('user/PUT_ITEM_IN_STASH', newItem);
+
     const newItemIndex = newArray.findIndex(item => item.row === row && item.col === col);
 
     newArray[newItemIndex].options = newItem;
@@ -263,6 +265,13 @@ export default {
   },
 
   applyBubblePlacing(context) {
+    const { user } = context.state;
+    const { itemStash } = user;
+    const { type } = itemStash;
+
+    context.commit('inventory/REMOVE_INVENTORY_ITEM', { item: type });
+
+    context.commit('user/CLEAR_ITEM_STASH');
     context.commit('user/CLEAR_LEVEL_STASH', 'default');
     context.commit('user/SET_USER_INPUT_MODE', 'default');
     context.commit('sceneController/HIDE_ARMORY_DIALOG');
@@ -270,7 +279,8 @@ export default {
 
   revertBubblePlacing(context) {
     context.dispatch('revertLevel');
-    context.commit('user/CLEAR_LEVEL_STASH', 'default');
+    context.commit('user/CLEAR_ITEM_STASH');
+    context.commit('user/CLEAR_LEVEL_STASH');
     context.commit('user/SET_USER_INPUT_MODE', 'default');
     context.commit('sceneController/HIDE_ARMORY_DIALOG');
   },
@@ -308,6 +318,7 @@ export default {
     context.dispatch('removeSelection');
     context.commit('user/SET_USER_INPUT_MODE', 'default');
     context.commit('sceneController/HIDE_ARMORY_DIALOG');
+    context.commit('inventory/REMOVE_INVENTORY_ITEM', { item: 'swap' });
   },
 
   revertSwap(context) {
@@ -317,15 +328,15 @@ export default {
   },
 
   rotate(context, direction) {
-    context.commit('user/SET_USER_INPUT_MODE', 'default');
-    context.commit('user/LOCK_USER_INPUT');
-
     const { itemsArray: items, user } = context.state;
     const { selection, itemStash } = user;
 
     if (!selection[0]) {
       return;
     }
+
+    context.commit('user/SET_USER_INPUT_MODE', 'default');
+    context.commit('user/LOCK_USER_INPUT');
 
     const [row, col] = selection[0].split('/');
 
@@ -346,6 +357,7 @@ export default {
   },
 
   applyRotate(context) {
+    context.commit('inventory/REMOVE_INVENTORY_ITEM', { item: 'rotate' });
     context.dispatch('removeSelection');
     context.commit('user/DISABLE_ROTATION_MODE');
     context.commit('user/CLEAR_ITEM_STASH');

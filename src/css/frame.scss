@@ -40,6 +40,10 @@ a {
   &:active {
     transform: translateY(2px);
   }
+
+  &[disabled] {
+    opacity: 0.5;
+  }
 }
 
 .scene {

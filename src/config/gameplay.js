@@ -7,12 +7,6 @@ const gameplayConfig = () => ({
   dropPopDuration: 200,
   dropInjectionDelay: 200,
   saveRecordName: '__faraBubbleGame1754__',
-  inventory: {
-    bobombs: 1,
-    swaps: 1,
-    moves: 1,
-    rotates: Infinity,
-  },
 
   directions: {
     default: directionsDefault,
