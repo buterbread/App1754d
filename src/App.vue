@@ -11,6 +11,7 @@
   @import "css/frame.scss";
   @import "css/homeScreen";
   @import "css/gameplayScene.scss";
+  @import "css/inventory.scss";
   @import "css/dropsCounter.scss";
   @import "css/bubbleComponentRect";
 </style>

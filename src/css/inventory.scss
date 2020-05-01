@@ -1,0 +1,106 @@
+.inventory-ammo {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  padding-bottom: 10px;
+  margin: auto 0;
+}
+
+.inventory-ammoItemBox {
+  display: flex;
+  align-items: center;
+  margin: 0 5px;
+  position: relative;
+}
+
+.inventory-ammoItem {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .item-box {
+    transform: scale(1.25);
+  }
+}
+
+.inventory-ammoItemText {
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 4px;
+  right: 0;
+  bottom: 0;
+  height: 14px;
+  margin: auto;
+  text-align: center;
+  font-size: 12px;
+  line-height: 14px;
+}
+
+.inventory-tools {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  padding-bottom: 10px;
+  margin: auto 0;
+}
+
+.inventory-tool {
+  display: block;
+  padding: 0;
+  border: none;
+  background-color: transparent;
+  color: #ffffff;
+  margin: 0 13px;
+}
+
+.inventory-toolIcon {
+  display: flex;
+  width: 34px;
+  height: 34px;
+  background-color: #403f5b;
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+}
+
+.inventory-toolIcon--swap {
+  &:before {
+    content: '';
+    display: block;
+    width: 20px;
+    height: 20px;
+    background: url("assets/icon--swap.svg") center no-repeat;
+    background-size: contain;
+  }
+}
+
+.inventory-toolIcon--rotate {
+  &:before {
+    content: '';
+    display: block;
+    width: 20px;
+    height: 20px;
+    background: url("assets/icon--rotate.svg") center no-repeat;
+    background-size: contain;
+    margin-top: 2px;
+  }
+}
+
+.inventory-toolText {
+  margin-top: 8px;
+  display: block;
+  font-size: 12px;
+  line-height: 12px;
+}
+
+.inventory-ammoDialog {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 20;
+}

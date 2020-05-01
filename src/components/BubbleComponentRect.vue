@@ -40,7 +40,10 @@ export default {
   },
   props: {
     item: Object,
-    onItemClick: Function,
+    onItemClick: {
+      type: Function,
+      default: () => {},
+    },
   },
   computed: {
     value() {

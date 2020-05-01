@@ -2,7 +2,7 @@
   <div class="inventory">
     <Dialog
       v-if="showArmoryDialog"
-      v-bind:classNames="'gameplayScene-armoryDialog'"
+      v-bind:classNames="'inventory-ammoDialog'"
     >
       <div class="rotateCtrl" v-if="isRotationActive">
         <button
@@ -14,41 +14,39 @@
       </div>
     </Dialog>
 
-    <div class="gameplayScene-armory">
-      <div class="gameplayScene-armoryItemBox">
-        <div class="gameplayScene-armoryItem">
+    <div class="inventory-ammo">
+      <div class="inventory-ammoItemBox" v-on:click="() => onArmoryItemClick('bobomb')">
+        <div class="inventory-ammoItem">
           <Bubble
-            v-bind:item="{ type: 'bobomb', value: 4, maxItemValue: 4, emitters: [] }"
-            v-bind:on-item-click="() => onArmoryItemClick('bobomb')" />
+            v-bind:item="{ type: 'bobomb', value: 4, maxItemValue: 4, emitters: bobombEmitters }" />
         </div>
-        <span class="gameplayScene-armoryItemText">{{bobomb}}</span>
+        <span class="inventory-ammoItemText">{{bobomb}}</span>
       </div>
 
-      <div class="gameplayScene-armoryItemBox">
-        <div class="gameplayScene-armoryItem">
+      <div class="inventory-ammoItemBox" v-on:click="() => onArmoryItemClick('laser')">
+        <div class="inventory-ammoItem">
           <Bubble
-            v-bind:item="{ type: 'laser', value: 1, maxItemValue: 1, emitters: [] }"
-            v-bind:on-item-click="() => onArmoryItemClick('laser')" />
+            v-bind:item="{ type: 'laser', value: 1, maxItemValue: 1, emitters: bobombEmitters }" />
         </div>
-        <span class="gameplayScene-armoryItemText">{{laser}}</span>
+        <span class="inventory-ammoItemText">{{laser}}</span>
       </div>
     </div>
 
-    <div class="gameplayScene-tools">
+    <div class="inventory-tools">
       <button
-        class="button gameplayScene-tool"
+        class="button inventory-tool"
         v-on:click="onSwapClick"
         :disabled="swap <= 0">
-        <i class="gameplayScene-toolIcon gameplayScene-toolIcon--swap"></i>
-        <span class="gameplayScene-toolText">{{swap}}</span>
+        <i class="inventory-toolIcon inventory-toolIcon--swap"></i>
+        <span class="inventory-toolText">{{swap}}</span>
       </button>
       <button
-        class="button gameplayScene-tool"
+        class="button inventory-tool"
         v-on:click="onRotationClick"
         :disabled="rotate <= 0"
       >
-        <i class="gameplayScene-toolIcon gameplayScene-toolIcon--rotate"></i>
-        <span class="gameplayScene-toolText">{{rotate}}</span>
+        <i class="inventory-toolIcon inventory-toolIcon--rotate"></i>
+        <span class="inventory-toolText">{{rotate}}</span>
       </button>
     </div>
   </div>
@@ -59,9 +57,22 @@ import { mapState } from 'vuex';
 import Bubble from './BubbleComponentRect';
 import Dialog from './Dialog';
 
+const bobombEmitters = [
+  { label: 'left', animation: false, emissionType: 'explodeNearest' },
+  { label: 'top', animation: false, emissionType: 'explodeNearest' },
+  { label: 'right', animation: false, emissionType: 'explodeNearest' },
+  { label: 'bottom', animation: false, emissionType: 'explodeNearest' },
+  { label: 'leftTop', animation: false, emissionType: 'explodeNearest' },
+  { label: 'topRight', animation: false, emissionType: 'explodeNearest' },
+  { label: 'rightBottom', animation: false, emissionType: 'explodeNearest' },
+  { label: 'bottomLeft', animation: false, emissionType: 'explodeNearest' },
+];
+
 export default {
   data() {
-    return {};
+    return {
+      bobombEmitters,
+    };
   },
   components: {
     Dialog,
