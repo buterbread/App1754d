@@ -18,7 +18,7 @@
       <div class="inventory-ammoItemBox" v-on:click="() => onArmoryItemClick('bobomb')">
         <div class="inventory-ammoItem">
           <Bubble
-            v-bind:item="{ type: 'bobomb', value: 4, maxItemValue: 4, emitters: bobombEmitters }" />
+            v-bind:item="{ type: 'bobomb', value: 1, maxItemValue: 1, emitters: [] }" />
         </div>
         <span class="inventory-ammoItemText">{{bobomb}}</span>
       </div>
@@ -26,7 +26,7 @@
       <div class="inventory-ammoItemBox" v-on:click="() => onArmoryItemClick('laser')">
         <div class="inventory-ammoItem">
           <Bubble
-            v-bind:item="{ type: 'laser', value: 1, maxItemValue: 1, emitters: bobombEmitters }" />
+            v-bind:item="{ type: 'laser', value: 1, maxItemValue: 1, emitters: [] }" />
         </div>
         <span class="inventory-ammoItemText">{{laser}}</span>
       </div>
@@ -57,22 +57,9 @@ import { mapState } from 'vuex';
 import Bubble from './BubbleComponentRect';
 import Dialog from './Dialog';
 
-const bobombEmitters = [
-  { label: 'left', animation: false, emissionType: 'explodeNearest' },
-  { label: 'top', animation: false, emissionType: 'explodeNearest' },
-  { label: 'right', animation: false, emissionType: 'explodeNearest' },
-  { label: 'bottom', animation: false, emissionType: 'explodeNearest' },
-  { label: 'leftTop', animation: false, emissionType: 'explodeNearest' },
-  { label: 'topRight', animation: false, emissionType: 'explodeNearest' },
-  { label: 'rightBottom', animation: false, emissionType: 'explodeNearest' },
-  { label: 'bottomLeft', animation: false, emissionType: 'explodeNearest' },
-];
-
 export default {
   data() {
-    return {
-      bobombEmitters,
-    };
+    return {};
   },
   components: {
     Dialog,
