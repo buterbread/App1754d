@@ -4,8 +4,6 @@ import levelConstructor from '../config/levelConstructor';
 import BubbleBobomb from '../bubbleBobomb';
 import BubbleLaser from '../bubbleLaser';
 
-const { saveRecordName } = config;
-
 function cloneItem(item) {
   const { emitters } = item;
 
@@ -152,6 +150,8 @@ export default {
   },
 
   saveProgress(context) {
+    const { saveRecordName } = config;
+
     localStorage.setItem(saveRecordName, JSON.stringify({
       date: +Date.now(),
       user: context.state.user,

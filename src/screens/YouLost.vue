@@ -1,12 +1,27 @@
 <template>
 <div class="you-lost">
   <h1>Game Over</h1>
-  <router-link to="gameplay" class="restart">Restart</router-link>
+  <a v-on:click.prevent="onRestartClick" class="restart">Restart</a>
+  <a v-on:click.prevent="onMainMenuClick" class="restart">Main menu</a>
 </div>
 </template>
 
 <script>
-export default {};
+export default {
+  methods: {
+    onRestartClick() {
+      this.$store.dispatch('stopGame');
+      this.$store.commit('RESET_DROPS_COUNTER');
+      this.$store.dispatch('startGame');
+    },
+    onMainMenuClick() {
+      this.$store.dispatch('stopGame');
+
+      this.$store.commit('RESET_DROPS_COUNTER');
+      this.$store.commit('sceneController/SHOW_GAME_MODES_MENU');
+    },
+  },
+};
 </script>
 
 <style lang="scss">

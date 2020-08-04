@@ -34,6 +34,8 @@
       </div>
     </div>
   </div>
+  <YouLost v-if="youLost"></YouLost>
+  <YouWin v-if="youWin"></YouWin>
 </div>
 </template>
 
@@ -43,6 +45,9 @@ import { mapState, mapGetters } from 'vuex';
 import GameModesMenu from './MenuGameModes';
 import ChaptersMenu from './MenuChapters';
 import SetsMenu from './MenuSets';
+import YouLost from './YouLost';
+import YouWin from './YouWin';
+
 import Playground from '../components/Playground';
 import DropsCounter from '../components/DropsCounter';
 import ComboMonitor from '../components/ComboMonitor';
@@ -57,6 +62,8 @@ export default {
     DropsCounter,
     ComboMonitor,
     Inventory,
+    YouLost,
+    YouWin,
   },
   methods: {
     isLastLevel() {
@@ -116,6 +123,8 @@ export default {
     }),
     ...mapGetters([
       'levelPassed',
+      'youLost',
+      'youWin',
     ]),
   },
 };

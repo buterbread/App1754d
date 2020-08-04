@@ -9,6 +9,9 @@ export default {
   },
   levelPassed(state, getters) {
     const { level } = state;
+    if (state.gameStarted) {
+      console.log(state.gameStarted, getters.animationsInProgress, level.win(state));
+    }
     return state.gameStarted && !getters.animationsInProgress && level.win(state);
   },
   animationsInProgress(state) {
