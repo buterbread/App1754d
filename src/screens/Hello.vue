@@ -78,35 +78,6 @@ export default {
       return this.currentChapter.index + 1 === this.currentGame.chaptersMap.length;
     },
   },
-  watch: {
-    levelPassed(value) {
-      if (!value) {
-        return;
-      }
-
-      if (this.user.currentSet.loop) {
-        this.$store.dispatch('startSet', this.currentSet.index);
-        return;
-      }
-
-      if (this.isLastChapter() && this.isLastSet() && this.isLastLevel()) {
-        this.$store.dispatch('startChapter', 0);
-        return;
-      }
-
-      if (this.isLastSet() && this.isLastLevel()) {
-        this.$store.dispatch('startChapter', this.currentChapter.index + 1);
-        return;
-      }
-
-      if (this.isLastLevel()) {
-        this.$store.dispatch('startSet', this.currentSet.index + 1);
-        return;
-      }
-
-      this.$store.dispatch('startNextLevel');
-    },
-  },
   computed: {
     ...mapState({
       showGameModesMenu: state => state.sceneController.showGameModesMenu,

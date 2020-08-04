@@ -1,10 +1,12 @@
 <template>
   <div class="you-win">
-    <router-link :to=nextLvlLink>Next Level &gt;</router-link>
+    <a v-on:click.prevent="onNextClick">Next Level &gt;</a>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
   data() {
     return {
@@ -13,11 +15,36 @@ export default {
     };
   },
   methods: {
-    getLevel() {
-      const { level } = this.$route.params;
+    onNextClick() {
+      if (this.user.currentSet.loop) {
+        this.$store.dispatch('startSet', this.currentSet.index);
+        return;
+      }
 
-      return (level === 'new') ? 2 : +level + 1;
+      if (this.isLastChapter() && this.isLastSet() && this.isLastLevel()) {
+        this.$store.dispatch('startChapter', 0);
+        return;
+      }
+
+      if (this.isLastSet() && this.isLastLevel()) {
+        this.$store.dispatch('startChapter', this.currentChapter.index + 1);
+        return;
+      }
+
+      if (this.isLastLevel()) {
+        this.$store.dispatch('startSet', this.currentSet.index + 1);
+        return;
+      }
+
+      this.$store.dispatch('startNextLevel');
     },
+  },
+  computed: {
+    ...mapState({
+      currentChapter: state => state.user.currentChapter,
+      currentSet: state => state.user.currentSet,
+      user: state => state.user,
+    }),
   },
 };
 </script>
@@ -35,7 +62,7 @@ export default {
     align-items: center;
     padding: 50px 20px;
     z-index: 9999;
-    background: #fafafa;
+    background: var(--bgColor);
     font-size: 36px;
     color: mediumseagreen;
   }
