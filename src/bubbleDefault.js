@@ -35,8 +35,6 @@ class BubbleDefault {
 
     Object.assign(this, defaults, options);
 
-
-
     this.id = Math.random()
       .toString(36)
       .substr(2, 9);
