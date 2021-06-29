@@ -75,7 +75,12 @@ class BaseLevel {
       const itemsRow = [];
       itemsRow.id = Math.random().toString(36).substr(2, 9);
       for (let j = 0; j < this.matrixWidth; j += 1) {
-        const col = new BubbleDefault({ levelType: 'default', value: this.getRandomValue() });
+        const col = new BubbleDefault({
+          levelType: this.type,
+          value: this.getRandomValue(),
+          row: i,
+          col: j,
+        });
         itemsRow.push(col);
       }
       itemsArray.push(itemsRow);
@@ -96,7 +101,12 @@ class TriangularLevel extends BaseLevel {
       const itemsRow = [];
       itemsRow.id = Math.random().toString(36).substr(2, 9);
       for (let j = 0; j < ((i * 2) + 1); j += 1) {
-        const col = new BubbleDefault({ value: this.getRandomValue() });
+        const col = new BubbleDefault({
+          levelType: this.type,
+          value: this.getRandomValue(),
+          row: i,
+          col: j,
+        });
         itemsRow.push(col);
       }
       itemsArray.push(itemsRow);

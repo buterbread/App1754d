@@ -71,7 +71,7 @@ const emittersCfg = {
 };
 
 function getEmittersConfig(options) {
-  const { levelType } = options;
+  const { levelType, row, col } = options;
 
   return JSON.parse(JSON.stringify(emittersCfg[levelType]));
 }

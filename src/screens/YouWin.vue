@@ -8,15 +8,21 @@
 import { mapState } from 'vuex';
 
 export default {
-  data() {
-    return {
-      show: false,
-      nextLvlLink: `gameplay/${this.getLevel()}`,
-    };
-  },
   methods: {
+    isLastLevel() {
+      return (this.user.currentLevel.index + 1) === this.user.currentSet.levelsLength;
+    },
+
+    isLastSet() {
+      return (this.user.currentSet.index + 1) === this.user.currentChapter.setsLength;
+    },
+
+    isLastChapter() {
+      return (this.currentChapter.index + 1) === this.user.currentGame.chaptersMap.length;
+    },
+
     onNextClick() {
-      if (this.user.currentSet.loop) {
+      if (this.user.currentSet.loop && this.currentSet.levelsLength === 0) {
         this.$store.dispatch('startSet', this.currentSet.index);
         return;
       }

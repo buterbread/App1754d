@@ -65,19 +65,7 @@ export default {
     YouLost,
     YouWin,
   },
-  methods: {
-    isLastLevel() {
-      return this.user.currentLevel.index + 1 === this.user.currentSet.levelsLength;
-    },
-
-    isLastSet() {
-      return this.user.currentSet.index + 1 === this.user.currentChapter.setsLength;
-    },
-
-    isLastChapter() {
-      return this.currentChapter.index + 1 === this.currentGame.chaptersMap.length;
-    },
-  },
+  methods: {},
   computed: {
     ...mapState({
       showGameModesMenu: state => state.sceneController.showGameModesMenu,

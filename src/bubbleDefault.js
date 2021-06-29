@@ -2,6 +2,8 @@ import getEmittersConfig from './config/emittersDefault';
 
 class BubbleDefault {
   constructor(options) {
+    const { levelType, row, col } = options;
+
     const defaults = {
       type: 'default',
       levelType: null,
@@ -28,7 +30,7 @@ class BubbleDefault {
       rotationAngle: 0,
       rotationAnimation: false,
       isWall: false,
-      emitters: getEmittersConfig({ levelType: options.levelType }),
+      emitters: getEmittersConfig({ levelType, row, col }),
     };
 
     Object.assign(this, defaults, options);
