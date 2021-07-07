@@ -1,7 +1,7 @@
 import BubbleDefault from './bubbleDefault';
 import getEmittersConfig from './config/emittersLaser';
 
-class BubbleBobomb extends BubbleDefault {
+class BubbleLaser extends BubbleDefault {
   constructor(options) {
     super(options);
 
@@ -10,4 +10,4 @@ class BubbleBobomb extends BubbleDefault {
   }
 }
 
-export default BubbleBobomb;
+export default BubbleLaser;

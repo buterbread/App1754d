@@ -86,6 +86,15 @@ export default {
                 },
               },
               {
+                row: 0,
+                col: 4,
+                unitConstructor: BubbleLaser,
+                options: {
+                  maxItemValue: 5,
+                  value: 3,
+                },
+              },
+              {
                 row: 6,
                 col: 4,
                 unitConstructor: BubbleLaser,

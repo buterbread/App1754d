@@ -81,7 +81,7 @@ export default {
       }
     },
 
-    desintegrate(context, options) {
+    laserImpact(context, options) {
       const { rootState, dispatch } = context;
       const { itemsArray: items } = rootState;
 
@@ -97,12 +97,33 @@ export default {
         return;
       }
 
+      const unit = items[row][col];
+      const { type } = unit;
+
       dispatch('startDropPassageAnimation', options, { root: true });
 
       setTimeout(() => {
-        dispatch('desintegrateBubble', { row, col }, { root: true });
+        if (type === 'laser') {
+          if (items[row][col].value !== 0) {
+            dispatch('increaseItemValue', {
+              row,
+              col,
+            }, { root: true });
+          }
 
-        dispatch('desintegrate', {
+          dispatch('stopDropPassageAnimation', initialItemCords, { root: true });
+          dispatch('attemptToPopBubble', {
+            row,
+            col,
+            addBonusDrop: true,
+          }, {
+            root: true,
+          });
+        } else {
+          dispatch('desintegrateBubble', { row, col }, { root: true });
+        }
+
+        dispatch('laserImpact', {
           row,
           col,
           offsets: options.offsets,

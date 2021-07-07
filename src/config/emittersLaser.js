@@ -3,14 +3,14 @@ const emittersCfg = {
     {
       label: 'top',
       animation: false,
-      emissionType: 'desintegrate',
+      emissionType: 'laserImpact',
     },
   ],
   triangle: [
     {
       label: 'triangle_left_top',
       animation: false,
-      emissionType: 'desintegrate',
+      emissionType: 'laserImpact',
       noseDirection: 'up',
     },
   ],
@@ -18,7 +18,7 @@ const emittersCfg = {
     {
       label: 'hexagon_top',
       animation: false,
-      emissionType: 'desintegrate',
+      emissionType: 'laserImpact',
     },
   ],
 };
