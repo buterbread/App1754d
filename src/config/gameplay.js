@@ -3,7 +3,7 @@ import directionsBobomb from './directionsBobomb';
 import directionsLaser from './directionsLaser';
 
 const gameplayConfig = () => ({
-  initialDropsCounter: 10,
+  initialDropsCounter: 9999,
   dropPopDuration: 200,
   dropInjectionDelay: 200,
   saveRecordName: '__faraBubbleGame1754__',

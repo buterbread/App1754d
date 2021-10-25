@@ -4,7 +4,7 @@ export default {
   namespaced: true,
 
   actions: {
-    explodeNearest(context, options) {
+    affectNearest(context, options) {
       const { rootState, dispatch, commit } = context;
       const { itemsArray: items } = rootState;
 
@@ -103,15 +103,14 @@ export default {
       dispatch('startDropPassageAnimation', options, { root: true });
 
       setTimeout(() => {
-        if (type === 'laser') {
-          if (items[row][col].value !== 0) {
-            dispatch('increaseItemValue', {
-              row,
-              col,
-            }, { root: true });
-          }
+        if (type === 'laser' && items[row][col].value !== 0) {
+          dispatch('increaseItemValue', {
+            row,
+            col,
+          }, { root: true });
 
           dispatch('stopDropPassageAnimation', initialItemCords, { root: true });
+
           dispatch('attemptToPopBubble', {
             row,
             col,
@@ -119,9 +118,10 @@ export default {
           }, {
             root: true,
           });
-        } else {
-          dispatch('desintegrateBubble', { row, col }, { root: true });
+          return;
         }
+
+        dispatch('desintegrateBubble', { row, col }, { root: true });
 
         dispatch('laserImpact', {
           row,
